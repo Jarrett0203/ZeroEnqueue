@@ -23,7 +23,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        //temp code to link to registration page
         val registerBtn = findViewById<Button>(R.id.registerBtn)
         registerBtn.setOnClickListener {
             val intent = Intent(this, RegisterUser::class.java)
@@ -37,6 +36,4 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
-
 }
