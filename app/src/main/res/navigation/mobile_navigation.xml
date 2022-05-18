@@ -12,14 +12,24 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.zeroenqueue.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_categories"
+        android:name="com.example.zeroenqueue.ui.categories.CategoriesFragment"
+        android:label="@string/title_categories"
+        tools:layout="@layout/fragment_categories" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.zeroenqueue.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_order_status"
+        android:name="com.example.zeroenqueue.ui.orderStatus.OrderStatusFragment"
+        android:label="@string/title_order_status"
+        tools:layout="@layout/fragment_order_status" />
+    <fragment
+        android:id="@+id/navigation_foodStall"
+        android:name="com.example.zeroenqueue.ui.foodStall.FoodStallFragment"
+        android:label="@string/title_food_stall"
+        tools:layout="@layout/fragment_food_stall" />
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.zeroenqueue.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>
