@@ -30,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         //temp code to link to homepage
-        val loginButton = findViewById<Button>(R.id.btnLogin)
+        val loginButton = findViewById<Button>(R.id.login)
         loginButton.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
