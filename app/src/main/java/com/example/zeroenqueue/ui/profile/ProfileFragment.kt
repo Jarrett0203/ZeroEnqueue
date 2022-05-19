@@ -6,7 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.FragmentTransaction
+import com.example.zeroenqueue.R
 import com.example.zeroenqueue.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
@@ -27,10 +32,10 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textProfile
+        /*val textView: TextView = binding.textProfile
         ProfileViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
-        }
+        }*/
         return root
     }
 

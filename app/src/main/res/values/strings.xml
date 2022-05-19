@@ -16,5 +16,7 @@
     <string name="title_food_stall">Food Stalls</string>
     <string name="title_profile">Profile</string>
     <string name="search">Search</string>
+    <string name="Submit">Submit</string>
+    <string name="Update">Update</string>
 
 </resources>

@@ -3,8 +3,9 @@
 
     <item
         android:id="@+id/navigation_foodStall"
-        android:icon="@drawable/ic_foodstall"
-        android:title="@string/title_food_stall"/>
+        android:icon="@drawable/ic_food"
+        android:title="@string/title_food_stall"
+        android:tint="@android:color/white"/>
 
     <item
         android:id="@+id/navigation_categories"

@@ -21,11 +21,12 @@ class FoodItemAdapter(val foodItems: List<FoodItem>) : RecyclerView.Adapter<Food
     override fun onBindViewHolder(holder: FoodItemViewHolder, position: Int) {
         val foodItem = foodItems[position]
 
+        holder.view.tvPrice.text = "$"+foodItem.price.toString()
         holder.view.tvRating.text = foodItem.rating.toString() + "%"
         holder.view.tvReviewCount.text = foodItem.reviewCount.toString() + " reviews"
         holder.view.tvFoodName.text = foodItem.foodName
         holder.view.tvFoodStallName.text = foodItem.foodStallName
-        holder.view.tvTag0.text = foodItem.categories
+        holder.view.tvCategories.text = foodItem.categories
         holder.view.tvIsNew.visibility = if(foodItem.isNew) View.VISIBLE else View.INVISIBLE
     }
 }

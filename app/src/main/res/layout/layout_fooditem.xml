@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
-        android:layout_margin="3dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -43,7 +42,7 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="15dp"
@@ -60,13 +59,13 @@
                         android:layout_width="15dp"
                         android:layout_height="14dp"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="6dp" />
+                        android:layout_marginEnd="6dp" />
 
                     <TextView
                         android:id="@+id/tvRating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/imageViewLike"
+                        android:layout_toEndOf="@id/imageViewLike"
                         android:text="78%"
                         android:textColor="@color/black"
                         android:textSize="17sp"
@@ -89,9 +88,9 @@
 
 
             <RelativeLayout
-                android:padding="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/tvFoodName"
@@ -112,28 +111,50 @@
                     android:id="@+id/btnOrder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:text="@string/order" />
 
             </RelativeLayout>
 
             <TextView
-                android:background="#414141"
-                android:layout_marginBottom="7dp"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"/>
+                android:layout_height="1dp"
+                android:layout_marginBottom="7dp"
+                android:background="#414141" />
 
-            <TextView
-                android:id="@+id/tvTag0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="5dp"
-                android:padding="2dp"
-                android:text="Western"
-                android:textAlignment="center"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvCategories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_centerVertical="true"
+                    android:padding="2dp"
+                    android:text="Western"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+                <TextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_alignParentEnd="true"
+                    android:padding="2dp"
+                    android:text="$5.50"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

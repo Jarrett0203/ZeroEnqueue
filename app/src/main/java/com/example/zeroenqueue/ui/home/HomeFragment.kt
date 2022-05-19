@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.zeroenqueue.FoodItem
 import com.example.zeroenqueue.FoodItemAdapter
 import com.example.zeroenqueue.R
@@ -21,39 +22,21 @@ private var _binding: FragmentHomeBinding? = null
   // onDestroyView.
   private val binding get() = _binding!!
 
-    //inflater: LayoutInflater, container: ViewGroup?,
-    //    savedInstanceState: Bundle?): View
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-    savedInstanceState: Bundle?): View? {
-      //_binding = FragmentHomeBinding.inflate(inflater, container, false)
-      //val root: View = binding.root
+    savedInstanceState: Bundle?): View {
+    _binding = FragmentHomeBinding.inflate(inflater, container, false)
+    val root: View = binding.root
+    val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+    val recyclerView: RecyclerView = binding.recyclerViewHome
 
-      //val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-
-      //val textView: TextView = binding.textHome
-      //homeViewModel.text.observe(viewLifecycleOwner) {
-        //  textView.text = it
-      //}
-
-    //return root
-      return inflater.inflate(R.layout.fragment_home, container, false)
-  }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val foodItems = listOf(
-            FoodItem(1, "https://i1.lensdump.com/i/tJ76mZ.png", 78, 132123, "Fish and Chips",
-            "The Tea Party", "Western", true),
-            FoodItem(2, "https://i1.lensdump.com/i/tJ76mZ.png", 78, 132123, "Fish and Chips",
-                "The Tea Party", "Western", false),
-            FoodItem(3, "https://i1.lensdump.com/i/tJ76mZ.png", 78, 132123, "Fish and Chips",
-                "The Tea Party", "Western", false)
-        )
-        recyclerViewHome.layoutManager = LinearLayoutManager(activity)
-        recyclerViewHome.adapter = FoodItemAdapter(foodItems)
+    homeViewModel.foodItems.observe(viewLifecycleOwner) {
+      //implement recycler view
+      recyclerView.layoutManager = LinearLayoutManager(activity)
+      recyclerView.adapter = FoodItemAdapter(it)
     }
 
+    return root
+  }
 override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
