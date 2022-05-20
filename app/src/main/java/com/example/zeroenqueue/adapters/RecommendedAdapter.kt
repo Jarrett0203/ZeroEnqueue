@@ -1,6 +1,5 @@
 package com.example.zeroenqueue.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import android.widget.TextView
 import com.asksira.loopingviewpager.LoopingPagerAdapter
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
-import com.example.zeroenqueue.dataClass.Recommended
+import com.example.zeroenqueue.model.Recommended
 
 class RecommendedAdapter(itemList:List<Recommended>, isInfinite:Boolean)
     :LoopingPagerAdapter<Recommended>(itemList, isInfinite) {

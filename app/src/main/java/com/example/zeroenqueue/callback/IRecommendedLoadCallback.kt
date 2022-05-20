@@ -1,6 +1,6 @@
 package com.example.zeroenqueue.callback
 
-import com.example.zeroenqueue.dataClass.Recommended
+import com.example.zeroenqueue.model.Recommended
 
 interface IRecommendedLoadCallback {
     fun onRecommendedLoadSuccess(recommendedList:List<Recommended>)

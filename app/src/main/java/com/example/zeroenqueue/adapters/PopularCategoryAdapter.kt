@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
-import com.example.zeroenqueue.dataClass.PopularCategory
+import com.example.zeroenqueue.model.PopularCategory
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.layout_popular_categories_item.view.*
 

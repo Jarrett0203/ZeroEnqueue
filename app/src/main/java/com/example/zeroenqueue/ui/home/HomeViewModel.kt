@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.zeroenqueue.callback.IPopularLoadCallback
 import com.example.zeroenqueue.callback.IRecommendedLoadCallback
-import com.example.zeroenqueue.dataClass.PopularCategory
-import com.example.zeroenqueue.dataClass.Recommended
+import com.example.zeroenqueue.model.PopularCategory
+import com.example.zeroenqueue.model.Recommended
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase

@@ -1,4 +1,4 @@
-package com.example.zeroenqueue.dataClass
+package com.example.zeroenqueue.model
 
 class Recommended {
     var food_id: String? = null
