@@ -11,4 +11,5 @@
     <color name="dark_yellow">#B89522</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="semi_transparent">#CD000000</color>
+    <color name="grey">#676060</color>
 </resources>
