@@ -10,9 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ZeroEnqueue">
         <activity
-            android:name=".RegisterUser"
-            android:parentActivityName=".LoginActivity" />
-        <activity android:name=".LoginActivity" android:exported="true">
+            android:name=".activity.RegisterUser"
+            android:parentActivityName=".activity.LoginActivity" />
+        <activity android:name=".activity.LoginActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,7 +21,7 @@
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_home" />

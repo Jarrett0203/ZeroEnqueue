@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "751548674532",
+    "firebase_url": "https://zeroenqueue-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "zeroenqueue",
     "storage_bucket": "zeroenqueue.appspot.com"
   },

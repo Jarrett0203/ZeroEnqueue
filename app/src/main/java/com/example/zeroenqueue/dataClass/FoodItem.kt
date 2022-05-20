@@ -1,4 +1,4 @@
-package com.example.zeroenqueue
+package com.example.zeroenqueue.dataClass
 
 data class FoodItem (
     val id : Int,

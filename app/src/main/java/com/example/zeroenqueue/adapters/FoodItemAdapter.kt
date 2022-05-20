@@ -1,9 +1,11 @@
-package com.example.zeroenqueue
+package com.example.zeroenqueue.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.zeroenqueue.dataClass.FoodItem
+import com.example.zeroenqueue.R
 import kotlinx.android.synthetic.main.layout_fooditem.view.*
 
 class FoodItemAdapter(val foodItems: List<FoodItem>) : RecyclerView.Adapter<FoodItemAdapter.FoodItemViewHolder>() {

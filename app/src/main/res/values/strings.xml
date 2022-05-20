@@ -25,5 +25,6 @@
     <string name="Submit">Submit</string>
     <string name="Update">Update</string>
     <string name="popular_categories">Popular Categories</string>
+    <string name="recommended">Recommended</string>
 
 </resources>

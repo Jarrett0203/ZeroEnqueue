@@ -10,6 +10,7 @@
     <color name="yellow">#fece2f</color>
     <color name="dark_yellow">#B89522</color>
     <color name="transparent">#00FFFFFF</color>
-    <color name="semi_transparent">#CD000000</color>
+    <color name="transparent_20">#CD000000</color>
+    <color name="transparent_50">#80000000</color>
     <color name="grey">#676060</color>
 </resources>
