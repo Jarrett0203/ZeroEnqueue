@@ -3,8 +3,9 @@ package com.example.zeroenqueue.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.zeroenqueue.callback.IPopularLoadCallback
-import com.example.zeroenqueue.callback.IRecommendedLoadCallback
+import com.example.zeroenqueue.common.Common
+import com.example.zeroenqueue.interfaces.IPopularLoadCallback
+import com.example.zeroenqueue.interfaces.IRecommendedLoadCallback
 import com.example.zeroenqueue.model.PopularCategory
 import com.example.zeroenqueue.model.Recommended
 import com.google.firebase.database.DataSnapshot
@@ -42,7 +43,7 @@ class HomeViewModel : ViewModel(), IPopularLoadCallback, IRecommendedLoadCallbac
 
     private fun loadPopularList() {
         val tempList = ArrayList<PopularCategory>()
-        val popularRef = FirebaseDatabase.getInstance("https://zeroenqueue-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("MostPopular")
+        val popularRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.POPULAR_REF)
         popularRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(itemSnapShot in snapshot.children){
@@ -61,7 +62,7 @@ class HomeViewModel : ViewModel(), IPopularLoadCallback, IRecommendedLoadCallbac
 
     private fun loadRecommendedList() {
         val tempList = ArrayList<Recommended>()
-        val recommendedRef = FirebaseDatabase.getInstance("https://zeroenqueue-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Recommended")
+        val recommendedRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.RECOMMENDED_REF)
         recommendedRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(itemSnapShot in snapshot.children){

@@ -1,11 +1,12 @@
 package com.example.zeroenqueue.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.zeroenqueue.databinding.ActivityRegisterUserBinding
 import com.google.firebase.auth.FirebaseAuth
-import android.widget.Toast
+
 
 class RegisterUser : AppCompatActivity() {
 
@@ -40,9 +41,11 @@ class RegisterUser : AppCompatActivity() {
             }
         }
 
+        /*
+        setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         actionBar!!.title = "RegisterUser"
 
-        actionBar.setDisplayHomeAsUpEnabled(true)
+        actionBar.setDisplayHomeAsUpEnabled(true)*/
     }
 }

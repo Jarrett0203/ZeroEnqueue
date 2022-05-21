@@ -12,6 +12,18 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/navigation_foodList"
+        android:name="com.example.zeroenqueue.ui.categories.CategoryFoodListFragment"
+        android:label="@string/title_food_list"
+        tools:layout="@layout/fragment_category_food_list" />
+
+    <fragment
+        android:id="@+id/navigation_foodStall"
+        android:name="com.example.zeroenqueue.ui.foodStall.FoodStallFragment"
+        android:label="@string/title_food_stall"
+        tools:layout="@layout/fragment_food_stall" />
+
+    <fragment
         android:id="@+id/navigation_categories"
         android:name="com.example.zeroenqueue.ui.categories.CategoriesFragment"
         android:label="@string/title_categories"
@@ -22,14 +34,11 @@
         android:name="com.example.zeroenqueue.ui.orderStatus.OrderStatusFragment"
         android:label="@string/title_order_status"
         tools:layout="@layout/fragment_order_status" />
-    <fragment
-        android:id="@+id/navigation_foodStall"
-        android:name="com.example.zeroenqueue.ui.foodStall.FoodStallFragment"
-        android:label="@string/title_food_stall"
-        tools:layout="@layout/fragment_food_stall" />
+
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.zeroenqueue.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
+
 </navigation>

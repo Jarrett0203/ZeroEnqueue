@@ -1,4 +1,4 @@
-package com.example.zeroenqueue.callback
+package com.example.zeroenqueue.interfaces
 
 import com.example.zeroenqueue.model.Category
 

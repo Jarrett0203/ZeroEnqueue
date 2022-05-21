@@ -3,11 +3,9 @@ package com.example.zeroenqueue.ui.categories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.zeroenqueue.callback.ICategoryLoadCallback
-import com.example.zeroenqueue.callback.IPopularLoadCallback
+import com.example.zeroenqueue.common.Common
+import com.example.zeroenqueue.interfaces.ICategoryLoadCallback
 import com.example.zeroenqueue.model.Category
-import com.example.zeroenqueue.model.PopularCategory
-import com.example.zeroenqueue.model.Recommended
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -44,7 +42,7 @@ class CategoriesViewModel : ViewModel(), ICategoryLoadCallback {
 
     private fun loadCategory() {
         val tempList = ArrayList<Category>()
-        val categoryRef = FirebaseDatabase.getInstance("https://zeroenqueue-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Category")
+        val categoryRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.CATEGORY_REF)
         categoryRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(itemSnapShot in snapshot.children){

@@ -4,29 +4,41 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
+
+
         <item
             android:id="@+id/navigation_home"
             android:icon="@drawable/ic_home"
             android:title="@string/title_home" />
-        <item
-            android:id="@+id/navigation_foodStall"
-            android:icon="@drawable/ic_food"
-            android:title="@string/title_food_stall"/>
 
-        <item
-            android:id="@+id/navigation_categories"
-            android:icon="@drawable/ic_categories"
-            android:title="@string/title_categories"/>
+        <item android:title="Food">
+            <menu>
+                <item
+                    android:id="@+id/navigation_foodStall"
+                    android:icon="@drawable/ic_food_stall"
+                    android:title="@string/title_food_stall"/>
 
-        <item
-            android:id="@+id/navigation_order_status"
-            android:icon="@drawable/ic_order_status"
-            android:title="@string/title_order_status"/>
+                <item
+                    android:id="@+id/navigation_categories"
+                    android:icon="@drawable/ic_categories"
+                    android:title="@string/title_categories"/>
+            </menu>
+        </item>
 
-        <item
-            android:id="@+id/navigation_profile"
-            android:icon="@drawable/ic_profile"
-            android:title="@string/title_profile"/>
+        <item android:title="Others">
+            <menu>
+                <item
+                    android:id="@+id/navigation_order_status"
+                    android:icon="@drawable/ic_order_status"
+                    android:title="@string/title_order_status"/>
+
+                <item
+                    android:id="@+id/navigation_profile"
+                    android:icon="@drawable/ic_profile"
+                    android:title="@string/title_profile"/>
+            </menu>
+
+        </item>
     </group>
 
 </menu>

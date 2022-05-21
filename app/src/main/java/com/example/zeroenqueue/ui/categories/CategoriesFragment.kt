@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.CategoryAdapter
+import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentCategoriesBinding
 import com.example.zeroenqueue.common.SpacesItemDecoration
 import dmax.dialog.SpotsDialog
@@ -68,8 +69,8 @@ class CategoriesFragment : Fragment() {
             override fun getSpanSize(position: Int): Int {
                 return if(adapter != null){
                     when(adapter!!.getItemViewType(position)) {
-                        0 -> 1
-                        1 -> 2
+                        Common.DEFAULT_COLUMN_COUNT -> 1
+                        Common.FULL_WIDTH_COLUMN -> 2
                         else -> -1
                     }
                 }else
