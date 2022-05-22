@@ -66,4 +66,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.github.d-max:spots-dialog:1.1@aar'
     implementation 'org.greenrobot:eventbus:3.3.1'
+    implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
+    implementation 'com.github.andremion:counterfab:1.2.2'
 }

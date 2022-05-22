@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.databinding.ActivityMainBinding
 import com.example.zeroenqueue.eventBus.CategoryClick
+import com.example.zeroenqueue.eventBus.FoodItemClick
 import com.google.android.material.navigation.NavigationView
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -70,8 +71,14 @@ class MainActivity : AppCompatActivity() {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onCategorySelected(event:CategoryClick){
         if (event.isSuccess){
-            //Toast.makeText(this, event.category.name+"works", Toast.LENGTH_SHORT).show()
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_foodList)
+        }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onfoodSelected(event: FoodItemClick){
+        if (event.isSuccess){
+            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_detail)
         }
     }
 }

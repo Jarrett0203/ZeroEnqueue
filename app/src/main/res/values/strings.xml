@@ -27,5 +27,8 @@
     <string name="Update">Update</string>
     <string name="popular_categories">Popular Categories</string>
     <string name="recommended">Recommended</string>
+    <string name="title_food_detail">Food Details</string>
+    <string name="food_image">Food Image</string>
+    <string name="rating">Rating</string>
 
 </resources>

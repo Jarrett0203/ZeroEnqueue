@@ -41,4 +41,10 @@
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 
+    <fragment
+        android:id="@+id/navigation_food_detail"
+        android:name="com.example.zeroenqueue.ui.foodDetail.foodDetailFragment"
+        android:label="@string/title_food_detail"
+        tools:layout="@layout/fragment_food_detail" />
+
 </navigation>
