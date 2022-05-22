@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.interfaces.IPopularLoadCallback
 import com.example.zeroenqueue.interfaces.IRecommendedLoadCallback
-import com.example.zeroenqueue.model.PopularCategory
-import com.example.zeroenqueue.model.Recommended
+import com.example.zeroenqueue.classes.PopularCategory
+import com.example.zeroenqueue.classes.Recommended
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase

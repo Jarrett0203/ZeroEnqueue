@@ -1,4 +1,4 @@
-package com.example.zeroenqueue.model
+package com.example.zeroenqueue.classes
 
 class PopularCategory {
     var food_id: String?=null

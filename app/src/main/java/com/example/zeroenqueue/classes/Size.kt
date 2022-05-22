@@ -1,6 +1,6 @@
-package com.example.zeroenqueue.model
+package com.example.zeroenqueue.classes
 
-class AddOn {
+class Size {
     var name: String? = null
     var price: Long = 0
 }

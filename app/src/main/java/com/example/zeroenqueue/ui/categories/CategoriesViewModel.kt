@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.interfaces.ICategoryLoadCallback
-import com.example.zeroenqueue.model.Category
+import com.example.zeroenqueue.classes.Category
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase

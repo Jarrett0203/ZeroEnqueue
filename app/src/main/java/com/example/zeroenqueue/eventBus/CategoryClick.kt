@@ -1,6 +1,6 @@
 package com.example.zeroenqueue.eventBus
 
-import com.example.zeroenqueue.model.Category
+import com.example.zeroenqueue.classes.Category
 
 class CategoryClick(var isSuccess: Boolean, var category: Category) {
 }

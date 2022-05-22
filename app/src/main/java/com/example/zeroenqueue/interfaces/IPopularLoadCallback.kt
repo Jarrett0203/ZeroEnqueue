@@ -1,6 +1,6 @@
 package com.example.zeroenqueue.interfaces
 
-import com.example.zeroenqueue.model.PopularCategory
+import com.example.zeroenqueue.classes.PopularCategory
 
 interface IPopularLoadCallback {
     fun onPopularLoadSuccess(popularList:List<PopularCategory>)

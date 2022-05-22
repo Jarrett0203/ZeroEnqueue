@@ -9,10 +9,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
+import com.example.zeroenqueue.classes.Comment
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.eventBus.FoodItemClick
 import com.example.zeroenqueue.interfaces.IRecyclerItemClickListener
-import com.example.zeroenqueue.model.Food
+import com.example.zeroenqueue.classes.Food
 import org.greenrobot.eventbus.EventBus
 
 class CategoryFoodListAdapter(
@@ -71,6 +72,7 @@ class CategoryFoodListAdapter(
         holder.setListener(object : IRecyclerItemClickListener {
             override fun onItemClick(view: View, pos: Int) {
                 Common.foodSelected = foodList[pos]
+                Common.foodSelected!!.key = pos.toString()
                 EventBus.getDefault().postSticky(FoodItemClick(true, foodList[pos]))
             }
         } )

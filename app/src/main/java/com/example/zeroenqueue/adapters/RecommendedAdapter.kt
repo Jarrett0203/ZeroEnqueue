@@ -8,7 +8,7 @@ import android.widget.TextView
 import com.asksira.loopingviewpager.LoopingPagerAdapter
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
-import com.example.zeroenqueue.model.Recommended
+import com.example.zeroenqueue.classes.Recommended
 
 class RecommendedAdapter(itemList:List<Recommended>, isInfinite:Boolean)
     :LoopingPagerAdapter<Recommended>(itemList, isInfinite) {

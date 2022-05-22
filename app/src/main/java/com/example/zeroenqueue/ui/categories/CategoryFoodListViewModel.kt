@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.zeroenqueue.common.Common
-import com.example.zeroenqueue.model.Food
+import com.example.zeroenqueue.classes.Food
 
 
 class CategoryFoodListViewModel : ViewModel() {

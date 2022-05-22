@@ -37,7 +37,7 @@ class CategoriesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val categoriesViewModel =
-            ViewModelProvider(this).get(CategoriesViewModel::class.java)
+            ViewModelProvider(this)[CategoriesViewModel::class.java]
 
         _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
         val root: View = binding.root

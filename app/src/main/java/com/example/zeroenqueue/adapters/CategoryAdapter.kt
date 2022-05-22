@@ -12,7 +12,7 @@ import com.example.zeroenqueue.R
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.eventBus.CategoryClick
 import com.example.zeroenqueue.interfaces.IRecyclerItemClickListener
-import com.example.zeroenqueue.model.Category
+import com.example.zeroenqueue.classes.Category
 import org.greenrobot.eventbus.EventBus
 
 class CategoryAdapter(
