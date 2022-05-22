@@ -6,6 +6,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.zeroenqueue.databinding.ActivityRegisterUserBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 class RegisterUser : AppCompatActivity() {
@@ -19,7 +21,7 @@ class RegisterUser : AppCompatActivity() {
         binding = ActivityRegisterUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        firebaseAuth = FirebaseAuth.getInstance()
+        firebaseAuth = Firebase.auth
 
         binding.registerUser.setOnClickListener {
             val fullName = binding.fullName.text.toString()
@@ -30,9 +32,9 @@ class RegisterUser : AppCompatActivity() {
             if (fullName.isEmpty() && userType.isEmpty() && email.isEmpty() && password.isEmpty()) {
                 Toast.makeText(this, "Empty fields are not allowed!!", Toast.LENGTH_SHORT).show()
             } else {
-                firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener() {
+                firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) {
                     if (it.isSuccessful) {
-                        val intent = Intent(this, SignInActivity::class.java)
+                        val intent = Intent(this, LoginActivity::class.java)
                         startActivity(intent)
                     } else {
                          Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
