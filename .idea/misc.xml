@@ -47,7 +47,15 @@
         <entry key="app/src/main/res/layout/fragment_categories.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_category_food_list.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_food_detail.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_food_stall.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_order_status.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/layout_category_item.xml" value="0.25104166666666666" />
+        <entry key="app/src/main/res/layout/layout_food_item.xml" value="0.25104166666666666" />
+        <entry key="app/src/main/res/layout/layout_popular_categories_item.xml" value="0.25104166666666666" />
+        <entry key="app/src/main/res/layout/layout_rating_comment.xml" value="0.25104166666666666" />
+        <entry key="app/src/main/res/layout/layout_recommended_food_items.xml" value="0.25104166666666666" />
         <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/menu/main.xml" value="0.3098958333333333" />
       </map>

@@ -2,22 +2,140 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.orderStatus.OrderStatusFragment" >
+    android:layout_height="match_parent" >
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:theme="@style/Theme.ZeroEnqueue.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width= "0dp"
+            android:layout_height="0dp"
+            android:background="?attr/colorPrimary" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="147dp"
+        android:layout_height="129dp"
+        android:layout_margin="70dp"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/stopwatch"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/appBarLayout" />
 
     <TextView
         android:id="@+id/text_order_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="1dp"
         android:layout_marginEnd="8dp"
+        android:text="Waiting time:"
         android:textAlignment="center"
-        android:textSize="20sp"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintVertical_bias="0.31" />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="8dp"
+        android:text="14mins"
+        android:textColor="#00FF00"
+        android:textAlignment="center"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.426" />
+
+    <TextView
+        android:id="@+id/firstStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="8dp"
+        android:text="Waiting for vendor to comfirm order"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.661" />
+
+    <LinearLayout
+        android:id="@+id/firstBox"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="@drawable/tickbox"
+        app:layout_constraintBottom_toBottomOf="@+id/firstStatus"
+        app:layout_constraintLeft_toLeftOf="@id/firstStatus"/>
+
+    <TextView
+        android:id="@+id/secondStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="8dp"
+        android:text="Food is being prepared"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.729" />
+
+    <LinearLayout
+        android:id="@+id/secondBox"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="@drawable/tickbox"
+        app:layout_constraintBottom_toBottomOf="@+id/secondStatus"
+        app:layout_constraintLeft_toLeftOf="@id/secondStatus"/>
+
+    <TextView
+        android:id="@+id/thirdStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="8dp"
+        android:text="Food is ready to be collected"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.799" />
+
+    <LinearLayout
+        android:id="@+id/thirdBox"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="@drawable/tickbox"
+        app:layout_constraintBottom_toBottomOf="@+id/thirdStatus"
+        app:layout_constraintLeft_toLeftOf="@id/thirdStatus"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
