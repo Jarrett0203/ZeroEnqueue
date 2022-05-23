@@ -90,9 +90,7 @@ class FoodDetailFragment : Fragment() {
 
     private fun addRatingToFood(ratingValue: Float) {
         FirebaseDatabase.getInstance()
-            .getReference(Common.CATEGORY_REF)
-            .child(Common.categorySelected!!.menu_id!!)
-            .child("foods")
+            .getReference(Common.FOODLIST_REF)
             .child(Common.foodSelected!!.key!!)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {

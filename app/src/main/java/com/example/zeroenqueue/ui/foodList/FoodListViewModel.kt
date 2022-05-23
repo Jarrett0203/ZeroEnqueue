@@ -3,7 +3,6 @@ package com.example.zeroenqueue.ui.foodList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.zeroenqueue.classes.Category
 import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.interfaces.IFoodLoadCallback

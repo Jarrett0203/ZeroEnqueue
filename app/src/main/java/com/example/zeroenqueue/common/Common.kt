@@ -2,14 +2,17 @@ package com.example.zeroenqueue.common
 
 import com.example.zeroenqueue.classes.Category
 import com.example.zeroenqueue.classes.Food
+import com.example.zeroenqueue.classes.FoodStall
 import com.example.zeroenqueue.classes.User
 
 object Common {
+    var foodStallSelected: FoodStall?=null
     var categorySelected: Category?=null
     var foodSelected: Food?=null
     var currentUser: User?= null
 
     val CATEGORY_REF: String ="Category"
+    val FOODSTALL_REF: String = "FoodStalls"
     val POPULAR_REF: String ="MostPopular"
     val RECOMMENDED_REF: String ="Recommended"
     val USER_REF="Users"

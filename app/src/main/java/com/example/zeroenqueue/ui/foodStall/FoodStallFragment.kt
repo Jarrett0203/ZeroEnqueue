@@ -1,13 +1,23 @@
 package com.example.zeroenqueue.ui.foodStall
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.zeroenqueue.R
+import com.example.zeroenqueue.adapters.FoodStallAdapter
+import com.example.zeroenqueue.common.Common
+import com.example.zeroenqueue.common.SpacesItemDecoration
 import com.example.zeroenqueue.databinding.FragmentFoodStallBinding
+import dmax.dialog.SpotsDialog
 
 class FoodStallFragment : Fragment() {
 
@@ -15,6 +25,10 @@ class FoodStallFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var recyclerViewFoodStall: RecyclerView
+    private lateinit var dialog: AlertDialog
+    private lateinit var layoutAnimationController: LayoutAnimationController
+    private var adapter: FoodStallAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,11 +41,41 @@ class FoodStallFragment : Fragment() {
         _binding = FragmentFoodStallBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textFoodStall
-        foodStallViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        recyclerViewFoodStall = binding.recyclerFoodStalls
+        initView()
+
+        foodStallViewModel.errorMessage.observe(viewLifecycleOwner) {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+        foodStallViewModel.foodStallList.observe(viewLifecycleOwner) {
+            dialog.dismiss()
+            adapter = FoodStallAdapter(requireContext(), it)
+            recyclerViewFoodStall.adapter = adapter
+            recyclerViewFoodStall.layoutAnimation = layoutAnimationController
         }
         return root
+    }
+
+    private fun initView() {
+        dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
+        dialog.show()
+        layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
+        recyclerViewFoodStall.setHasFixedSize(true)
+        val layoutManager = GridLayoutManager(context, 2)
+        layoutManager.spanSizeLookup = object: GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if(adapter != null){
+                    when(adapter!!.getItemViewType(position)) {
+                        Common.DEFAULT_COLUMN_COUNT -> 1
+                        Common.FULL_WIDTH_COLUMN -> 2
+                        else -> -1
+                    }
+                }else
+                    -1
+            }
+        }
+        recyclerViewFoodStall.layoutManager = layoutManager
+        recyclerViewFoodStall.addItemDecoration(SpacesItemDecoration(8))
     }
 
     override fun onDestroyView() {
