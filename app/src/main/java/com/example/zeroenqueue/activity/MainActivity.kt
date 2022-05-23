@@ -15,6 +15,7 @@ import com.example.zeroenqueue.R
 import com.example.zeroenqueue.databinding.ActivityMainBinding
 import com.example.zeroenqueue.eventBus.CategoryClick
 import com.example.zeroenqueue.eventBus.FoodItemClick
+import com.example.zeroenqueue.eventBus.FoodStallClick
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import org.greenrobot.eventbus.EventBus
@@ -99,6 +100,13 @@ class MainActivity : AppCompatActivity() {
     fun onFoodSelected(event: FoodItemClick){
         if (event.isSuccess){
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_detail)
+        }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onFoodStallSelected(event: FoodStallClick){
+        if (event.isSuccess){
+            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_foodStallMenu)
         }
     }
 }

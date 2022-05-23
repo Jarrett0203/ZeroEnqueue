@@ -30,5 +30,6 @@
     <string name="title_food_detail">Food Details</string>
     <string name="food_image">Food Image</string>
     <string name="rating">Rating</string>
+    <string name="food_stall_menu">Stall Menu</string>
 
 </resources>

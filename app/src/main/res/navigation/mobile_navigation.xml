@@ -51,5 +51,10 @@
         android:name="com.example.zeroenqueue.ui.foodList.FoodListFragment"
         android:label="@string/title_food_list"
         tools:layout="@layout/fragment_food_list" />
+    <fragment
+        android:id="@+id/navigation_foodStallMenu"
+        android:name="com.example.zeroenqueue.ui.foodStall.FoodStallMenuFragment"
+        android:label="@string/food_stall_menu"
+        tools:layout="@layout/fragment_food_stall_menu" />
 
 </navigation>
