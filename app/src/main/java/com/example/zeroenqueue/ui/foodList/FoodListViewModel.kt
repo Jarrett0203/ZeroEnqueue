@@ -30,7 +30,15 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
             return foodListMutableLiveData!!
         }
 
-    private fun loadFoodList() {
+    fun getFoodList(): MutableLiveData<List<Food>> {
+        if(foodListMutableLiveData == null){
+            foodListMutableLiveData = MutableLiveData()
+            loadFoodList()
+        }
+        return foodListMutableLiveData!!
+    }
+
+    fun loadFoodList() {
         val tempList = ArrayList<Food>()
         val foodListRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODLIST_REF)
         foodListRef.addListenerForSingleValueEvent(object: ValueEventListener {
@@ -55,4 +63,6 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
     override fun onFoodLoadFailed(message: String) {
         messageError.value = message
     }
+
+
 }

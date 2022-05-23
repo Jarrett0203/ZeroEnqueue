@@ -73,6 +73,11 @@ class FoodListAdapter(
                 Common.foodSelected!!.key = pos.toString()
                 EventBus.getDefault().postSticky(FoodItemClick(true, foodList[pos]))
             }
-        } )
+        })
+    }
+
+    @JvmName("getFoodList1")
+    fun getFoodList(): List<Food> {
+        return foodList
     }
 }
