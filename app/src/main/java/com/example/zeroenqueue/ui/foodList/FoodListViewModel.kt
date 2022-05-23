@@ -56,8 +56,8 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
         })
     }
 
-    override fun onFoodLoadSuccess(categoryList: List<Food>) {
-        foodListMutableLiveData!!.value = categoryList
+    override fun onFoodLoadSuccess(foodList: List<Food>) {
+        foodListMutableLiveData!!.value = foodList
     }
 
     override fun onFoodLoadFailed(message: String) {

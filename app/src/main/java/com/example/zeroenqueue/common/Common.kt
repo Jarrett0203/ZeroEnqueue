@@ -12,6 +12,7 @@ object Common {
     var currentUser: User?= null
 
     val CATEGORY_REF: String ="Category"
+    val CATEGORIES_REF: String ="Categories"
     val FOODSTALL_REF: String = "FoodStalls"
     val POPULAR_REF: String ="MostPopular"
     val RECOMMENDED_REF: String ="Recommended"

@@ -9,7 +9,7 @@ class Food {
     var price: Long = 0
     var addon:List<AddOn> = ArrayList<AddOn>()
     var size:List<Size> = ArrayList<Size>()
-    var foodStallName: String? = null
+    var foodStall: String? = null
     var categories: String? = null
 
     var ratingValue:Float = 0.toFloat()

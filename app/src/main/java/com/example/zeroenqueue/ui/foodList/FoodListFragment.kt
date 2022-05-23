@@ -40,7 +40,7 @@ class FoodListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         foodListViewModel =
-            ViewModelProvider(this).get(FoodListViewModel::class.java)
+            ViewModelProvider(this)[FoodListViewModel::class.java]
 
         _binding = FragmentFoodListBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -52,22 +52,17 @@ class FoodListFragment : Fragment() {
             adapter = FoodListAdapter(requireContext(), it)
             recyclerViewFoodList.adapter = adapter
             recyclerViewFoodList.layoutAnimation = layoutAnimationController
-
         }
         return root
     }
 
     private fun initView() {
-
         setHasOptionsMenu(true)
-
         dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
         dialog.show()
-        layoutAnimationController =
-            AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
         recyclerViewFoodList.setHasFixedSize(true)
-        recyclerViewFoodList.layoutManager =
-            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        recyclerViewFoodList.layoutManager = LinearLayoutManager(context)
+        layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -90,7 +85,6 @@ class FoodListFragment : Fragment() {
             }
 
             override fun onQueryTextChange(s: String?): Boolean {
-
                 return false
             }
 

@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onfoodSelected(event: FoodItemClick){
+    fun onFoodSelected(event: FoodItemClick){
         if (event.isSuccess){
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_detail)
         }

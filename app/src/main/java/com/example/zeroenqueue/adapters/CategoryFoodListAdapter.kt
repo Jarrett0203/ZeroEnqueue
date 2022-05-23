@@ -76,4 +76,8 @@ class CategoryFoodListAdapter(
             }
         } )
     }
+
+    fun getCategoryFoodList(): List<Food> {
+        return foodList
+    }
 }
