@@ -75,11 +75,3 @@ class HomeFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
     }
 }
-
-/*val recyclerView: RecyclerView = binding.recyclerViewHome
-
-      homeViewModel.foodItems.observe(viewLifecycleOwner) {
-        //implement recycler view
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = FoodItemAdapter(it)
-      }*/

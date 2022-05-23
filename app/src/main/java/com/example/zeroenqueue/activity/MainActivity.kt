@@ -1,10 +1,9 @@
 package com.example.zeroenqueue.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.widget.Button
-import android.widget.Toast
+import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -13,13 +12,11 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.zeroenqueue.R
-import com.example.zeroenqueue.classes.User
-import com.example.zeroenqueue.common.Common
-import com.example.zeroenqueue.common.Common.currentUser
 import com.example.zeroenqueue.databinding.ActivityMainBinding
 import com.example.zeroenqueue.eventBus.CategoryClick
 import com.example.zeroenqueue.eventBus.FoodItemClick
 import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -39,15 +36,31 @@ class MainActivity : AppCompatActivity() {
         
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
+        val headView: View? = navView.getHeaderView(0)
+        val profileImage: ImageView? = headView!!.profile_image
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home, R.id.navigation_categories, R.id.navigation_order_status,
-                R.id.navigation_foodStall, R.id.navigation_profile
+                R.id.navigation_foodStall, R.id.navigation_profile, R.id.navigation_food_list
             ), drawerLayout
         )
+
+        profileImage!!.setOnClickListener {
+            /*val profileFragment = ProfileFragment()
+            val fragment : Fragment? =
+
+            supportFragmentManager.findFragmentByTag(ProfileFragment::class.java.simpleName)
+
+            if (fragment !is ProfileFragment){
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.fragment_layout, profileFragment, ProfileFragment::class.java.simpleName)
+                    .commit()
+            }*/
+        }
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -78,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onCategorySelected(event:CategoryClick){
         if (event.isSuccess){
-            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_foodList)
+            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_categoryFoodList)
         }
     }
 

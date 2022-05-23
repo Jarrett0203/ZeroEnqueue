@@ -19,7 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.*
 import dmax.dialog.SpotsDialog
 
-class foodDetailFragment : Fragment() {
+class FoodDetailFragment : Fragment() {
 
     private var _binding: FragmentFoodDetailBinding? = null
 

@@ -13,6 +13,7 @@ object Common {
     val POPULAR_REF: String ="MostPopular"
     val RECOMMENDED_REF: String ="Recommended"
     val USER_REF="Users"
+    val FOODLIST_REF = "FoodList"
     val COMMENT_REF = "Comments"
 
     val DATABASE_LINK: String ="https://zeroenqueue-default-rtdb.asia-southeast1.firebasedatabase.app/"

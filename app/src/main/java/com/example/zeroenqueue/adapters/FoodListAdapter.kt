@@ -9,18 +9,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
+import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.eventBus.FoodItemClick
 import com.example.zeroenqueue.interfaces.IRecyclerItemClickListener
-import com.example.zeroenqueue.classes.Food
 import org.greenrobot.eventbus.EventBus
 
-class CategoryFoodListAdapter(
+class FoodListAdapter(
     var context: Context,
     val foodList: List<Food>
-) : RecyclerView.Adapter<CategoryFoodListAdapter.CategoryFoodViewHolder>() {
-
-    inner class CategoryFoodViewHolder(val view: View) : RecyclerView.ViewHolder(view),
+) : RecyclerView.Adapter<FoodListAdapter.FoodListViewHolder>() {
+    inner class FoodListViewHolder(val view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
         var food_name: TextView? = null
         var food_price: TextView? = null
@@ -50,8 +49,8 @@ class CategoryFoodListAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): CategoryFoodListAdapter.CategoryFoodViewHolder {
-        return CategoryFoodViewHolder(
+    ): FoodListAdapter.FoodListViewHolder {
+        return FoodListViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.layout_food_item, parent, false)
         )
@@ -60,7 +59,7 @@ class CategoryFoodListAdapter(
     override fun getItemCount(): Int = foodList.size
 
     override fun onBindViewHolder(
-        holder: CategoryFoodListAdapter.CategoryFoodViewHolder,
+        holder: FoodListAdapter.FoodListViewHolder,
         position: Int
     ) {
         Glide.with(context).load(foodList[position].image)

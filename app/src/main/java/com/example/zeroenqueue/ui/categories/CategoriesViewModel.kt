@@ -46,9 +46,9 @@ class CategoriesViewModel : ViewModel(), ICategoryLoadCallback {
         categoryRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(itemSnapShot in snapshot.children){
-                    val model = itemSnapShot.getValue(Category::class.java)
-                    model!!.menu_id = itemSnapShot.key
-                    tempList.add(model)
+                    val category = itemSnapShot.getValue(Category::class.java)
+                    category!!.menu_id = itemSnapShot.key
+                    tempList.add(category)
                 }
                 categoryCallbackListener.onCategoryLoadSuccess(tempList)
             }
