@@ -1,7 +1,9 @@
 package com.example.zeroenqueue.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -11,6 +13,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.zeroenqueue.R
+import com.example.zeroenqueue.classes.User
+import com.example.zeroenqueue.common.Common
+import com.example.zeroenqueue.common.Common.currentUser
 import com.example.zeroenqueue.databinding.ActivityMainBinding
 import com.example.zeroenqueue.eventBus.CategoryClick
 import com.example.zeroenqueue.eventBus.FoodItemClick
@@ -45,6 +50,8 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
