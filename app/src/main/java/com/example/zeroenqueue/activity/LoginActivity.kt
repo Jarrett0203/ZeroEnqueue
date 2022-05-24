@@ -78,6 +78,31 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (firebaseAuth.currentUser != null) {
+            dialog.show()
+            userRef.child(firebaseAuth.currentUser!!.uid)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (snapshot.exists()) {
+                            val currentUser = snapshot.getValue(User::class.java)
+                            goToMainActivity(currentUser)
+                        }
+                        dialog.dismiss()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Toast.makeText(
+                            this@LoginActivity,
+                            error.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })
+        }
+    }
+
     private fun goToMainActivity(user: User?) {
         Common.currentUser = user!!
         val intent = Intent(this, MainActivity::class.java)
@@ -85,28 +110,5 @@ class LoginActivity : AppCompatActivity() {
     }
 }
 
-/*override fun onStart() {
-    super.onStart()
-    if (firebaseAuth.currentUser != null) {
-        dialog.show()
-        userRef.child(firebaseAuth.currentUser!!.uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        val currentUser = snapshot.getValue(User::class.java)
-                        goToMainActivity(currentUser)
-                    }
-                    dialog.dismiss()
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        error.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
-    }
-}*/
 

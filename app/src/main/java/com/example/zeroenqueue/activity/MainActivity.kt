@@ -1,5 +1,6 @@
 package com.example.zeroenqueue.activity
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var cartDataSource: CartDataSource
     private var drawerLayout: DrawerLayout?=null
+    private lateinit var navView: NavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBarMain.toolbar)
         
         drawerLayout = binding.drawerLayout
-        val navView: NavigationView = binding.navView
+        navView = binding.navView
         val headView: View? = navView.getHeaderView(0)
         val profileImage: ImageView? = headView!!.profile_image
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -87,13 +89,11 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        var headerView = navView.getHeaderView(0)
-        var txt_user = headerView.findViewById<TextView>(R.id.txt_user)
-        Common.setSpanString("Hey, ", "Common.currentUser!!.name", txt_user)
+        val txt_user = headView.findViewById<TextView>(R.id.txt_user)
+        Common.setSpanString("Hey, ", Common.currentUser!!.name, txt_user)
 
         navView.setNavigationItemSelectedListener(object:NavigationView.OnNavigationItemSelectedListener{
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
-                item.isChecked = true;
                 drawerLayout!!.closeDrawers()
                 if(item.itemId == R.id.navigation_sign_out) {
                     signout()
@@ -110,14 +110,14 @@ class MainActivity : AppCompatActivity() {
                 } else if(item.itemId == R.id.navigation_profile) {
                     navController.navigate(R.id.navigation_profile)
                 }
-                return true;
+                return false
             }
         })
          countCartItem()
     }
 
     private fun signout() {
-        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this)
         builder.setTitle("Sign out")
             .setMessage("Are you sure you want to exit?")
             .setNegativeButton("CANCEL", {dialogInterface, _ -> dialogInterface.dismiss()})
@@ -125,6 +125,7 @@ class MainActivity : AppCompatActivity() {
                 Common.foodSelected = null
                 Common.categorySelected = null
                 Common.currentUser = null
+                Common.foodStallSelected = null
                 FirebaseAuth.getInstance().signOut()
 
                 val intent = Intent(this@MainActivity, LoginActivity::class.java)
@@ -132,6 +133,8 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }
+        val dialog = builder.create()
+        dialog.show()
     }
     override fun onBackPressed() {
         if (drawerLayout!!.isDrawerOpen(GravityCompat.START)) {

@@ -40,21 +40,6 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/logout"
-                android:backgroundTint="@color/grey"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginLeft="255dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="64dp"
-                android:text="logout"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.277"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintVertical_bias="0.068" />
         </RelativeLayout>
 
         <!--cards-->
@@ -162,6 +147,7 @@
                 android:hint="Name">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_profile"
@@ -175,6 +161,7 @@
                 android:hint="User Type">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_userType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_user_type"
@@ -188,6 +175,7 @@
                 android:hint="Email">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_email"
@@ -201,6 +189,7 @@
                 android:hint="Password">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_password"
@@ -209,6 +198,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
+                android:id="@+id/btnUpdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/Update" />

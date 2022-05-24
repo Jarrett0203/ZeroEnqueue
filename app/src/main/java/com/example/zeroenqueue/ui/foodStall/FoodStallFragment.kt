@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.FoodStallAdapter
@@ -61,21 +62,7 @@ class FoodStallFragment : Fragment() {
         dialog.show()
         layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
         recyclerViewFoodStall.setHasFixedSize(true)
-        val layoutManager = GridLayoutManager(context, 2)
-        layoutManager.spanSizeLookup = object: GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if(adapter != null){
-                    when(adapter!!.getItemViewType(position)) {
-                        Common.DEFAULT_COLUMN_COUNT -> 1
-                        Common.FULL_WIDTH_COLUMN -> 2
-                        else -> -1
-                    }
-                }else
-                    -1
-            }
-        }
-        recyclerViewFoodStall.layoutManager = layoutManager
-        recyclerViewFoodStall.addItemDecoration(SpacesItemDecoration(8))
+        recyclerViewFoodStall.layoutManager = LinearLayoutManager(context)
     }
 
     override fun onDestroyView() {
