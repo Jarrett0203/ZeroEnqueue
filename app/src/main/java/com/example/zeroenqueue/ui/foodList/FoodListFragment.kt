@@ -3,23 +3,27 @@ package com.example.zeroenqueue.ui.foodList
 import android.app.AlertDialog
 import android.app.SearchManager
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
+import android.widget.CompoundButton
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.FoodListAdapter
 import com.example.zeroenqueue.classes.Food
+import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentFoodListBinding
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import dmax.dialog.SpotsDialog
-import kotlin.collections.ArrayList
 
 class FoodListFragment : Fragment() {
 
@@ -33,6 +37,19 @@ class FoodListFragment : Fragment() {
     private lateinit var dialog: AlertDialog
     private var adapter: FoodListAdapter? = null
     private lateinit var foodListViewModel: FoodListViewModel
+    private lateinit var chipGroup : ChipGroup
+    private lateinit var chipChicken : Chip
+    private lateinit var chipChineseVegetarian: Chip
+    private lateinit var chipEasternSoups : Chip
+    private lateinit var chipFingerFoods: Chip
+    private lateinit var chipFish : Chip
+    private lateinit var chipMediFoods: Chip
+    private lateinit var chipPasta : Chip
+    private lateinit var chipPizza: Chip
+    private lateinit var chipSandwiches : Chip
+    private lateinit var chipSnacks: Chip
+    private lateinit var chipWesternSoups : Chip
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +62,20 @@ class FoodListFragment : Fragment() {
         _binding = FragmentFoodListBinding.inflate(inflater, container, false)
         val root: View = binding.root
         recyclerViewFoodList = binding.recyclerFoodList
+
+        chipGroup = binding.chipGroup
+        chipChicken = binding.categoryChicken
+        chipChineseVegetarian = binding.categoryChineseVegetarian
+        chipEasternSoups = binding.categoryEasternSoups
+        chipFingerFoods = binding.categoryFingerFoods
+        chipFish = binding.categoryFish
+        chipMediFoods = binding.categoryMedifoods
+        chipPasta = binding.categoryPasta
+        chipPizza = binding.categoryPizza
+        chipSandwiches = binding.categorySandwiches
+        chipSnacks = binding.categorySnacks
+        chipWesternSoups = binding.categoryWesternSoups
+
         initView()
 
         foodListViewModel.foodList.observe(viewLifecycleOwner) {
@@ -63,8 +94,60 @@ class FoodListFragment : Fragment() {
         recyclerViewFoodList.setHasFixedSize(true)
         recyclerViewFoodList.layoutManager = LinearLayoutManager(context)
         layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
+
+        val selectedData : ArrayList<String> = arrayListOf()
+
+        val checkedChangedListener = CompoundButton.OnCheckedChangeListener { compoundButton, b ->
+            if (b){
+                Toast.makeText(context, compoundButton.text.toString()+" selected", Toast.LENGTH_SHORT).show()
+                selectedData.add(compoundButton.text.toString())
+                startFilter(selectedData)
+            }
+            else {
+                Toast.makeText(context, compoundButton.text.toString()+" unselected", Toast.LENGTH_SHORT).show()
+                selectedData.remove(compoundButton.text.toString())
+                if(selectedData.isEmpty()) {
+                    foodListViewModel.loadFoodList()
+                }
+                else {
+                    startFilter(selectedData)
+                }
+            }
+        }
+
+        chipChicken.setOnCheckedChangeListener(checkedChangedListener)
+        chipChineseVegetarian.setOnCheckedChangeListener(checkedChangedListener)
+        chipEasternSoups.setOnCheckedChangeListener(checkedChangedListener)
+        chipFingerFoods.setOnCheckedChangeListener(checkedChangedListener)
+        chipFish.setOnCheckedChangeListener(checkedChangedListener)
+        chipMediFoods.setOnCheckedChangeListener(checkedChangedListener)
+        chipPasta.setOnCheckedChangeListener(checkedChangedListener)
+        chipPizza.setOnCheckedChangeListener(checkedChangedListener)
+        chipSandwiches.setOnCheckedChangeListener(checkedChangedListener)
+        chipSnacks.setOnCheckedChangeListener(checkedChangedListener)
+        chipWesternSoups.setOnCheckedChangeListener(checkedChangedListener)
+
+        /*val ids = chipGroup.checkedChipIds
+        for (id in ids) {
+            val chip = chipGroup.findViewById<Chip>(id)
+            chip.setOnClickListener {
+                Toast.makeText(context, chip.text.toString() + " selected", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }*/
     }
 
+    private fun startFilter(selectedData: ArrayList<String>) {
+        val resultFood = ArrayList<Food>()
+        for (i in 0 until adapter!!.getItemCount()) {
+            val food = adapter!!.getFoodList()[i]
+            if (food.categories!!.uppercase().contains(selectedData[0].uppercase()))
+                resultFood.add(food)
+        }
+        foodListViewModel.getFoodList().value = resultFood
+    }
+
+    //search menu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.search_food, menu)
@@ -103,6 +186,7 @@ class FoodListFragment : Fragment() {
         }
     }
 
+    //search query
     private fun startSearch(s: String) {
         val resultFood = ArrayList<Food>()
         for (i in 0 until adapter!!.getItemCount()) {
@@ -111,8 +195,8 @@ class FoodListFragment : Fragment() {
                 resultFood.add(food)
         }
         foodListViewModel.getFoodList().value = resultFood
-
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
