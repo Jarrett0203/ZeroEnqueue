@@ -31,5 +31,6 @@
     <string name="food_image">Food Image</string>
     <string name="rating">Rating</string>
     <string name="food_stall_menu">Stall Menu</string>
+    <string name="sign_out">Sign out</string>
 
 </resources>

@@ -1,11 +1,27 @@
 package com.example.zeroenqueue.common
 
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
+import android.widget.TextView
 import com.example.zeroenqueue.classes.Category
 import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.classes.FoodStall
 import com.example.zeroenqueue.classes.User
 
 object Common {
+    fun setSpanString(s: String, name: String?, txtUser: TextView?) {
+        val builder = SpannableStringBuilder()
+        builder.append(s)
+        val txtSpannable = SpannableString(name)
+        val boldSpan = StyleSpan(Typeface.BOLD)
+        txtSpannable.setSpan(boldSpan, 0, name!!.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        builder.append(txtSpannable)
+        txtUser!!.setText(builder, TextView.BufferType.SPANNABLE)
+    }
+
     var foodStallSelected: FoodStall?=null
     var categorySelected: Category?=null
     var foodSelected: Food?=null

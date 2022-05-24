@@ -1,10 +1,13 @@
 package com.example.zeroenqueue.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -25,6 +28,7 @@ import com.example.zeroenqueue.eventBus.CountCartEvent
 import com.example.zeroenqueue.eventBus.FoodItemClick
 import com.example.zeroenqueue.eventBus.FoodStallClick
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -41,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var cartDataSource: CartDataSource
-    private lateinit var drawerLayout: DrawerLayout
+    private var drawerLayout: DrawerLayout?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,12 +87,55 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        countCartItem()
+        var headerView = navView.getHeaderView(0)
+        var txt_user = headerView.findViewById<TextView>(R.id.txt_user)
+        Common.setSpanString("Hey, ", "Common.currentUser!!.name", txt_user)
+
+        navView.setNavigationItemSelectedListener(object:NavigationView.OnNavigationItemSelectedListener{
+            override fun onNavigationItemSelected(item: MenuItem): Boolean {
+                item.isChecked = true;
+                drawerLayout!!.closeDrawers()
+                if(item.itemId == R.id.navigation_sign_out) {
+                    signout()
+                } else if(item.itemId == R.id.navigation_home) {
+                    navController.navigate(R.id.navigation_home)
+                } else if(item.itemId == R.id.navigation_food_list) {
+                    navController.navigate(R.id.navigation_food_list)
+                } else if(item.itemId == R.id.navigation_categories) {
+                    navController.navigate(R.id.navigation_categories)
+                } else if(item.itemId == R.id.navigation_order_status) {
+                    navController.navigate(R.id.navigation_order_status)
+                } else if(item.itemId == R.id.navigation_foodStall) {
+                    navController.navigate(R.id.navigation_foodStall)
+                } else if(item.itemId == R.id.navigation_profile) {
+                    navController.navigate(R.id.navigation_profile)
+                }
+                return true;
+            }
+        })
+         countCartItem()
     }
 
+    private fun signout() {
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("Sign out")
+            .setMessage("Are you sure you want to exit?")
+            .setNegativeButton("CANCEL", {dialogInterface, _ -> dialogInterface.dismiss()})
+            .setPositiveButton("OK") {dialogInterface, _ ->
+                Common.foodSelected = null
+                Common.categorySelected = null
+                Common.currentUser = null
+                FirebaseAuth.getInstance().signOut()
+
+                val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+            }
+    }
     override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
+        if (drawerLayout!!.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout!!.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
