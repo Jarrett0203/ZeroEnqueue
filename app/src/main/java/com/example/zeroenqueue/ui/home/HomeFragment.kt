@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
             recyclerView.layoutAnimation = layoutAnimationController
         }
         homeViewModel.recommendedList.observe(viewLifecycleOwner) {
-            viewPager.adapter = RecommendedAdapter(it, false)
+            viewPager.adapter = RecommendedAdapter(it, true)
         }
 
         return root

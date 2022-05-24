@@ -118,4 +118,10 @@ class FoodListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onStop() {
+        if (adapter != null)
+            adapter!!.onStop()
+        super.onStop()
+    }
 }
