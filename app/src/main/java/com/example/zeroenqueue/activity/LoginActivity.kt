@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
 import android.widget.Toast
 import com.example.zeroenqueue.R
+import com.example.zeroenqueue.classes.Category
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityLoginBinding
@@ -44,14 +45,28 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.password.text.toString()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener() {
+                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                     dialog.show()
                     if (it.isSuccessful) {
-                        val loginButton = findViewById<Button>(R.id.login)
-                        dialog.dismiss()
-                        loginButton.setOnClickListener {
-                            val intent = Intent(this, MainActivity::class.java)
-                            startActivity(intent)
+                        if (firebaseAuth.currentUser != null) {
+                            userRef.child(firebaseAuth.currentUser!!.uid)
+                                .addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        if (snapshot.exists()) {
+                                            val currentUser = snapshot.getValue(User::class.java)
+                                            goToMainActivity(currentUser)
+                                        }
+                                        dialog.dismiss()
+                                    }
+
+                                    override fun onCancelled(error: DatabaseError) {
+                                        Toast.makeText(
+                                            this@LoginActivity,
+                                            error.message,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                })
                         }
                     } else {
                         Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
@@ -64,35 +79,35 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (firebaseAuth.currentUser != null) {
-            dialog.show()
-            userRef.child(firebaseAuth.currentUser!!.uid)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (snapshot.exists()) {
-                            val currentUser = snapshot.getValue(User::class.java)
-                            goToMainActivity(currentUser)
-                        }
-                        dialog.dismiss()
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        Toast.makeText(
-                            this@LoginActivity,
-                            error.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                })
-        }
-    }
-
     private fun goToMainActivity(user: User?) {
         Common.currentUser = user!!
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
-        finish()
     }
 }
+
+/*override fun onStart() {
+    super.onStart()
+    if (firebaseAuth.currentUser != null) {
+        dialog.show()
+        userRef.child(firebaseAuth.currentUser!!.uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val currentUser = snapshot.getValue(User::class.java)
+                        goToMainActivity(currentUser)
+                    }
+                    dialog.dismiss()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        error.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+    }
+}*/
+

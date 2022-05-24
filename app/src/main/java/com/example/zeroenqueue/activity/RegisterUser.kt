@@ -63,6 +63,8 @@ class RegisterUser : AppCompatActivity() {
                                             val currentUser = User()
                                             currentUser.uid = newUser.uid
                                             currentUser.name = fullName.text.toString()
+                                            currentUser.email = email
+                                            currentUser.password = password
                                             currentUser.userType = userType.text.toString()
                                             userRef.child(newUser.uid)
                                                 .setValue(currentUser)
