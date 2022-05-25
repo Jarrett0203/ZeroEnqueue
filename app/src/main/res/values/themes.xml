@@ -28,4 +28,8 @@
     <style name="ToolbarColoredBackArrow" parent="Theme.ZeroEnqueue">
         <item name="android:textColorSecondary">@android:color/black</item>
     </style>
+
+    <style name="ChipUncheckedText" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

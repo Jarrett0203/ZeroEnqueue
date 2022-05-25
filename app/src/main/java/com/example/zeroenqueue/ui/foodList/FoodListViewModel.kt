@@ -30,13 +30,25 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
             return foodListMutableLiveData!!
         }
 
-    fun getFoodList(): MutableLiveData<List<Food>> {
-        if(foodListMutableLiveData == null){
-            foodListMutableLiveData = MutableLiveData()
-            loadFoodList()
+    val foodListWithCategory:LiveData<List<Food>>
+        get(){
+            if(foodListMutableLiveData == null){
+                foodListMutableLiveData = MutableLiveData()
+                messageError = MutableLiveData()
+                loadFoodListWithCategory(arrayListOf(Common.categorySelected!!.name!!))
+            }
+            return foodListMutableLiveData!!
         }
-        return foodListMutableLiveData!!
-    }
+
+    val foodListWithFoodStall:LiveData<List<Food>>
+        get(){
+            if(foodListMutableLiveData == null){
+                foodListMutableLiveData = MutableLiveData()
+                messageError = MutableLiveData()
+                loadFoodListWithFoodStall(arrayListOf(Common.foodStallSelected!!.name!!))
+            }
+            return foodListMutableLiveData!!
+        }
 
     fun loadFoodList() {
         val tempList = ArrayList<Food>()
@@ -46,6 +58,25 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
                 for(itemSnapShot in snapshot.children){
                     val food = itemSnapShot.getValue(Food::class.java)
                     tempList.add(food!!)
+                }
+                foodCallbackListener.onFoodLoadSuccess(tempList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                foodCallbackListener.onFoodLoadFailed(error.message)
+            }
+        })
+    }
+
+    fun loadFoodListSearch(search: String) {
+        val tempList = ArrayList<Food>()
+        val foodListRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODLIST_REF)
+        foodListRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(itemSnapShot in snapshot.children){
+                    val searchFood = itemSnapShot.getValue(Food::class.java)
+                    if (searchFood!!.name!!.lowercase().contains(search))
+                        tempList.add(searchFood)
                 }
                 foodCallbackListener.onFoodLoadSuccess(tempList)
             }
@@ -77,17 +108,19 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
         })
     }
 
-    fun loadFoodListSearch(search: String) {
+    fun loadFoodListWithFoodStall(foodStallList: List<String>) {
         val tempList = ArrayList<Food>()
         val foodListRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODLIST_REF)
         foodListRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                for(itemSnapShot in snapshot.children){
-                    val searchFood = itemSnapShot.getValue(Food::class.java)
-                    if (searchFood!!.name!!.lowercase().contains(search))
-                        tempList.add(searchFood)
+                for (itemSnapShot in snapshot.children) {
+                    val food = itemSnapShot.getValue(Food::class.java)
+                    foodStallList.forEach { s ->
+                        if (food!!.foodStall!!.uppercase() == s.uppercase())
+                            tempList.add(food)
+                    }
+                    foodCallbackListener.onFoodLoadSuccess(tempList)
                 }
-                foodCallbackListener.onFoodLoadSuccess(tempList)
             }
 
             override fun onCancelled(error: DatabaseError) {

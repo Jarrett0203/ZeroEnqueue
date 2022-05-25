@@ -5,5 +5,5 @@ class Comment {
     var commentDetails:String?=null
     var name:String?=null
     var uid:String?=null
-    var commentTimeStamp:Map<String, Any>?=null
+    var commentTimeStamp:HashMap<String, Any>?=null
 }

@@ -86,6 +86,8 @@ class FoodListAdapter(
             .into(holder.food_image!!)
         holder.food_name!!.text = foodList[position].name
         holder.food_price!!.text = foodList[position].price.toString()
+        Common.foodStallSelected = null
+        Common.categorySelected = null
 
         holder.setListener(object : IRecyclerItemClickListener {
             override fun onItemClick(view: View, pos: Int) {

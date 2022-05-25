@@ -3,6 +3,7 @@ package com.example.zeroenqueue.ui.foodList
 import android.app.AlertDialog
 import android.app.SearchManager
 import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.*
 import android.view.animation.AnimationUtils
@@ -16,14 +17,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.window.layout.WindowMetricsCalculator
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.FoodListAdapter
-import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentFoodListBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import dmax.dialog.SpotsDialog
+
 
 class FoodListFragment : Fragment() {
 
@@ -37,19 +39,16 @@ class FoodListFragment : Fragment() {
     private lateinit var dialog: AlertDialog
     private var adapter: FoodListAdapter? = null
     private lateinit var foodListViewModel: FoodListViewModel
-    private lateinit var chipGroup : ChipGroup
-    private lateinit var chipChicken : Chip
+    private lateinit var chipGroupCategory: ChipGroup
+    private lateinit var chipGroupFoodStall: ChipGroup
+    private lateinit var chipChicken: Chip
     private lateinit var chipChineseVegetarian: Chip
-    private lateinit var chipEasternSoups : Chip
-    private lateinit var chipFingerFoods: Chip
-    private lateinit var chipFish : Chip
-    private lateinit var chipMediFoods: Chip
-    private lateinit var chipPasta : Chip
-    private lateinit var chipPizza: Chip
-    private lateinit var chipSandwiches : Chip
     private lateinit var chipSnacks: Chip
-    private lateinit var chipWesternSoups : Chip
-
+    private lateinit var chipWesternSoups: Chip
+    private lateinit var chipChickenStall: Chip
+    private lateinit var chipVegetarianStall: Chip
+    private lateinit var chipMedifoods: Chip
+    private lateinit var chipWesternStall: Chip
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,26 +62,42 @@ class FoodListFragment : Fragment() {
         val root: View = binding.root
         recyclerViewFoodList = binding.recyclerFoodList
 
-        chipGroup = binding.chipGroup
+        chipGroupCategory = binding.chipGroupCategory
+        chipGroupFoodStall = binding.chipGroupFoodStall
         chipChicken = binding.categoryChicken
         chipChineseVegetarian = binding.categoryChineseVegetarian
-        chipEasternSoups = binding.categoryEasternSoups
-        chipFingerFoods = binding.categoryFingerFoods
-        chipFish = binding.categoryFish
-        chipMediFoods = binding.categoryMedifoods
-        chipPasta = binding.categoryPasta
-        chipPizza = binding.categoryPizza
-        chipSandwiches = binding.categorySandwiches
         chipSnacks = binding.categorySnacks
         chipWesternSoups = binding.categoryWesternSoups
+        chipChickenStall = binding.chickenStall
+        chipVegetarianStall = binding.vegetarianStall
+        chipMedifoods = binding.medifoodsStall
+        chipWesternStall = binding.westernStall
 
         initView()
 
-        foodListViewModel.foodList.observe(viewLifecycleOwner) {
-            dialog.dismiss()
-            adapter = FoodListAdapter(requireContext(), it)
-            recyclerViewFoodList.adapter = adapter
-            recyclerViewFoodList.layoutAnimation = layoutAnimationController
+        if (Common.foodStallSelected != null) {
+            foodListViewModel.foodListWithFoodStall.observe(viewLifecycleOwner) {
+                dialog.dismiss()
+                adapter = FoodListAdapter(requireContext(), it)
+                recyclerViewFoodList.adapter = adapter
+                recyclerViewFoodList.layoutAnimation = layoutAnimationController
+            }
+        }
+        else if (Common.categorySelected != null) {
+            foodListViewModel.foodListWithCategory.observe(viewLifecycleOwner) {
+                dialog.dismiss()
+                adapter = FoodListAdapter(requireContext(), it)
+                recyclerViewFoodList.adapter = adapter
+                recyclerViewFoodList.layoutAnimation = layoutAnimationController
+            }
+        }
+        else {
+            foodListViewModel.foodList.observe(viewLifecycleOwner) {
+                dialog.dismiss()
+                adapter = FoodListAdapter(requireContext(), it)
+                recyclerViewFoodList.adapter = adapter
+                recyclerViewFoodList.layoutAnimation = layoutAnimationController
+            }
         }
         return root
     }
@@ -93,37 +108,156 @@ class FoodListFragment : Fragment() {
         dialog.show()
         recyclerViewFoodList.setHasFixedSize(true)
         recyclerViewFoodList.layoutManager = LinearLayoutManager(context)
-        layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
+        layoutAnimationController =
+            AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
 
-        val selectedData : ArrayList<String> = arrayListOf()
+        val windowMetrics =
+            WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(requireActivity())
+        val currentBounds = windowMetrics.bounds
+        val widthScreen = currentBounds.width()
 
-        val checkedChangedListener = CompoundButton.OnCheckedChangeListener { compoundButton, b ->
-            if (b){
-                selectedData.add(compoundButton.text.toString())
+        val scrollViewCategory = binding.horizontalScrollViewCategory
+        val scrollViewFoodStall = binding.horizontalScrollViewFoodStall
+
+        val selectedDataCategory: ArrayList<String> = arrayListOf()
+        val selectedDataFoodStall: ArrayList<String> = arrayListOf()
+
+        val checkedChangedListenerCategory = CompoundButton.OnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                Toast.makeText(
+                    context,
+                    compoundButton.text.toString() + " selected",
+                    Toast.LENGTH_SHORT
+                ).show()
+                selectedDataCategory.add(compoundButton.text.toString())
+                binding.recyclerFoodList.scrollToPosition(0)
+                foodListViewModel.loadFoodListWithCategory(selectedDataCategory)
+            } else {
+                Toast.makeText(
+                    context,
+                    compoundButton.text.toString() + " unselected",
+                    Toast.LENGTH_SHORT
+                ).show()
+                selectedDataCategory.remove(compoundButton.text.toString())
+                binding.recyclerFoodList.scrollToPosition(0)
                 foodListViewModel.loadFoodList()
-                foodListViewModel.loadFoodListWithCategory(selectedData)
-            }
-            else {
-                selectedData.remove(compoundButton.text.toString())
-                foodListViewModel.loadFoodList()
-                if(selectedData.isNotEmpty()) {
-                    foodListViewModel.loadFoodListWithCategory(selectedData)
+                if (selectedDataCategory.isNotEmpty()) {
+                    foodListViewModel.loadFoodListWithCategory(selectedDataCategory)
                 }
             }
         }
-        chipChicken.setOnCheckedChangeListener(checkedChangedListener)
-        chipChineseVegetarian.setOnCheckedChangeListener(checkedChangedListener)
-        chipEasternSoups.setOnCheckedChangeListener(checkedChangedListener)
-        chipFingerFoods.setOnCheckedChangeListener(checkedChangedListener)
-        chipFish.setOnCheckedChangeListener(checkedChangedListener)
-        chipMediFoods.setOnCheckedChangeListener(checkedChangedListener)
-        chipPasta.setOnCheckedChangeListener(checkedChangedListener)
-        chipPizza.setOnCheckedChangeListener(checkedChangedListener)
-        chipSandwiches.setOnCheckedChangeListener(checkedChangedListener)
-        chipSnacks.setOnCheckedChangeListener(checkedChangedListener)
-        chipWesternSoups.setOnCheckedChangeListener(checkedChangedListener)
-    }
+        val checkedChangedListenerFoodStall = CompoundButton.OnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                Toast.makeText(
+                    context,
+                    compoundButton.text.toString() + " selected",
+                    Toast.LENGTH_SHORT
+                ).show()
+                selectedDataFoodStall.add(compoundButton.text.toString())
+                binding.recyclerFoodList.scrollToPosition(0)
+                foodListViewModel.loadFoodListWithFoodStall(selectedDataFoodStall)
+            } else {
+                Toast.makeText(
+                    context,
+                    compoundButton.text.toString() + " unselected",
+                    Toast.LENGTH_SHORT
+                ).show()
+                selectedDataFoodStall.remove(compoundButton.text.toString())
+                binding.recyclerFoodList.scrollToPosition(0)
+                foodListViewModel.loadFoodList()
+                if (selectedDataFoodStall.isNotEmpty()) {
+                    foodListViewModel.loadFoodListWithFoodStall(selectedDataFoodStall)
+                }
+            }
+        }
 
+        for (i in 0 until chipGroupCategory.childCount) {
+            val chip = chipGroupCategory.getChildAt(i) as Chip
+            chip.setOnCheckedChangeListener(checkedChangedListenerCategory)
+            chip.setOnClickListener {
+                val r = Rect()
+                it.getGlobalVisibleRect(r)
+
+                if (chipChicken.isChecked) {
+                    val rr = Rect()
+                    it.getDrawingRect(rr)
+                    scrollViewCategory.smoothScrollBy(rr.right - (widthScreen - r.right), 0)
+                }
+
+                if (chipChineseVegetarian.isChecked) {
+                    val rr = Rect()
+                    it.getDrawingRect(rr)
+                    scrollViewCategory.smoothScrollBy(rr.right - (widthScreen - r.right), 0)
+                }
+
+                if (chipSnacks.isChecked) {
+                    val rr = Rect()
+                    it.getDrawingRect(rr)
+                    scrollViewCategory.smoothScrollBy(r.right, 0)
+                }
+
+                if (chipWesternSoups.isChecked) {
+                    val rr = Rect()
+                    it.getDrawingRect(rr)
+                    scrollViewCategory.smoothScrollBy(r.right, 0)
+                }
+                else {
+                    scrollViewCategory.smoothScrollTo(
+                        chip.left - (widthScreen / 2) + (chip.width / 2),
+                        0
+                    )
+                }
+            }
+            if (Common.categorySelected != null) {
+                if (chip.text.toString().uppercase() == Common.categorySelected!!.name!!) {
+                    chip.isChecked = true
+                }
+            }
+        }
+        for (i in 0 until chipGroupFoodStall.childCount) {
+            val chip = chipGroupFoodStall.getChildAt(i) as Chip
+            chip.setOnCheckedChangeListener(checkedChangedListenerFoodStall)
+            chip.setOnClickListener {
+                val r = Rect()
+                it.getGlobalVisibleRect(r)
+
+                if (chipChickenStall.isChecked) {
+                    val rr = Rect()
+                    it.getDrawingRect(rr)
+                    scrollViewFoodStall.smoothScrollBy(rr.right - (widthScreen - r.right), 0)
+                }
+
+                if (chipVegetarianStall.isChecked) {
+                    val rr = Rect()
+                    it.getDrawingRect(rr)
+                    scrollViewFoodStall.smoothScrollBy(rr.right - (widthScreen - r.right), 0)
+                }
+
+                if (chipMedifoods.isChecked) {
+                    val rr = Rect()
+                    it.getDrawingRect(rr)
+                    scrollViewFoodStall.smoothScrollBy(r.right, 0)
+                }
+
+                if (chipWesternStall.isChecked) {
+                    val rr = Rect()
+                    it.getDrawingRect(rr)
+                    scrollViewFoodStall.smoothScrollBy(r.right, 0)
+                }
+                else {
+                    scrollViewFoodStall.smoothScrollTo(
+                        chip.left - (widthScreen / 2) + (chip.width / 2),
+                        0
+                    )
+                }
+            }
+            if (Common.foodStallSelected != null) {
+                if (chip.text.toString().uppercase() == Common.foodStallSelected!!.name!!.uppercase()) {
+                    chip.isChecked = true
+                }
+            }
+        }
+    }
 
     //search menu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -164,7 +298,6 @@ class FoodListFragment : Fragment() {
             foodListViewModel.loadFoodList()
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

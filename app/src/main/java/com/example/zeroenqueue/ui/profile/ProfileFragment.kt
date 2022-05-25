@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.zeroenqueue.databinding.FragmentProfileBinding
+import com.example.zeroenqueue.ui.comment.CommentFragment
 import com.google.android.material.textfield.TextInputEditText
 import dmax.dialog.SpotsDialog
 
@@ -52,5 +53,15 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object{
+        private var instance: ProfileFragment? = null
+        fun getInstance(): ProfileFragment {
+            if (instance == null){
+                instance = ProfileFragment()
+            }
+            return instance!!
+        }
     }
 }

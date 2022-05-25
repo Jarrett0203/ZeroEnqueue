@@ -44,5 +44,13 @@
     <string name="snacks">Snacks</string>
     <string name="western_soups">Western Soups</string>
     <string name="menu_order_status">View order status</string>
+    <string name="chicken_stall">Chicken Stall</string>
+    <string name="vegetarian_stall">Vegetarian Stall</string>
+    <string name="soup_stall">Soup Stall</string>
+    <string name="finger_foods_stall">Finger Foods Stall</string>
+    <string name="fish_stall">Fish Stall</string>
+    <string name="medifoods_stall">Medifoods</string>
+    <string name="western_stall">Western Stall</string>
+    <string name="title_comment">Comments</string>
 
 </resources>
