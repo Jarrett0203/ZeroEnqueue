@@ -43,5 +43,6 @@
     <string name="sandwiches">Sandwiches</string>
     <string name="snacks">Snacks</string>
     <string name="western_soups">Western Soups</string>
+    <string name="menu_order_status">View order status</string>
 
 </resources>

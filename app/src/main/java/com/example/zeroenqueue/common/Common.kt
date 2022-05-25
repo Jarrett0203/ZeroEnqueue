@@ -19,6 +19,29 @@ object Common {
         txtUser!!.setText(builder, TextView.BufferType.SPANNABLE)
     }
 
+    fun getDateOfWeek(i: Int): String {
+        when(i) {
+            1 -> return "Monday"
+            2 -> return "Tuesday"
+            3 -> return "Wednesday"
+            4 -> return "Thursday"
+            5 -> return "Friday"
+            6 -> return "Saturday"
+            7 -> return "Sunday"
+            else -> return "unknown"
+        }
+    }
+
+    fun convertStatusToText(orderStatus: Int): String {
+        when(orderStatus) {
+            0 -> return "Order placed"
+            1 -> return "Preparing"
+            2 -> return "Ready to be collected"
+            -1 -> return "Cancelled"
+            else -> return "Unknown"
+        }
+    }
+
     var foodStallSelected: FoodStall?=null
     var categorySelected: Category?=null
     var foodSelected: Food?=null
@@ -28,6 +51,7 @@ object Common {
     val CATEGORY_REF: String ="Category"
     val CATEGORIES_REF: String ="Categories"
     val FOODSTALL_REF: String = "FoodStalls"
+    val ORDER_REF: String = "Order"
     val POPULAR_REF: String ="MostPopular"
     val RECOMMENDED_REF: String ="Recommended"
     val USER_REF="Users"

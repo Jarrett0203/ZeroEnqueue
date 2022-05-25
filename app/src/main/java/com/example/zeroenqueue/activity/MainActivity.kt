@@ -110,6 +110,8 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.navigation_foodStall)
                 } else if(item.itemId == R.id.navigation_profile) {
                     navController.navigate(R.id.navigation_profile)
+                } else if(item.itemId == R.id.navigation_order_status) {
+                    navController.navigate(R.id.navigation_order_status)
                 }
                 return false
             }
