@@ -50,5 +50,6 @@
     <string name="fish_stall">Fish Stall</string>
     <string name="medifoods_stall">Medifoods</string>
     <string name="western_stall">Western Stall</string>
+    <string name="title_comment">Comments</string>
 
 </resources>

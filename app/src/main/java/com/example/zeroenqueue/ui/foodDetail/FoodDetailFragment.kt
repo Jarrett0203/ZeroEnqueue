@@ -1,26 +1,26 @@
 package com.example.zeroenqueue.ui.foodDetail
 
 import android.app.AlertDialog
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.andremion.counterfab.CounterFab
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
-import com.example.zeroenqueue.databinding.FragmentFoodDetailBinding
+import com.example.zeroenqueue.classes.Comment
 import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.common.Common
-import com.example.zeroenqueue.classes.Comment
+import com.example.zeroenqueue.databinding.FragmentFoodDetailBinding
 import com.example.zeroenqueue.db.CartDataSource
 import com.example.zeroenqueue.db.CartDatabase
 import com.example.zeroenqueue.db.CartItem
 import com.example.zeroenqueue.db.LocalCartDataSource
 import com.example.zeroenqueue.eventBus.CountCartEvent
+import com.example.zeroenqueue.ui.comment.CommentFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.*
 import dmax.dialog.SpotsDialog
@@ -61,7 +61,7 @@ class FoodDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         foodDetailViewModel =
-            ViewModelProvider(this).get(FoodDetailViewModel::class.java)
+            ViewModelProvider(this)[FoodDetailViewModel::class.java]
 
         _binding = FragmentFoodDetailBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -150,13 +150,17 @@ class FoodDetailFragment : Fragment() {
 
     private fun initView() {
 
-        cartDataSource = LocalCartDataSource(CartDatabase.getInstance(context!!).cartDAO())
+        cartDataSource = LocalCartDataSource(CartDatabase.getInstance(requireContext()).cartDAO())
         waitingDialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
         btnRating.setOnClickListener {
             showDialogRating()
         }
+        btnShowComments.setOnClickListener{
+            val commentFragment = CommentFragment.getInstance()
+            commentFragment.show(requireActivity().supportFragmentManager, "CommentFragment")
+        }
 
-        btnCart!!.setOnClickListener {
+        btnCart.setOnClickListener {
             val cartItem = CartItem()
             cartItem.uid = Common.currentUser!!.uid!!
             //cartItem.userPhone = Common.currentUser!!.phone!!
@@ -171,8 +175,9 @@ class FoodDetailFragment : Fragment() {
 
             cartDataSource.getItemWithAllOptionsInCart(Common.currentUser!!.uid!!,
                 cartItem.foodId,
-                cartItem.foodSize!!,
-                cartItem.foodAddon!!)
+                cartItem.foodSize,
+                cartItem.foodAddon
+            )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object: SingleObserver<CartItem> {
@@ -183,7 +188,7 @@ class FoodDetailFragment : Fragment() {
                     override fun onSuccess(cartItem: CartItem) {
                         //if item is alr in db, update
                         if(cartItem.equals(cartItem)) {
-                            cartItem.foodExtraPrice = cartItem.foodExtraPrice;
+                            cartItem.foodExtraPrice = cartItem.foodExtraPrice
                             cartItem.foodAddon = cartItem.foodAddon
                             cartItem.foodSize = cartItem.foodSize
                             cartItem.foodQuantity = cartItem.foodQuantity + cartItem.foodQuantity
@@ -211,7 +216,7 @@ class FoodDetailFragment : Fragment() {
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({}, {
-                                        t: Throwable -> Toast.makeText(context, "{INSERT CART}" + t!!.message, Toast.LENGTH_SHORT).show()
+                                        t: Throwable -> Toast.makeText(context, "{INSERT CART}" + t.message, Toast.LENGTH_SHORT).show()
                                 }))
                         }
                     }
@@ -222,7 +227,7 @@ class FoodDetailFragment : Fragment() {
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({}, {
-                                        t: Throwable -> Toast.makeText(context, "{INSERT CART}" + t!!.message, Toast.LENGTH_SHORT).show()
+                                        t: Throwable -> Toast.makeText(context, "{INSERT CART}" + t.message, Toast.LENGTH_SHORT).show()
                                 }))
                         } else {
                             Toast.makeText(context, "[CART ERROR]" + e.message, Toast.LENGTH_SHORT).show()
@@ -244,11 +249,11 @@ class FoodDetailFragment : Fragment() {
 
         builder.setView(itemView)
 
-        builder.setNegativeButton("CANCEL") { dialogInterface, i ->
+        builder.setNegativeButton("CANCEL") { dialogInterface, _ ->
             dialogInterface.dismiss()
         }
 
-        builder.setPositiveButton("OK") { dialogInterface, i ->
+        builder.setPositiveButton("OK") { _, _ ->
             val comment = Comment()
             comment.name = Common.currentUser!!.name
             comment.uid = Common.currentUser!!.uid

@@ -3,7 +3,6 @@ package com.example.zeroenqueue.activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -28,6 +27,7 @@ import com.example.zeroenqueue.eventBus.CategoryClick
 import com.example.zeroenqueue.eventBus.CountCartEvent
 import com.example.zeroenqueue.eventBus.FoodItemClick
 import com.example.zeroenqueue.eventBus.FoodStallClick
+import com.example.zeroenqueue.ui.home.HomeFragment
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.SingleObserver
@@ -74,16 +74,19 @@ class MainActivity : AppCompatActivity() {
         )
 
         profileImage!!.setOnClickListener {
-            /*val profileFragment = ProfileFragment()
-            val fragment : Fragment? =
-
-            supportFragmentManager.findFragmentByTag(ProfileFragment::class.java.simpleName)
-
-            if (fragment !is ProfileFragment){
-                supportFragmentManager.beginTransaction()
-                    .add(R.id.fragment_layout, profileFragment, ProfileFragment::class.java.simpleName)
-                    .commit()
-            }*/
+            val navHostFragment = supportFragmentManager.primaryNavigationFragment
+            val currentFragment = navHostFragment!!.childFragmentManager.fragments[0]
+            drawerLayout!!.closeDrawers()
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.home.HomeFragment")
+                navController.navigate(R.id.home_to_profile)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.foodStall.FoodStallFragment")
+                navController.navigate(R.id.foodStall_to_profile)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.categories.CategoriesFragment")
+                navController.navigate(R.id.categories_to_profile)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.foodList.FoodListFragment")
+                navController.navigate(R.id.food_list_to_profile)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.orderStatus.OrderStatusFragment")
+                navController.navigate(R.id.order_status_to_profile)
         }
 
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -114,7 +117,7 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
         })
-         countCartItem()
+        countCartItem()
     }
 
     private fun signout() {
