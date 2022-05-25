@@ -16,12 +16,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zeroenqueue.R
-import com.example.zeroenqueue.adapters.CategoryFoodListAdapter
 import com.example.zeroenqueue.adapters.FoodStallMenuAdapter
 import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentFoodStallMenuBinding
-import com.example.zeroenqueue.ui.categories.CategoryFoodListViewModel
 import dmax.dialog.SpotsDialog
 
 class FoodStallMenuFragment : Fragment() {

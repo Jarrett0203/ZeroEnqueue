@@ -8,115 +8,247 @@
     android:orientation="vertical">
 
     <HorizontalScrollView
+        android:id="@+id/horizontal_scroll_view_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none">
 
         <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chip_group"
+            android:id="@+id/chip_group_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_chicken"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@string/chicken"
-                app:chipBackgroundColor="@color/yellow" />
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_chinese_vegetarian"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@string/chinese_vegetarian"
-                app:chipBackgroundColor="@color/yellow" />
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_eastern_soups"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@string/eastern_soups"
-                app:chipBackgroundColor="@color/yellow" />
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_finger_foods"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@string/finger_foods"
-                app:chipBackgroundColor="@color/yellow" />
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_fish"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@string/fish"
-                app:chipBackgroundColor="@color/yellow" />
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_medifoods"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@string/medifoods"
-                app:chipBackgroundColor="@color/yellow" />
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_pasta"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@string/pasta"
-                app:chipBackgroundColor="@color/yellow" />
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_pizza"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@string/pizza"
-                app:chipBackgroundColor="@color/yellow" />
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_sandwiches"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@string/sandwiches"
-                app:chipBackgroundColor="@color/yellow" />
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_snacks"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@string/snacks"
-                app:chipBackgroundColor="@color/yellow" />
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_western_soups"
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@string/western_soups"
-                app:chipBackgroundColor="@color/yellow" />
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:id="@+id/horizontal_scroll_view_food_stall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_food_stall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chicken_stall"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/chicken_stall"
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/vegetarian_stall"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/vegetarian_stall"
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/soup_stall"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/soup_stall"
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/finger_foods_stall"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/finger_foods_stall"
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/fish_stall"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/fish_stall"
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/medifoods_stall"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/medifoods_stall"
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/western_stall"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/western_stall"
+                android:textAppearance="@style/ChipUncheckedText"
+                app:chipBackgroundColor="@color/bg_chip" />
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 

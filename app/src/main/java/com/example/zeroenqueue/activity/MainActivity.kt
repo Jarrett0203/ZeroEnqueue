@@ -174,7 +174,7 @@ class MainActivity : AppCompatActivity() {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onCategorySelected(event:CategoryClick){
         if (event.isSuccess){
-            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_categoryFoodList)
+            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_list)
         }
     }
 
@@ -188,7 +188,7 @@ class MainActivity : AppCompatActivity() {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onFoodStallSelected(event: FoodStallClick){
         if (event.isSuccess){
-            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_foodStallMenu)
+            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_list)
         }
     }
 

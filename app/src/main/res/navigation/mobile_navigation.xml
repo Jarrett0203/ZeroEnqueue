@@ -12,12 +12,6 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_categoryFoodList"
-        android:name="com.example.zeroenqueue.ui.categories.CategoryFoodListFragment"
-        android:label="@string/title_food_list"
-        tools:layout="@layout/fragment_category_food_list" />
-
-    <fragment
         android:id="@+id/navigation_foodStall"
         android:name="com.example.zeroenqueue.ui.foodStall.FoodStallFragment"
         android:label="@string/title_food_stall"
