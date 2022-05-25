@@ -13,7 +13,7 @@ interface CartDAO {
     @Query("SELECT * FROM Cart WHERE foodId=:foodId AND uid=:uid")
     fun getItemInCart(foodId:String, uid:String): Single<CartItem>
 
-    @Query("SELECT COUNT(*) FROM Cart WHERE uid=:uid")
+    @Query("SELECT SUM(foodQuantity) FROM Cart WHERE uid=:uid")
     fun countCartItems(uid:String): Single<Int>
 
     @Query("SELECT SUM(foodQuantity*(foodPrice + foodExtraPrice)) FROM Cart WHERE uid=:uid")
@@ -30,4 +30,7 @@ interface CartDAO {
 
     @Query("DELETE FROM Cart WHERE uid=:uid")
     fun cleanCart(uid:String): Single<Int>
+
+    @Query("SELECT * FROM Cart WHERE foodId=:foodId AND uid=:uid AND foodSize =:foodSize AND foodAddon =:foodAddon")
+    fun getItemWithAllOptionsInCart(uid:String, foodId:String, foodSize:String, foodAddon:String): Single<CartItem>
 }

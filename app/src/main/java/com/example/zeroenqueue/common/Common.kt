@@ -6,10 +6,7 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.widget.TextView
-import com.example.zeroenqueue.classes.Category
-import com.example.zeroenqueue.classes.Food
-import com.example.zeroenqueue.classes.FoodStall
-import com.example.zeroenqueue.classes.User
+import com.example.zeroenqueue.classes.*
 
 object Common {
     fun setSpanString(s: String, name: String?, txtUser: TextView?) {
