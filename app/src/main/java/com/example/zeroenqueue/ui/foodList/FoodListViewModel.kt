@@ -56,6 +56,46 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
         })
     }
 
+    fun loadFoodListWithCategory(categoryList: List<String>) {
+        val tempList = ArrayList<Food>()
+        val foodListRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODLIST_REF)
+        foodListRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(itemSnapShot in snapshot.children){
+                    val categoryFood = itemSnapShot.getValue(Food::class.java)
+                    categoryList.forEach{ s ->
+                        if (categoryFood!!.categories!!.uppercase() == s.uppercase())
+                            tempList.add(categoryFood)
+                    }
+                }
+                foodCallbackListener.onFoodLoadSuccess(tempList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                foodCallbackListener.onFoodLoadFailed(error.message)
+            }
+        })
+    }
+
+    fun loadFoodListSearch(search: String) {
+        val tempList = ArrayList<Food>()
+        val foodListRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODLIST_REF)
+        foodListRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(itemSnapShot in snapshot.children){
+                    val searchFood = itemSnapShot.getValue(Food::class.java)
+                    if (searchFood!!.name!!.lowercase().contains(search))
+                        tempList.add(searchFood)
+                }
+                foodCallbackListener.onFoodLoadSuccess(tempList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                foodCallbackListener.onFoodLoadFailed(error.message)
+            }
+        })
+    }
+
     override fun onFoodLoadSuccess(foodList: List<Food>) {
         foodListMutableLiveData!!.value = foodList
     }

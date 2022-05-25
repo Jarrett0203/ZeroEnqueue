@@ -99,22 +99,18 @@ class FoodListFragment : Fragment() {
 
         val checkedChangedListener = CompoundButton.OnCheckedChangeListener { compoundButton, b ->
             if (b){
-                Toast.makeText(context, compoundButton.text.toString()+" selected", Toast.LENGTH_SHORT).show()
                 selectedData.add(compoundButton.text.toString())
-                startFilter(selectedData)
+                foodListViewModel.loadFoodList()
+                foodListViewModel.loadFoodListWithCategory(selectedData)
             }
             else {
-                Toast.makeText(context, compoundButton.text.toString()+" unselected", Toast.LENGTH_SHORT).show()
                 selectedData.remove(compoundButton.text.toString())
-                if(selectedData.isEmpty()) {
-                    foodListViewModel.loadFoodList()
-                }
-                else {
-                    startFilter(selectedData)
+                foodListViewModel.loadFoodList()
+                if(selectedData.isNotEmpty()) {
+                    foodListViewModel.loadFoodListWithCategory(selectedData)
                 }
             }
         }
-
         chipChicken.setOnCheckedChangeListener(checkedChangedListener)
         chipChineseVegetarian.setOnCheckedChangeListener(checkedChangedListener)
         chipEasternSoups.setOnCheckedChangeListener(checkedChangedListener)
@@ -126,26 +122,8 @@ class FoodListFragment : Fragment() {
         chipSandwiches.setOnCheckedChangeListener(checkedChangedListener)
         chipSnacks.setOnCheckedChangeListener(checkedChangedListener)
         chipWesternSoups.setOnCheckedChangeListener(checkedChangedListener)
-
-        /*val ids = chipGroup.checkedChipIds
-        for (id in ids) {
-            val chip = chipGroup.findViewById<Chip>(id)
-            chip.setOnClickListener {
-                Toast.makeText(context, chip.text.toString() + " selected", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }*/
     }
 
-    private fun startFilter(selectedData: ArrayList<String>) {
-        val resultFood = ArrayList<Food>()
-        for (i in 0 until adapter!!.getItemCount()) {
-            val food = adapter!!.getFoodList()[i]
-            if (food.categories!!.uppercase().contains(selectedData[0].uppercase()))
-                resultFood.add(food)
-        }
-        foodListViewModel.getFoodList().value = resultFood
-    }
 
     //search menu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -161,8 +139,9 @@ class FoodListFragment : Fragment() {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(s: String?): Boolean {
+                foodListViewModel.loadFoodList()
                 binding.recyclerFoodList.scrollToPosition(0)
-                startSearch(s!!.lowercase())
+                foodListViewModel.loadFoodListSearch(s!!.lowercase())
                 searchView.clearFocus()
                 return true
             }
@@ -184,17 +163,6 @@ class FoodListFragment : Fragment() {
             menuItem.collapseActionView()
             foodListViewModel.loadFoodList()
         }
-    }
-
-    //search query
-    private fun startSearch(s: String) {
-        val resultFood = ArrayList<Food>()
-        for (i in 0 until adapter!!.getItemCount()) {
-            val food = adapter!!.getFoodList()[i]
-            if (food.name!!.lowercase().contains(s))
-                resultFood.add(food)
-        }
-        foodListViewModel.getFoodList().value = resultFood
     }
 
 

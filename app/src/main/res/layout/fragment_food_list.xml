@@ -23,102 +23,90 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:backgroundTint="@color/yellow"
                 android:checkable="true"
                 android:text="@string/chicken"
-                app:checkedIconEnabled="true"
-                app:checkedIconVisible="true"
-                app:chipIconEnabled="true" />
+                app:chipBackgroundColor="@color/yellow" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_chinese_vegetarian"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/yellow"
                 android:checkable="true"
                 android:text="@string/chinese_vegetarian"
-                app:checkedIconEnabled="true" />
+                app:chipBackgroundColor="@color/yellow" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_eastern_soups"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/yellow"
                 android:checkable="true"
                 android:text="@string/eastern_soups"
-                app:checkedIconEnabled="true" />
+                app:chipBackgroundColor="@color/yellow" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_finger_foods"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/yellow"
                 android:checkable="true"
                 android:text="@string/finger_foods"
-                app:checkedIconEnabled="true" />
+                app:chipBackgroundColor="@color/yellow" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_fish"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/yellow"
                 android:checkable="true"
                 android:text="@string/fish"
-                app:checkedIconEnabled="true" />
+                app:chipBackgroundColor="@color/yellow" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_medifoods"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/yellow"
                 android:checkable="true"
                 android:text="@string/medifoods"
-                app:checkedIconEnabled="true" />
+                app:chipBackgroundColor="@color/yellow" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_pasta"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/yellow"
                 android:checkable="true"
                 android:text="@string/pasta"
-                app:checkedIconEnabled="true" />
+                app:chipBackgroundColor="@color/yellow" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_pizza"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/yellow"
                 android:checkable="true"
                 android:text="@string/pizza"
-                app:checkedIconEnabled="true" />
+                app:chipBackgroundColor="@color/yellow" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_sandwiches"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/yellow"
                 android:checkable="true"
                 android:text="@string/sandwiches"
-                app:checkedIconEnabled="true" />
+                app:chipBackgroundColor="@color/yellow" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_snacks"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/yellow"
                 android:checkable="true"
                 android:text="@string/snacks"
-                app:checkedIconEnabled="true" />
+                app:chipBackgroundColor="@color/yellow" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/category_western_soups"
@@ -126,10 +114,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/yellow"
                 android:checkable="true"
                 android:text="@string/western_soups"
-                app:checkedIconEnabled="true" />
+                app:chipBackgroundColor="@color/yellow" />
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
