@@ -23,6 +23,7 @@ class FoodStallAdapter(
     inner class FoodStallViewHolder(val view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
         var food_stall_name: TextView? = null
+        var food_stall_address: TextView? = null
         var food_stall_image: ImageView? = null
         private var listener: IRecyclerItemClickListener?=null
 
@@ -32,6 +33,7 @@ class FoodStallAdapter(
 
         init {
             food_stall_name = itemView.findViewById(R.id.food_stall_name)
+            food_stall_address = itemView.findViewById(R.id.food_stall_address)
             food_stall_image = itemView.findViewById(R.id.food_stall_image)
             itemView.setOnClickListener(this)
         }
@@ -60,6 +62,7 @@ class FoodStallAdapter(
         Glide.with(context).load(foodStallList[position].image)
             .into(holder.food_stall_image!!)
         holder.food_stall_name!!.text = foodStallList[position].name
+        holder.food_stall_address!!.text = foodStallList[position].address
 
         holder.setListener(object : IRecyclerItemClickListener {
             override fun onItemClick(view: View, pos: Int) {

@@ -94,6 +94,7 @@ class MainActivity : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener(object:NavigationView.OnNavigationItemSelectedListener{
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
+                item.isChecked = true
                 drawerLayout!!.closeDrawers()
                 if(item.itemId == R.id.navigation_sign_out) {
                     signout()

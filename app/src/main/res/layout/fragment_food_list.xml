@@ -1,9 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.foodList.FoodListFragment">
+    tools:context=".ui.foodList.FoodListFragment"
+    android:orientation="vertical">
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/category_chicken"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:checkable="true"
+                android:text="@string/chicken"
+                app:chipBackgroundColor="@color/yellow" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/category_chinese_vegetarian"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/chinese_vegetarian"
+                app:chipBackgroundColor="@color/yellow" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/category_eastern_soups"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/eastern_soups"
+                app:chipBackgroundColor="@color/yellow" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/category_finger_foods"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/finger_foods"
+                app:chipBackgroundColor="@color/yellow" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/category_fish"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/fish"
+                app:chipBackgroundColor="@color/yellow" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/category_medifoods"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/medifoods"
+                app:chipBackgroundColor="@color/yellow" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/category_pasta"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/pasta"
+                app:chipBackgroundColor="@color/yellow" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/category_pizza"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/pizza"
+                app:chipBackgroundColor="@color/yellow" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/category_sandwiches"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/sandwiches"
+                app:chipBackgroundColor="@color/yellow" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/category_snacks"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/snacks"
+                app:chipBackgroundColor="@color/yellow" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/category_western_soups"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:checkable="true"
+                android:text="@string/western_soups"
+                app:chipBackgroundColor="@color/yellow" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_food_list"
@@ -12,4 +127,4 @@
         tools:listitem="@layout/layout_food_item">
     </androidx.recyclerview.widget.RecyclerView>
 
-</RelativeLayout>
+</LinearLayout>

@@ -32,5 +32,16 @@
     <string name="rating">Rating</string>
     <string name="food_stall_menu">Stall Menu</string>
     <string name="sign_out">Sign out</string>
+    <string name="chicken">Chicken</string>
+    <string name="chinese_vegetarian">Chinese Vegetarian</string>
+    <string name="eastern_soups">Eastern Soups</string>
+    <string name="finger_foods">Finger Foods</string>
+    <string name="fish">Fish</string>
+    <string name="medifoods">MediFoods Delights</string>
+    <string name="pasta">Pasta</string>
+    <string name="pizza">Pizza</string>
+    <string name="sandwiches">Sandwiches</string>
+    <string name="snacks">Snacks</string>
+    <string name="western_soups">Western Soups</string>
 
 </resources>

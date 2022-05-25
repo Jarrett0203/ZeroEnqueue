@@ -23,6 +23,7 @@ object Common {
     var categorySelected: Category?=null
     var foodSelected: Food?=null
     var currentUser: User?= null
+    var foodList: List<Food>?= null
 
     val CATEGORY_REF: String ="Category"
     val CATEGORIES_REF: String ="Categories"
