@@ -142,6 +142,7 @@ class MainActivity : AppCompatActivity() {
         val dialog = builder.create()
         dialog.show()
     }
+
     override fun onBackPressed() {
         if (drawerLayout!!.isDrawerOpen(GravityCompat.START)) {
             drawerLayout!!.closeDrawer(GravityCompat.START)
@@ -217,7 +218,8 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onError(e: Throwable) {
-                    Toast.makeText(this@MainActivity, "[COUNT CART]"+e.message, Toast.LENGTH_SHORT).show()
+                    if (!e.message!!.contains("empty"))
+                        Toast.makeText(this@MainActivity, "[COUNT CART]"+e.message, Toast.LENGTH_SHORT).show()
                 }
 
             })

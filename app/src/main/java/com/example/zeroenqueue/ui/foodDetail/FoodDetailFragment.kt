@@ -185,18 +185,18 @@ class FoodDetailFragment : Fragment() {
 
                     }
 
-                    override fun onSuccess(cartItem: CartItem) {
+                    override fun onSuccess(cartItemFromDB: CartItem) {
                         //if item is alr in db, update
-                        if(cartItem.equals(cartItem)) {
-                            cartItem.foodExtraPrice = cartItem.foodExtraPrice
-                            cartItem.foodAddon = cartItem.foodAddon
-                            cartItem.foodSize = cartItem.foodSize
-                            cartItem.foodQuantity = cartItem.foodQuantity + cartItem.foodQuantity
+                        if(cartItemFromDB.equals(cartItem)) {
+                            cartItemFromDB.foodExtraPrice = cartItem.foodExtraPrice
+                            cartItemFromDB.foodAddon = cartItem.foodAddon
+                            cartItemFromDB.foodSize = cartItem.foodSize
+                            cartItemFromDB.foodQuantity = cartItemFromDB.foodQuantity + cartItem.foodQuantity
 
-                            cartDataSource.updateCart(cartItem)
+                            cartDataSource.updateCart(cartItemFromDB)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(object: SingleObserver<Int> {
+                                .subscribe(object:SingleObserver<Int> {
                                     override fun onSuccess(t: Int) {
                                         Toast.makeText(context, "Update Cart Success", Toast.LENGTH_SHORT).show()
                                         EventBus.getDefault().postSticky(CountCartEvent(true))
@@ -207,7 +207,7 @@ class FoodDetailFragment : Fragment() {
                                     }
 
                                     override fun onError(e: Throwable) {
-                                        Toast.makeText(context, "{UPDATE CART}" + e.message, Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "[UPDATE CART]" + e.message, Toast.LENGTH_SHORT).show()
                                     }
                                 })
                         } else {
@@ -215,7 +215,11 @@ class FoodDetailFragment : Fragment() {
                             compositeDisposable.add(cartDataSource.insertOrReplaceAll(cartItem)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe({}, {
+                                .subscribe({
+                                    Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT)
+                                        .show()
+                                    EventBus.getDefault().postSticky(CountCartEvent(true))
+                                }, {
                                         t: Throwable -> Toast.makeText(context, "{INSERT CART}" + t.message, Toast.LENGTH_SHORT).show()
                                 }))
                         }
@@ -226,7 +230,11 @@ class FoodDetailFragment : Fragment() {
                             compositeDisposable.add(cartDataSource.insertOrReplaceAll(cartItem)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe({}, {
+                                .subscribe({
+                                    Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT)
+                                        .show()
+                                    EventBus.getDefault().postSticky(CountCartEvent(true))
+                                }, {
                                         t: Throwable -> Toast.makeText(context, "{INSERT CART}" + t.message, Toast.LENGTH_SHORT).show()
                                 }))
                         } else {

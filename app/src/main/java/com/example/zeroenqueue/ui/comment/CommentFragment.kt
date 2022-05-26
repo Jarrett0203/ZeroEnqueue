@@ -62,7 +62,6 @@ class CommentFragment : BottomSheetDialogFragment(), ICommentCallback {
 
     private fun loadCommentFromFirebase() {
         dialog.show()
-
         val comments = ArrayList<Comment>()
         FirebaseDatabase.getInstance().getReference(Common.COMMENT_REF)
             .child(Common.foodSelected!!.id!!)

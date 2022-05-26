@@ -112,8 +112,9 @@ class FoodListAdapter(
 
             cartDataSource.getItemWithAllOptionsInCart(Common.currentUser!!.uid!!,
                 cartItem.foodId,
-                cartItem.foodSize!!,
-                cartItem.foodAddon!!)
+                cartItem.foodSize,
+                cartItem.foodAddon
+            )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object: SingleObserver<CartItem> {
@@ -121,15 +122,15 @@ class FoodListAdapter(
 
                     }
 
-                    override fun onSuccess(cartItem: CartItem) {
+                    override fun onSuccess(cartItemFromDB: CartItem) {
                         //if item is alr in db, update
-                        if(cartItem.equals(cartItem)) {
-                            cartItem.foodExtraPrice = cartItem.foodExtraPrice;
-                            cartItem.foodAddon = cartItem.foodAddon
-                            cartItem.foodSize = cartItem.foodSize
-                            cartItem.foodQuantity = cartItem.foodQuantity + cartItem.foodQuantity
+                        if(cartItemFromDB.equals(cartItem)) {
+                            cartItemFromDB.foodExtraPrice = cartItem.foodExtraPrice
+                            cartItemFromDB.foodAddon = cartItem.foodAddon
+                            cartItemFromDB.foodSize = cartItem.foodSize
+                            cartItemFromDB.foodQuantity = cartItemFromDB.foodQuantity + cartItem.foodQuantity
 
-                            cartDataSource.updateCart(cartItem)
+                            cartDataSource.updateCart(cartItemFromDB)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(object:SingleObserver<Int> {
@@ -143,7 +144,7 @@ class FoodListAdapter(
                                     }
 
                                     override fun onError(e: Throwable) {
-                                        Toast.makeText(context, "{UPDATE CART}" + e.message, Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "[UPDATE CART]" + e.message, Toast.LENGTH_SHORT).show()
                                     }
                                 })
                         } else {
@@ -151,8 +152,12 @@ class FoodListAdapter(
                             compositeDisposable.add(cartDataSource.insertOrReplaceAll(cartItem)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe({}, {
-                                        t: Throwable -> Toast.makeText(context, "{INSERT CART}" + t!!.message, Toast.LENGTH_SHORT).show()
+                                .subscribe({
+                                    Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT)
+                                        .show()
+                                    EventBus.getDefault().postSticky(CountCartEvent(true))
+                                }, {
+                                        t: Throwable -> Toast.makeText(context, "{INSERT CART}" + t.message, Toast.LENGTH_SHORT).show()
                                 }))
                         }
                     }
@@ -162,8 +167,12 @@ class FoodListAdapter(
                             compositeDisposable.add(cartDataSource.insertOrReplaceAll(cartItem)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe({}, {
-                                    t: Throwable -> Toast.makeText(context, "{INSERT CART}" + t!!.message, Toast.LENGTH_SHORT).show()
+                                .subscribe({
+                                    Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT)
+                                        .show()
+                                    EventBus.getDefault().postSticky(CountCartEvent(true))
+                                }, {
+                                    t: Throwable -> Toast.makeText(context, "{INSERT CART}" + t.message, Toast.LENGTH_SHORT).show()
                                 }))
                         } else {
                             Toast.makeText(context, "[CART ERROR]" + e.message, Toast.LENGTH_SHORT).show()
