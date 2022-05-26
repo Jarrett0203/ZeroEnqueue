@@ -7,8 +7,20 @@ import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.widget.TextView
 import com.example.zeroenqueue.classes.*
+import java.lang.StringBuilder
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 object Common {
+    fun formatPrice(price: Double): String {
+        if (price != 0.0) {
+            val df = DecimalFormat("###0.00")
+            df.roundingMode = RoundingMode.HALF_UP
+            return StringBuilder(df.format(price)).toString()
+        }
+        return "0.00"
+    }
+
     fun setSpanString(s: String, name: String?, txtUser: TextView?) {
         val builder = SpannableStringBuilder()
         builder.append(s)
@@ -46,10 +58,8 @@ object Common {
     var categorySelected: Category?=null
     var foodSelected: Food?=null
     var currentUser: User?= null
-    var foodList: List<Food>?= null
 
     val CATEGORY_REF: String ="Category"
-    val CATEGORIES_REF: String ="Categories"
     val FOODSTALL_REF: String = "FoodStalls"
     val ORDER_REF: String = "Order"
     val POPULAR_REF: String ="MostPopular"

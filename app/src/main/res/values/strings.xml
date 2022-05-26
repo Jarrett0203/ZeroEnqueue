@@ -52,5 +52,8 @@
     <string name="medifoods_stall">Medifoods</string>
     <string name="western_stall">Western Stall</string>
     <string name="title_comment">Comments</string>
+    <string name="size">Size</string>
+    <string name="addOns">Add-Ons</string>
+    <string name="example">Example</string>
 
 </resources>

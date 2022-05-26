@@ -6,7 +6,7 @@ class Food {
     var image: String? = null
     var id: String? = null
     var description: String? = null
-    var price: Long = 0
+    var price: Double = 0.00
     var addon:List<AddOn> = ArrayList<AddOn>()
     var size:List<Size> = ArrayList<Size>()
     var foodStall: String? = null
@@ -14,4 +14,6 @@ class Food {
 
     var ratingValue:Float = 0.toFloat()
     var ratingCount:Long = 0.toLong()
+    var addOnSelected: MutableList<AddOn>? = null
+    var sizeSelected: Size? = null
 }

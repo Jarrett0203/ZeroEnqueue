@@ -85,7 +85,7 @@ class FoodListAdapter(
         Glide.with(context).load(foodList[position].image)
             .into(holder.food_image!!)
         holder.food_name!!.text = foodList[position].name
-        holder.food_price!!.text = foodList[position].price.toString()
+        holder.food_price!!.text = StringBuilder("").append(Common.formatPrice(foodList[position].price)).toString()
         Common.foodStallSelected = null
         Common.categorySelected = null
 
@@ -105,7 +105,7 @@ class FoodListAdapter(
             cartItem.foodId = foodList.get(position).id!!
             cartItem.foodName = foodList.get(position).name!!
             cartItem.foodImage = foodList.get(position).image!!
-            cartItem.foodPrice = foodList.get(position).price.toDouble()
+            cartItem.foodPrice = foodList.get(position).price
             cartItem.foodQuantity = 1
             cartItem.foodAddon = "Default"
             cartItem.foodSize = "Default"
@@ -184,10 +184,5 @@ class FoodListAdapter(
 
     fun onStop() {
         compositeDisposable.clear()
-    }
-
-    @JvmName("getFoodList1")
-    fun getFoodList(): List<Food> {
-        return foodList
     }
 }

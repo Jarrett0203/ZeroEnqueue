@@ -111,6 +111,11 @@ class FoodListFragment : Fragment() {
         layoutAnimationController =
             AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
 
+        filterWithFoodStallOrCategory()
+
+    }
+
+    private fun filterWithFoodStallOrCategory() {
         val windowMetrics =
             WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(requireActivity())
         val currentBounds = windowMetrics.bounds
