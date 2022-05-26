@@ -29,6 +29,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.*
+import com.google.gson.Gson
 import dmax.dialog.SpotsDialog
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -143,8 +144,15 @@ class FoodDetailFragment : Fragment(), TextWatcher {
             cartItem.foodImage = Common.foodSelected!!.image!!
             cartItem.foodPrice = Common.foodSelected!!.price
             cartItem.foodQuantity = number_button!!.number.toInt()
-            cartItem.foodAddon = "Default"
-            cartItem.foodSize = "Default"
+            cartItem.foodExtraPrice = Common.calculateExtraPrice(Common.foodSelected!!.sizeSelected, Common.foodSelected!!.addOnSelected)
+            if (Common.foodSelected!!.addOnSelected != null)
+                cartItem.foodAddon = Gson().toJson(Common.foodSelected!!.addOnSelected)
+            else
+                cartItem.foodAddon = "Default"
+            if (Common.foodSelected!!.sizeSelected != null)
+                cartItem.foodSize = Gson().toJson(Common.foodSelected!!.sizeSelected)
+            else
+                cartItem.foodSize = "Default"
 
             cartDataSource.getItemWithAllOptionsInCart(
                 Common.currentUser!!.uid!!,
@@ -315,14 +323,13 @@ class FoodDetailFragment : Fragment(), TextWatcher {
 
                         val sumRating = food.ratingValue + ratingValue
                         val ratingCount = food.ratingCount + 1
-                        val totalRating = sumRating / ratingCount
 
                         val updateData = HashMap<String, Any>()
-                        updateData["ratingValue"] = totalRating
+                        updateData["ratingValue"] = sumRating
                         updateData["ratingCount"] = ratingCount
 
                         food.ratingCount = ratingCount
-                        food.ratingValue = totalRating
+                        food.ratingValue = sumRating
 
                         snapshot.ref
                             .updateChildren(updateData)
@@ -388,7 +395,7 @@ class FoodDetailFragment : Fragment(), TextWatcher {
         food_name.text = StringBuilder(it!!.name!!)
         food_description.text = StringBuilder(it.description!!)
         food_price.text = StringBuilder("").append(Common.formatPrice(it.price)).toString()
-        ratingBar.rating = it.ratingValue
+        ratingBar.rating = it.ratingValue / it.ratingCount
         for (size in it.size) {
             val radioButton = RadioButton(context)
             radioButton.setOnCheckedChangeListener { _, b ->
@@ -418,7 +425,7 @@ class FoodDetailFragment : Fragment(), TextWatcher {
                 totalPrice += addOn.price
         }
 
-        totalPrice += Common.foodSelected!!.sizeSelected!!.price.toDouble()
+        totalPrice += Common.foodSelected!!.sizeSelected!!.price
         val displayPrice: Double =
             ((totalPrice * number_button.number.toInt()) * 100).roundToInt() / 100.0
 

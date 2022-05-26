@@ -102,11 +102,12 @@ class FoodListAdapter(
             cartItem.uid = Common.currentUser!!.uid!!
             //cartItem.userPhone = Common.currentUser!!.phone!!
 
-            cartItem.foodId = foodList.get(position).id!!
-            cartItem.foodName = foodList.get(position).name!!
-            cartItem.foodImage = foodList.get(position).image!!
-            cartItem.foodPrice = foodList.get(position).price
+            cartItem.foodId = foodList[position].id!!
+            cartItem.foodName = foodList[position].name!!
+            cartItem.foodImage = foodList[position].image!!
+            cartItem.foodPrice = foodList[position].price
             cartItem.foodQuantity = 1
+            cartItem.foodExtraPrice = 0.0
             cartItem.foodAddon = "Default"
             cartItem.foodSize = "Default"
 

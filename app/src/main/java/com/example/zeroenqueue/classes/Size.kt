@@ -2,5 +2,5 @@ package com.example.zeroenqueue.classes
 
 class Size {
     var name: String? = null
-    var price: Long = 0
+    var price: Double = 0.0
 }

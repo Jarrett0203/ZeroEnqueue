@@ -9,8 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.PopularCategory
+import com.example.zeroenqueue.common.Common
+import com.example.zeroenqueue.eventBus.CategoryClick
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.layout_popular_categories_item.view.*
+import org.greenrobot.eventbus.EventBus
 
 class PopularCategoryAdapter(var context:Context,
     val popularCategories: List<PopularCategory>)
@@ -35,7 +38,12 @@ class PopularCategoryAdapter(var context:Context,
     override fun getItemCount(): Int = popularCategories.size
 
     override fun onBindViewHolder(holder: PopularCategoryAdapter.PopularCategoryViewHolder, position: Int) {
-        Glide.with(context).load(popularCategories.get(position).image).into(holder.view.category_image)
-        holder.view.text_category_name!!.setText(popularCategories.get(position).name)
+        Glide.with(context).load(popularCategories[position].image).into(holder.view.category_image)
+        holder.view.text_category_name!!.text = popularCategories[position].name
+        holder.view.setOnClickListener{
+            Common.categorySelected = popularCategories[position]
+            EventBus.getDefault().postSticky(CategoryClick(true, popularCategories[position]))
+        }
     }
+
 }

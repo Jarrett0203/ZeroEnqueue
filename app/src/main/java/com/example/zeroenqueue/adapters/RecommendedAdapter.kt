@@ -9,6 +9,8 @@ import com.asksira.loopingviewpager.LoopingPagerAdapter
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.Recommended
+import com.example.zeroenqueue.eventBus.RecommendedClick
+import org.greenrobot.eventbus.EventBus
 
 class RecommendedAdapter(itemList:List<Recommended>, isInfinite:Boolean)
     :LoopingPagerAdapter<Recommended>(itemList, isInfinite) {
@@ -18,6 +20,10 @@ class RecommendedAdapter(itemList:List<Recommended>, isInfinite:Boolean)
 
         Glide.with(convertView.context).load(itemList?.get(listPosition)?.image).into(imageView)
         textView.text = itemList?.get(listPosition)?.name
+
+        convertView.setOnClickListener{
+            EventBus.getDefault().postSticky(RecommendedClick(true, itemList!![listPosition]))
+        }
     }
 
     override fun inflateView(viewType: Int, container: ViewGroup, listPosition: Int): View {
