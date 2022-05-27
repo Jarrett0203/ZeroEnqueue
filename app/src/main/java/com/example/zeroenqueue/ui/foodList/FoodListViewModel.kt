@@ -3,8 +3,10 @@ package com.example.zeroenqueue.ui.foodList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.zeroenqueue.classes.Category
 import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.common.Common
+import com.example.zeroenqueue.interfaces.ICategoryLoadCallback
 import com.example.zeroenqueue.interfaces.IFoodLoadCallback
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -118,6 +120,33 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
                     foodStallList.forEach { s ->
                         if (food!!.foodStall!!.uppercase() == s.uppercase())
                             tempList.add(food)
+                    }
+                    foodCallbackListener.onFoodLoadSuccess(tempList)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                foodCallbackListener.onFoodLoadFailed(error.message)
+            }
+        })
+    }
+
+    fun loadFoodListWithFoodStallAndCategories(foodStallList: List<String>, categoryList: List<String>) {
+        val tempList = ArrayList<Food>()
+        val foodListRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODLIST_REF)
+        foodListRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (itemSnapShot in snapshot.children) {
+                    val food = itemSnapShot.getValue(Food::class.java)
+                    foodStallList.forEach { s ->
+                        if (food!!.foodStall!!.uppercase() == s.uppercase())
+                            tempList.add(food)
+                    }
+                    categoryList.forEach { s ->
+                        if (food!!.categories!!.uppercase() == s.uppercase()) {
+                            if (!tempList.contains(food))
+                                tempList.add(food)
+                        }
                     }
                     foodCallbackListener.onFoodLoadSuccess(tempList)
                 }

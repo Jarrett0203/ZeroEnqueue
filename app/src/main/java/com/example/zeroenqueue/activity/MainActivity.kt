@@ -20,6 +20,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.zeroenqueue.R
+import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityMainBinding
 import com.example.zeroenqueue.db.CartDataSource
@@ -30,6 +31,11 @@ import com.example.zeroenqueue.ui.home.HomeFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import dmax.dialog.SpotsDialog
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -46,9 +52,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var cartDataSource: CartDataSource
-    private var drawerLayout: DrawerLayout?=null
+    private var drawerLayout: DrawerLayout? = null
     private lateinit var navView: NavigationView
     private lateinit var navController: NavController
+    private lateinit var dialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         cartDataSource = LocalCartDataSource(CartDatabase.getInstance(this).cartDAO())
 
         setSupportActionBar(binding.appBarMain.toolbar)
-        
+
         drawerLayout = binding.drawerLayout
         navView = binding.navView
 
@@ -102,32 +109,21 @@ class MainActivity : AppCompatActivity() {
         val txt_user = headView.findViewById<TextView>(R.id.txt_user)
         Common.setSpanString("Hey, ", Common.currentUser!!.name, txt_user)
 
-        navView.setNavigationItemSelectedListener(object:NavigationView.OnNavigationItemSelectedListener{
-            override fun onNavigationItemSelected(item: MenuItem): Boolean {
-                item.isChecked = true
-                drawerLayout!!.closeDrawers()
-                if(item.itemId == R.id.navigation_sign_out) {
-                    signout()
-                } else if(item.itemId == R.id.navigation_home) {
-                    navController.navigate(R.id.navigation_home)
-                } else if(item.itemId == R.id.navigation_food_list) {
-                    navController.navigate(R.id.navigation_food_list)
-                } else if(item.itemId == R.id.navigation_categories) {
-                    navController.navigate(R.id.navigation_categories)
-                } else if(item.itemId == R.id.navigation_order_status) {
-                    navController.navigate(R.id.navigation_order_status)
-                } else if(item.itemId == R.id.navigation_foodStall) {
-                    navController.navigate(R.id.navigation_foodStall)
-                } else if(item.itemId == R.id.navigation_profile) {
-                    navController.navigate(R.id.navigation_profile)
-                } else if(item.itemId == R.id.navigation_order_status) {
-                    navController.navigate(R.id.navigation_order_status)
-                } else if(item.itemId == R.id.navigation_cart) {
-                    navController.navigate(R.id.navigation_cart)
-                }
-                return false
+        navView.setNavigationItemSelectedListener { item ->
+            drawerLayout!!.closeDrawers()
+            when (item.itemId) {
+                R.id.navigation_sign_out -> signout()
+                R.id.navigation_home -> navController.navigate(R.id.navigation_home)
+                R.id.navigation_food_list -> navController.navigate(R.id.navigation_food_list)
+                R.id.navigation_categories -> navController.navigate(R.id.navigation_categories)
+                R.id.navigation_order_status -> navController.navigate(R.id.navigation_order_status)
+                R.id.navigation_foodStall -> navController.navigate(R.id.navigation_foodStall)
+                R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
+                R.id.navigation_order_status -> navController.navigate(R.id.navigation_order_status)
+                R.id.navigation_cart -> navController.navigate(R.id.navigation_cart)
             }
-        })
+            true
+        }
         countCartItem()
     }
 
@@ -135,8 +131,8 @@ class MainActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Sign out")
             .setMessage("Are you sure you want to exit?")
-            .setNegativeButton("CANCEL", {dialogInterface, _ -> dialogInterface.dismiss()})
-            .setPositiveButton("OK") {dialogInterface, _ ->
+            .setNegativeButton("CANCEL") { dialogInterface, _ -> dialogInterface.dismiss() }
+            .setPositiveButton("OK") { _, _ ->
                 Common.foodSelected = null
                 Common.categorySelected = null
                 Common.currentUser = null
@@ -187,29 +183,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onCategorySelected(event:CategoryClick){
-        if (event.isSuccess){
+    fun onCategorySelected(event: CategoryClick) {
+        if (event.isSuccess) {
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_list)
         }
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onFoodSelected(event: FoodItemClick){
-        if (event.isSuccess){
+    fun onFoodSelected(event: FoodItemClick) {
+        if (event.isSuccess) {
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_detail)
         }
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onFoodStallSelected(event: FoodStallClick){
-        if (event.isSuccess){
+    fun onFoodStallSelected(event: FoodStallClick) {
+        if (event.isSuccess) {
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_list)
         }
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onCountCartEvent(event: CountCartEvent){
-        if (event.isSuccess){
+    fun onCountCartEvent(event: CountCartEvent) {
+        if (event.isSuccess) {
             countCartItem()
         }
     }
@@ -221,6 +217,33 @@ class MainActivity : AppCompatActivity() {
         } else {
             fab.show()
         }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onRecommendedSelected(event: RecommendedClick) {
+        dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
+        dialog.show()
+        FirebaseDatabase.getInstance().getReference("FoodList")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        for (itemSnapShot in snapshot.children) {
+                            val food = itemSnapShot.getValue(Food::class.java)
+                            if (event.recommended.food_id == food!!.id) {
+                                dialog.dismiss()
+                                Common.foodSelected = food
+                                Common.foodSelected!!.key = itemSnapShot.key
+                                findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_detail)
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    dialog.dismiss()
+                    Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 
     private fun countCartItem() {
@@ -237,7 +260,11 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onError(e: Throwable) {
                     if (!e.message!!.contains("empty"))
-                        Toast.makeText(this@MainActivity, "[COUNT CART]"+e.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "[COUNT CART]" + e.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
                 }
 
             })

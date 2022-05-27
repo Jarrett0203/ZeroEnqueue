@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:id="@+id/home_group"
+    <group
+        android:id="@+id/home_group"
         android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_home"
@@ -11,19 +12,18 @@
             android:title="@string/title_home" />
     </group>
 
-    <group android:checkableBehavior="single">
-
-        <item android:title="Food" android:checkableBehavior="single">
-            <menu android:checkableBehavior="single">
+    <item android:title="@string/food">
+        <menu>
+            <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/navigation_food_list"
                     android:icon="@drawable/ic_list"
-                    android:title="@string/title_food_list"/>
+                    android:title="@string/title_food_list" />
 
                 <item
                     android:id="@+id/navigation_foodStall"
                     android:icon="@drawable/ic_food_stall"
-                    android:title="@string/title_food_stall"/>
+                    android:title="@string/title_food_stall" />
 
                 <item
                     android:id="@+id/navigation_categories"
@@ -34,20 +34,24 @@
                     android:id="@+id/navigation_cart"
                     android:icon="@drawable/ic_baseline_shopping_cart_24"
                     android:title="@string/menu_cart"/>
-            </menu>
-        </item>
+            </group>
+        </menu>
+    </item>
 
-        <item android:title="Others" android:checkableBehavior="single">
-            <menu>
+    <item android:title="@string/others">
+        <menu>
+            <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/navigation_order_status"
                     android:icon="@drawable/ic_order_status"
-                    android:title="@string/title_order_status"/>
-            </menu>
-        </item>
-    </group>
+                    android:title="@string/title_order_status" />
+            </group>
+        </menu>
+    </item>
 
-    <group android:id="@+id/user_group">
+    <group
+        android:id="@+id/user_group"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_sign_out"
             android:icon="@drawable/ic_baseline_exit_to_app_24"
