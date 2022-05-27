@@ -39,7 +39,7 @@ import org.w3c.dom.Text
 class CartFragment: Fragment() {
 
     private lateinit var cartViewModel: CartViewModel
-    private lateinit var compositeDisposable: CompositeDisposable
+    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private var cartDataSource:CartDataSource?=null
     private var recyclerViewState: Parcelable?=null
 
@@ -63,8 +63,8 @@ class CartFragment: Fragment() {
         cartViewModel.initCartDataSource(requireContext())
         val root = inflater.inflate(R.layout.fragment_cart, container, false)
         initViews(root)
-        cartViewModel.getMutableLiveDataCartItems().observe(viewLifecycleOwner, Observer {
-            if(it == null || it.isEmpty()) {
+        cartViewModel.getMutableLiveDataCartItems().observe(viewLifecycleOwner) {
+            if (it == null || it.isEmpty()) {
                 recycler_cart!!.visibility = View.GONE
                 group_place_holder!!.visibility = View.GONE
                 txt_empty_cart!!.visibility = View.VISIBLE
@@ -76,12 +76,8 @@ class CartFragment: Fragment() {
                 val adapter = MyCartAdapter(requireContext(), it)
                 recycler_cart!!.adapter = adapter
             }
-        })
+        }
         return root
-//        val textView:TextView = root.findViewById(R.id.text_tools)
-//        toolsViewModel.text.observe(this, Observer {
-//            textView.text = it
-//        })
     }
 
     private fun initViews(root:View) {
@@ -106,7 +102,7 @@ class CartFragment: Fragment() {
 
     override fun onStop() {
         super.onStop()
-        cartViewModel!!.onStop()
+        cartViewModel.onStop()
         compositeDisposable.clear()
         EventBus.getDefault().postSticky(HideFABCart(false))
         if(EventBus.getDefault().isRegistered(this))
@@ -121,7 +117,7 @@ class CartFragment: Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object: SingleObserver<Int> {
                 override fun onSuccess(t: Int) {
-                    calculateTotalPrice();
+                    calculateTotalPrice()
                     recycler_cart!!.layoutManager!!.onRestoreInstanceState(recyclerViewState)
                 }
 

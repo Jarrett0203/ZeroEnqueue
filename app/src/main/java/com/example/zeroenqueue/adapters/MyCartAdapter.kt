@@ -1,4 +1,4 @@
-package com.example.zeroenqueue.adapters;
+package com.example.zeroenqueue.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -40,7 +40,7 @@ class MyCartAdapter (internal var context:Context,
         init {
             img_cart = itemView.findViewById(R.id.img_cart) as ImageView
             txt_food_name = itemView.findViewById(R.id.txt_food_name) as TextView
-            txt_food_prices = itemView.findViewById(R.id.txt_food_name) as TextView
+            txt_food_prices = itemView.findViewById(R.id.txt_food_price) as TextView
             number_button = itemView.findViewById(R.id.number_button) as ElegantNumberButton
         }
 
