@@ -55,5 +55,8 @@
     <string name="size">Size</string>
     <string name="addOns">Add-Ons</string>
     <string name="example">Example</string>
+    <string name="filter">Filter</string>
+    <string name="food">Food</string>
+    <string name="others">Others</string>
 
 </resources>

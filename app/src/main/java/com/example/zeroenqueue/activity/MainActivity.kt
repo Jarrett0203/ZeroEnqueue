@@ -99,31 +99,20 @@ class MainActivity : AppCompatActivity() {
         val txt_user = headView.findViewById<TextView>(R.id.txt_user)
         Common.setSpanString("Hey, ", Common.currentUser!!.name, txt_user)
 
-        navView.setNavigationItemSelectedListener(object :
-            NavigationView.OnNavigationItemSelectedListener {
-            override fun onNavigationItemSelected(item: MenuItem): Boolean {
-                item.isChecked = true
-                drawerLayout!!.closeDrawers()
-                if (item.itemId == R.id.navigation_sign_out) {
-                    signout()
-                } else if (item.itemId == R.id.navigation_home) {
-                    navController.navigate(R.id.navigation_home)
-                } else if (item.itemId == R.id.navigation_food_list) {
-                    navController.navigate(R.id.navigation_food_list)
-                } else if (item.itemId == R.id.navigation_categories) {
-                    navController.navigate(R.id.navigation_categories)
-                } else if (item.itemId == R.id.navigation_order_status) {
-                    navController.navigate(R.id.navigation_order_status)
-                } else if (item.itemId == R.id.navigation_foodStall) {
-                    navController.navigate(R.id.navigation_foodStall)
-                } else if (item.itemId == R.id.navigation_profile) {
-                    navController.navigate(R.id.navigation_profile)
-                } else if (item.itemId == R.id.navigation_order_status) {
-                    navController.navigate(R.id.navigation_order_status)
-                }
-                return false
+        navView.setNavigationItemSelectedListener { item ->
+            drawerLayout!!.closeDrawers()
+            when (item.itemId) {
+                R.id.navigation_sign_out -> signout()
+                R.id.navigation_home -> navController.navigate(R.id.navigation_home)
+                R.id.navigation_food_list -> navController.navigate(R.id.navigation_food_list)
+                R.id.navigation_categories -> navController.navigate(R.id.navigation_categories)
+                R.id.navigation_order_status -> navController.navigate(R.id.navigation_order_status)
+                R.id.navigation_foodStall -> navController.navigate(R.id.navigation_foodStall)
+                R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
+                R.id.navigation_order_status -> navController.navigate(R.id.navigation_order_status)
             }
-        })
+            true
+        }
         countCartItem()
     }
 
@@ -131,8 +120,8 @@ class MainActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Sign out")
             .setMessage("Are you sure you want to exit?")
-            .setNegativeButton("CANCEL", { dialogInterface, _ -> dialogInterface.dismiss() })
-            .setPositiveButton("OK") { dialogInterface, _ ->
+            .setNegativeButton("CANCEL") { dialogInterface, _ -> dialogInterface.dismiss() }
+            .setPositiveButton("OK") { _, _ ->
                 Common.foodSelected = null
                 Common.categorySelected = null
                 Common.currentUser = null
@@ -223,6 +212,7 @@ class MainActivity : AppCompatActivity() {
                             if (event.recommended.food_id == food!!.id) {
                                 dialog.dismiss()
                                 Common.foodSelected = food
+                                Common.foodSelected!!.key = itemSnapShot.key
                                 findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_detail)
                             }
                         }

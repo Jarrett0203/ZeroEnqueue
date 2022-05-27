@@ -283,11 +283,13 @@ class FoodDetailFragment : Fragment(), TextWatcher {
                     StringBuilder(addOn.name!!).append("(+$")
                         .append(Common.formatPrice(addOn.price)).append(")").toString()
                 chip.isClickable = false
+
                 chip.setOnCloseIconClickListener {
                     chipGroupAddonSelected.removeView(it)
                     Common.foodSelected!!.addOnSelected!!.remove(addOn)
                     calculateTotalPrice()
                 }
+
                 chipGroupAddonSelected.addView(chip)
             }
         } else if (Common.foodSelected!!.addOnSelected!!.size == 0)
