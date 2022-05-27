@@ -11,7 +11,7 @@ interface CartDataSource {
 
     fun countCartItems(uid:String): Single<Int>
 
-    fun totalPrice(uid:String): Single<Long>
+    fun totalPrice(uid:String): Single<Double>
 
     fun insertOrReplaceAll(vararg cartItems: CartItem): Completable
 
@@ -22,4 +22,5 @@ interface CartDataSource {
     fun cleanCart(uid:String): Single<Int>
 
     fun getItemWithAllOptionsInCart(uid:String, foodId:String, foodSize:String, foodAddon:String): Single<CartItem>
+
 }

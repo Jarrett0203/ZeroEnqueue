@@ -27,12 +27,12 @@ package com.example.zeroenqueue.adapters
 //        calendar = Calendar.getInstance()
 //        simpleDateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
 //    }
-
+//
 //    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 //        return MyViewHolder(LayoutInflater.from(context))
 //            .inflate(R.layout.layout_order_item, parent, false)
 //    }
-
+//
 //    inner class MyViewHolder(itemView: LayoutInflater) : RecyclerView.ViewHolder(itemView) {
 //
 //        internal var img_order:ImageView?=null
@@ -49,7 +49,7 @@ package com.example.zeroenqueue.adapters
 //            txt_order_date = itemView.findViewById(R.id.txt_order_date) as TextView
 //        }
 //  }
-
+//
 //    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 //        Glide.with(context!!)
 //            .load(orderList[position].cartItemList!![0].foodImage)

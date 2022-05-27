@@ -55,7 +55,7 @@
 
     <fragment
         android:id="@+id/navigation_order_status"
-        android:name="com.example.zeroenqueue.ui.orderStatus.OrderSummaryFragment"
+        android:name="com.example.zeroenqueue.ui.orderStatus.OrderStatusFragment"
         android:label="@string/title_order_status"
         tools:layout="@layout/fragment_order_status" >
         <action
@@ -87,5 +87,11 @@
             android:id="@+id/food_list_to_profile"
             app:destination="@id/navigation_profile" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_cart"
+        android:name="com.example.zeroenqueue.ui.cart.CartFragment"
+        android:label="@string/menu_cart"
+        tools:layout="@layout/fragment_cart" />
 
 </navigation>

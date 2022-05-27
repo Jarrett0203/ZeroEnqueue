@@ -29,6 +29,11 @@
                     android:id="@+id/navigation_categories"
                     android:icon="@drawable/ic_categories"
                     android:title="@string/title_categories"/>
+
+                <item
+                    android:id="@+id/navigation_cart"
+                    android:icon="@drawable/ic_baseline_shopping_cart_24"
+                    android:title="@string/menu_cart"/>
             </menu>
         </item>
 

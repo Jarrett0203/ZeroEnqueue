@@ -3,6 +3,7 @@ package com.example.zeroenqueue.activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.service.controls.actions.FloatAction
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -12,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -23,11 +25,9 @@ import com.example.zeroenqueue.databinding.ActivityMainBinding
 import com.example.zeroenqueue.db.CartDataSource
 import com.example.zeroenqueue.db.CartDatabase
 import com.example.zeroenqueue.db.LocalCartDataSource
-import com.example.zeroenqueue.eventBus.CategoryClick
-import com.example.zeroenqueue.eventBus.CountCartEvent
-import com.example.zeroenqueue.eventBus.FoodItemClick
-import com.example.zeroenqueue.eventBus.FoodStallClick
+import com.example.zeroenqueue.eventBus.*
 import com.example.zeroenqueue.ui.home.HomeFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.SingleObserver
@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cartDataSource: CartDataSource
     private var drawerLayout: DrawerLayout?=null
     private lateinit var navView: NavigationView
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,15 +62,21 @@ class MainActivity : AppCompatActivity() {
         
         drawerLayout = binding.drawerLayout
         navView = binding.navView
+
+        val fab: FloatingActionButton = findViewById(R.id.fab)
+        fab.setOnClickListener { view ->
+            navController.navigate(R.id.navigation_cart)
+        }
         val headView: View? = navView.getHeaderView(0)
         val profileImage: ImageView? = headView!!.profile_image
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        navController = findNavController(R.id.nav_host_fragment_content_main)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home, R.id.navigation_categories, R.id.navigation_order_status,
-                R.id.navigation_foodStall, R.id.navigation_profile, R.id.navigation_food_list
+                R.id.navigation_foodStall, R.id.navigation_profile, R.id.navigation_food_list,
+                R.id.navigation_cart
             ), drawerLayout
         )
 
@@ -115,6 +122,8 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.navigation_profile)
                 } else if(item.itemId == R.id.navigation_order_status) {
                     navController.navigate(R.id.navigation_order_status)
+                } else if(item.itemId == R.id.navigation_cart) {
+                    navController.navigate(R.id.navigation_cart)
                 }
                 return false
             }
@@ -202,6 +211,15 @@ class MainActivity : AppCompatActivity() {
     fun onCountCartEvent(event: CountCartEvent){
         if (event.isSuccess){
             countCartItem()
+        }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onHideFABEvent(event: HideFABCart){
+        if (event.isHidden){
+            fab.hide()
+        } else {
+            fab.show()
         }
     }
 
