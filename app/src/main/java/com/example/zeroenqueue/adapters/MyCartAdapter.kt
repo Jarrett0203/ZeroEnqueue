@@ -10,6 +10,7 @@ import com.example.zeroenqueue.R
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.db.CartDataSource
 import com.example.zeroenqueue.db.CartDatabase
 import com.example.zeroenqueue.db.CartItem
@@ -19,8 +20,10 @@ import com.example.zeroenqueue.ui.foodDetail.FoodDetailViewModel
 import io.reactivex.disposables.CompositeDisposable
 import org.greenrobot.eventbus.EventBus
 
-class MyCartAdapter (internal var context:Context,
-                     internal var cartItem :List<CartItem>) :
+class MyCartAdapter(
+    internal var context: Context,
+    internal var cartItem: List<CartItem>
+) :
     RecyclerView.Adapter<MyCartAdapter.MyViewHolder>() {
 
     internal var compositeDisposable: CompositeDisposable
@@ -31,7 +34,7 @@ class MyCartAdapter (internal var context:Context,
         cartDataSource = LocalCartDataSource(CartDatabase.getInstance(context).cartDAO())
     }
 
-    inner class MyViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var img_cart: ImageView
         var txt_food_name: TextView
         var txt_food_prices: TextView
@@ -57,7 +60,9 @@ class MyCartAdapter (internal var context:Context,
         Glide.with(context).load(cartItem[position].foodImage)
             .into(holder.img_cart)
         holder.txt_food_name.text = StringBuilder(cartItem[position].foodName!!)
-        holder.txt_food_prices.text = StringBuilder("").append(cartItem[position].foodPrice + cartItem[position].foodExtraPrice)
+        holder.txt_food_prices.text = StringBuilder("$")
+            .append(Common.formatPrice(cartItem[position].foodPrice + cartItem[position].foodExtraPrice))
+            .toString()
         holder.number_button.number = cartItem[position].foodQuantity.toString()
 
         holder.number_button.setOnValueChangeListener { view, oldValue, newValue ->

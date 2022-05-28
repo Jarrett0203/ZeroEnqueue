@@ -3,10 +3,7 @@ package com.example.zeroenqueue.activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.service.controls.actions.FloatAction
 import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -27,7 +24,6 @@ import com.example.zeroenqueue.db.CartDataSource
 import com.example.zeroenqueue.db.CartDatabase
 import com.example.zeroenqueue.db.LocalCartDataSource
 import com.example.zeroenqueue.eventBus.*
-import com.example.zeroenqueue.ui.home.HomeFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -52,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var cartDataSource: CartDataSource
-    private var drawerLayout: DrawerLayout? = null
+    private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
     private lateinit var navController: NavController
     private lateinit var dialog: AlertDialog
@@ -74,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener { view ->
             navController.navigate(R.id.navigation_cart)
         }
-        val headView: View? = navView.getHeaderView(0)
+        val headView = navView.getHeaderView(0)
         val profileImage: ImageView? = headView!!.profile_image
         navController = findNavController(R.id.nav_host_fragment_content_main)
         // Passing each menu ID as a set of Ids because each
@@ -90,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         profileImage!!.setOnClickListener {
             val navHostFragment = supportFragmentManager.primaryNavigationFragment
             val currentFragment = navHostFragment!!.childFragmentManager.fragments[0]
-            drawerLayout!!.closeDrawers()
+            drawerLayout.closeDrawers()
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.home.HomeFragment")
                 navController.navigate(R.id.home_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.foodStall.FoodStallFragment")
@@ -106,11 +102,11 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        val txt_user = headView.findViewById<TextView>(R.id.txt_user)
-        Common.setSpanString("Hey, ", Common.currentUser!!.name, txt_user)
+        val txtUser = headView.findViewById<TextView>(R.id.txt_user)
+        Common.setSpanString("Hey, ", Common.currentUser!!.name, txtUser)
 
         navView.setNavigationItemSelectedListener { item ->
-            drawerLayout!!.closeDrawers()
+            drawerLayout.closeDrawers()
             when (item.itemId) {
                 R.id.navigation_sign_out -> signout()
                 R.id.navigation_home -> navController.navigate(R.id.navigation_home)
@@ -119,7 +115,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_order_status -> navController.navigate(R.id.navigation_order_status)
                 R.id.navigation_foodStall -> navController.navigate(R.id.navigation_foodStall)
                 R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
-                R.id.navigation_order_status -> navController.navigate(R.id.navigation_order_status)
                 R.id.navigation_cart -> navController.navigate(R.id.navigation_cart)
             }
             true
@@ -149,11 +144,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (drawerLayout!!.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout!!.closeDrawer(GravityCompat.START)
-        } else {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        else
             super.onBackPressed()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

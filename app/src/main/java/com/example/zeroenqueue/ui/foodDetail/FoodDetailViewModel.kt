@@ -12,10 +12,6 @@ class FoodDetailViewModel : ViewModel() {
     private var foodDetailMutableLiveData: MutableLiveData<Food>?=null
     private var commentMutableLiveData: MutableLiveData<Comment>?=null
 
-    init {
-        commentMutableLiveData = MutableLiveData()
-    }
-
     val foodDetail:LiveData<Food>
         get(){
             if(foodDetailMutableLiveData == null){

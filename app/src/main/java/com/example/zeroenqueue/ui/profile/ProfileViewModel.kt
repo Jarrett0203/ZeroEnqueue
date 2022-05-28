@@ -55,6 +55,12 @@ class ProfileViewModel : ViewModel(), IProfileLoadCallback {
         })
     }
 
+    fun setProfile(profile: User) {
+        if (profileMutableLiveData != null) {
+            profileMutableLiveData!!.value = profile
+        }
+    }
+
     override fun onProfileLoadSuccess(profile: User) {
         profileMutableLiveData!!.value = profile
     }
