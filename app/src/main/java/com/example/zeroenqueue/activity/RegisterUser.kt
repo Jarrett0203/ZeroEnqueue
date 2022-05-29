@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityRegisterUserBinding
+import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -24,7 +25,10 @@ class RegisterUser : AppCompatActivity() {
     private lateinit var userRef: DatabaseReference
     private lateinit var dialog: AlertDialog
     private lateinit var fullName: TextView
-    private lateinit var userType: TextView
+    private lateinit var phone: TextView
+    private lateinit var chipCustomer: Chip
+    private lateinit var chipVendor: Chip
+    private lateinit var userType: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,15 +43,29 @@ class RegisterUser : AppCompatActivity() {
 
         binding.registerUser.setOnClickListener {
             fullName = binding.fullName
-            userType = binding.usertype
+            phone = binding.phone
+            chipCustomer = binding.chipCustomer
+            chipVendor = binding.chipVendor
+            chipCustomer.setOnCheckedChangeListener { _, b ->
+                if (b) {
+                    userType = "Customer"
+                }
+            }
+            chipVendor.setOnCheckedChangeListener { _, b ->
+                if (b) {
+                    userType = "Vendor"
+                }
+            }
             val email = binding.email.text.toString()
             val password = binding.password.text.toString()
 
-            if (fullName.text.toString().isEmpty() && userType.text.toString()
-                    .isEmpty() && email.isEmpty() && password.isEmpty()
-            ) {
+            if (fullName.text.toString().isEmpty() || email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Empty fields are not allowed!!", Toast.LENGTH_SHORT).show()
-            } else {
+            }
+            else if (!chipCustomer.isChecked && !chipVendor.isChecked) {
+                Toast.makeText(this, "Please select a user type.", Toast.LENGTH_SHORT).show()
+            }
+            else {
                 firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) {
                         if (it.isSuccessful) {
@@ -63,9 +81,10 @@ class RegisterUser : AppCompatActivity() {
                                             val currentUser = User()
                                             currentUser.uid = newUser.uid
                                             currentUser.name = fullName.text.toString()
+                                            currentUser.phone = phone.text.toString()
                                             currentUser.email = email
                                             currentUser.password = password
-                                            currentUser.userType = userType.text.toString()
+                                            currentUser.userType = userType
                                             userRef.child(newUser.uid)
                                                 .setValue(currentUser)
                                                 .addOnCompleteListener { task ->

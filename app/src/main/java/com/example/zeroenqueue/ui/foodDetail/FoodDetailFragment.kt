@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.andremion.counterfab.CounterFab
@@ -338,7 +339,6 @@ class FoodDetailFragment : Fragment(), TextWatcher {
                             .addOnCompleteListener { task ->
                                 dialog.dismiss()
                                 if (task.isSuccessful) {
-                                    Common.foodSelected = food
                                     foodDetailViewModel.setFood(food)
                                     Toast.makeText(
                                         context!!,
@@ -409,8 +409,8 @@ class FoodDetailFragment : Fragment(), TextWatcher {
             radioButton.layoutParams = params
             radioButton.text = size.name
             radioButton.tag = size.price
-
-            rdi_group_size.addView(radioButton)
+            if (rdi_group_size.size <= 1)
+                rdi_group_size.addView(radioButton)
         }
 
         if (rdi_group_size.childCount > 0) {

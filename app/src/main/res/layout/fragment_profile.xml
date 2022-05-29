@@ -158,15 +158,15 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="User Type">
+                android:hint="Phone Number">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_userType"
+                    android:id="@+id/input_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_user_type"
+                    android:drawableStart="@drawable/ic_phone"
                     android:drawablePadding="10dp"
-                    android:text="Vendor" />
+                    android:text="91232312" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -197,6 +197,64 @@
                     android:text="asdfs1234" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="10dp"
+                app:strokeColor="@color/yellow">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/usertype"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_type"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="5dp"/>
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:selectionRequired="true"
+                        app:singleSelection="true"
+                        android:layout_gravity="center_horizontal">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCustomer"
+                            style="@style/Colors_Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:checkable="true"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="@string/customer"
+                            android:textAlignment="center"
+                            android:textSize="18sp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipVendor"
+                            style="@style/Colors_Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:checkable="true"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="@string/vendor"
+                            android:textAlignment="center"
+                            android:textSize="18sp" />
+                    </com.google.android.material.chip.ChipGroup>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
             <Button
                 android:id="@+id/btnUpdate"
                 android:layout_width="match_parent"
@@ -211,6 +269,7 @@
             android:padding="20dp">
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/edit_store"
                 android:layout_width="0dp"
                 android:layout_height="75dp"
                 android:layout_margin="10dp"
@@ -219,7 +278,6 @@
                 app:cardElevation="10dp">
 
                 <RelativeLayout
-                    android:id="@+id/edit_store"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clickable="true"
@@ -247,6 +305,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/addNewFood"
                 android:layout_width="0dp"
                 android:layout_height="75dp"
                 android:layout_margin="10dp"
@@ -255,7 +314,6 @@
                 app:cardElevation="10dp">
 
                 <RelativeLayout
-                    android:id="@+id/add_new_food"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clickable="true"

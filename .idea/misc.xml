@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1855" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable/bottom_nav_icon_color.xml" value="0.226" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable/ic_foodstall.xml" value="0.226" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1855" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable/ic_order_status.xml" value="0.226" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable/ic_profile.xml" value="0.226" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable/side_nav_bar.xml" value="0.226" />
@@ -18,6 +20,7 @@
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/content_main.xml" value="0.25677083333333334" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/content_profile.xml" value="0.24375" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_add_food_item.xml" value="0.2578125" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_cart.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_categories.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_category_food_list.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_comment.xml" value="0.2578125" />
@@ -30,7 +33,7 @@
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_order_summary.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_profile.xml" value="0.1838768115942029" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_addon_display.xml" value="0.192578125" />
-        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_cart_item.xml" value="0.2578125" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_cart_item.xml" value="0.23529411764705882" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_category_item.xml" value="0.1" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_category_menu.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_chip.xml" value="0.25677083333333334" />
@@ -52,6 +55,7 @@
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/menu/main.xml" value="0.25677083333333334" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/menu/menu_food_stalls.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/menu/search_food.xml" value="0.11510416666666666" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1855" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.189" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.189" />
         <entry key="app/src/main/res/drawable/side_nav_bar.xml" value="0.189" />

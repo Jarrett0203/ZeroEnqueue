@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:text="Name"
+                    android:text="@string/cart"
                     android:textSize="14sp" />
 
                 <TextView
@@ -45,25 +45,25 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:text="price"
+                    android:text="100.0"
                     android:textColor="@android:color/holo_red_light"
                     android:textSize="12sp" />
 
             </LinearLayout>
 
             <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:id="@+id/number_button"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
                 app:backGroundColor="@color/yellow"
                 app:finalNumber="20"
                 app:textSize="8sp"
                 app:initialNumber="1"
-                app:textColor="@android:color/white"
+                app:textColor="@android:color/black"
                 />
 
         </LinearLayout>

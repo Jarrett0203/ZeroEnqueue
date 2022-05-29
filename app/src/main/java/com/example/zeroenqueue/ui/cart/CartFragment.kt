@@ -164,7 +164,7 @@ class CartFragment: Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object: SingleObserver<Double> {
                 override fun onSuccess(t: Double) {
-                    txt_total_price!!.text = StringBuilder("Total: ")
+                    txt_total_price!!.text = StringBuilder("Total: $")
                         .append(Common.formatPrice(t))
                     recycler_cart!!.layoutManager!!.onRestoreInstanceState(recyclerViewState)
                 }

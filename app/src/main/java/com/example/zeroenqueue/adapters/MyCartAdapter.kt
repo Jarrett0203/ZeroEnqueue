@@ -19,8 +19,10 @@ import com.example.zeroenqueue.ui.foodDetail.FoodDetailViewModel
 import io.reactivex.disposables.CompositeDisposable
 import org.greenrobot.eventbus.EventBus
 
-class MyCartAdapter (internal var context:Context,
-                     internal var cartItems :List<CartItem>) :
+class MyCartAdapter(
+    internal var context: Context,
+    internal var cartItem: List<CartItem>
+) :
     RecyclerView.Adapter<MyCartAdapter.MyViewHolder>() {
 
     internal var compositeDisposable: CompositeDisposable
@@ -31,7 +33,7 @@ class MyCartAdapter (internal var context:Context,
         cartDataSource = LocalCartDataSource(CartDatabase.getInstance(context).cartDAO())
     }
 
-    inner class MyViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var img_cart: ImageView
         var txt_food_name: TextView
         var txt_food_prices: TextView
@@ -54,21 +56,23 @@ class MyCartAdapter (internal var context:Context,
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Glide.with(context).load(cartItems[position].foodImage)
+        Glide.with(context).load(cartItem[position].foodImage)
             .into(holder.img_cart)
-        holder.txt_food_name.text = StringBuilder(cartItems[position].foodName!!)
-        holder.txt_food_prices.text = StringBuilder("").append(cartItems[position].foodPrice + cartItems[position].foodExtraPrice)
-        holder.number_button.number = cartItems[position].foodQuantity.toString()
+        holder.txt_food_name.text = StringBuilder(cartItem[position].foodName!!)
+        holder.txt_food_prices.text = StringBuilder("$")
+            .append(Common.formatPrice(cartItem[position].foodPrice + cartItem[position].foodExtraPrice))
+            .toString()
+        holder.number_button.number = cartItem[position].foodQuantity.toString()
 
         holder.number_button.setOnValueChangeListener { view, oldValue, newValue ->
-            cartItems[position].foodQuantity = newValue
-            EventBus.getDefault().postSticky(UpdateCartItems(cartItems[position]))
+            cartItem[position].foodQuantity = newValue
+            EventBus.getDefault().postSticky(UpdateCartItems(cartItem[position]))
         }
 
     }
 
     override fun getItemCount(): Int {
-        return cartItems.size
+        return cartItem.size
     }
 
 
