@@ -20,7 +20,7 @@ import io.reactivex.disposables.CompositeDisposable
 import org.greenrobot.eventbus.EventBus
 
 class MyCartAdapter (internal var context:Context,
-                     internal var cartItem :List<CartItem>) :
+                     internal var cartItems :List<CartItem>) :
     RecyclerView.Adapter<MyCartAdapter.MyViewHolder>() {
 
     internal var compositeDisposable: CompositeDisposable
@@ -48,27 +48,27 @@ class MyCartAdapter (internal var context:Context,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(
-            LayoutInflater.from(parent.context)
+            LayoutInflater.from(context)
                 .inflate(R.layout.layout_cart_item, parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Glide.with(context).load(cartItem[position].foodImage)
+        Glide.with(context).load(cartItems[position].foodImage)
             .into(holder.img_cart)
-        holder.txt_food_name.text = StringBuilder(cartItem[position].foodName!!)
-        holder.txt_food_prices.text = StringBuilder("").append(cartItem[position].foodPrice + cartItem[position].foodExtraPrice)
-        holder.number_button.number = cartItem[position].foodQuantity.toString()
+        holder.txt_food_name.text = StringBuilder(cartItems[position].foodName!!)
+        holder.txt_food_prices.text = StringBuilder("").append(cartItems[position].foodPrice + cartItems[position].foodExtraPrice)
+        holder.number_button.number = cartItems[position].foodQuantity.toString()
 
         holder.number_button.setOnValueChangeListener { view, oldValue, newValue ->
-            cartItem[position].foodQuantity = newValue
-            EventBus.getDefault().postSticky(UpdateCartItems(cartItem[position]))
+            cartItems[position].foodQuantity = newValue
+            EventBus.getDefault().postSticky(UpdateCartItems(cartItems[position]))
         }
 
     }
 
     override fun getItemCount(): Int {
-        return cartItem.size
+        return cartItems.size
     }
 
 

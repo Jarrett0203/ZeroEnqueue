@@ -2,6 +2,7 @@ package com.example.zeroenqueue.ui.cart
 
 import android.media.metrics.Event
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -20,11 +21,13 @@ import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.MyCartAdapter
 import com.example.zeroenqueue.cart
 import com.example.zeroenqueue.common.Common
+import com.example.zeroenqueue.common.SwipeHelper
 import com.example.zeroenqueue.db.CartDataSource
 import com.example.zeroenqueue.db.CartDatabase
 import com.example.zeroenqueue.db.LocalCartDataSource
 import com.example.zeroenqueue.eventBus.HideFABCart
 import com.example.zeroenqueue.eventBus.UpdateCartItems
+import com.example.zeroenqueue.interfaces.IDeleteBtnCallback
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -67,11 +70,11 @@ class CartFragment: Fragment() {
             if (it == null || it.isEmpty()) {
                 recycler_cart!!.visibility = View.GONE
                 group_place_holder!!.visibility = View.GONE
-                txt_empty_cart!!.visibility = View.VISIBLE
+                empty_cart!!.visibility = View.VISIBLE
             } else {
                 recycler_cart!!.visibility = View.VISIBLE
                 group_place_holder!!.visibility = View.VISIBLE
-                txt_empty_cart!!.visibility = View.GONE
+                empty_cart!!.visibility = View.GONE
 
                 val adapter = MyCartAdapter(requireContext(), it)
                 recycler_cart!!.adapter = adapter
@@ -92,6 +95,26 @@ class CartFragment: Fragment() {
         empty_cart = root.findViewById(R.id.txt_empty_cart) as TextView
         total_prices = root.findViewById(R.id.txt_total_price) as TextView
         group_place_holder = root.findViewById(R.id.group_place_holder) as CardView
+
+        val swipe = object : SwipeHelper(requireContext(), recycler_cart!!, 200) {
+            override fun instantiateMyButton(
+                viewHolder: RecyclerView.ViewHolder,
+                buffer: MutableList<MyButton>
+            ) {
+                buffer.add(MyButton(context!!,
+                    "Delete",
+                    30,
+                    0,
+                    Color.parseColor("#FF3c30"),
+                    object: IDeleteBtnCallback {
+                        override fun onClick(pos: Int) {
+                            Toast.makeText(context, "Delete Item", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                ))
+            }
+        }
     }
 
     override fun onStart() {
@@ -110,26 +133,28 @@ class CartFragment: Fragment() {
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onUpdateItemInCart(event: UpdateCartItems) {
-        recyclerViewState = recycler_cart!!.layoutManager!!.onSaveInstanceState()
-        cartDataSource!!.updateCart(event.cartItem)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object: SingleObserver<Int> {
-                override fun onSuccess(t: Int) {
-                    calculateTotalPrice()
-                    recycler_cart!!.layoutManager!!.onRestoreInstanceState(recyclerViewState)
-                }
+    fun onUpdateCartItems(event: UpdateCartItems) {
+        if(event.cartItem != null) {
+            recyclerViewState = recycler_cart!!.layoutManager!!.onSaveInstanceState()
+            cartDataSource!!.updateCart(event.cartItem)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object: SingleObserver<Int> {
+                    override fun onSuccess(t: Int) {
+                        calculateTotalPrice()
+                        recycler_cart!!.layoutManager!!.onRestoreInstanceState(recyclerViewState)
+                    }
 
-                override fun onSubscribe(d: Disposable) {
-                    TODO("Not yet implemented")
-                }
+                    override fun onSubscribe(d: Disposable) {
+                        TODO("Not yet implemented")
+                    }
 
 
-                override fun onError(e: Throwable) {
-                    Toast.makeText(context, "[UPDATE CART]" + e.message, Toast.LENGTH_SHORT).show()
-                }
-            })
+                    override fun onError(e: Throwable) {
+                        Toast.makeText(context, "[UPDATE CART]" + e.message, Toast.LENGTH_SHORT).show()
+                    }
+                })
+        }
 
     }
 
