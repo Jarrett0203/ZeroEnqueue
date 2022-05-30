@@ -149,7 +149,8 @@ class CartFragment: Fragment() {
 
 
                 override fun onError(e: Throwable) {
-                    Toast.makeText(context, "[SUM CART]" + e.message, Toast.LENGTH_SHORT).show()
+                    if (!e.message!!.contains("empty"))
+                        Toast.makeText(context, "[SUM CART]" + e.message, Toast.LENGTH_SHORT).show()
                 }
 
             })

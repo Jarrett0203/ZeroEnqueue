@@ -11,11 +11,12 @@ import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityRegisterUserBinding
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import dmax.dialog.SpotsDialog
+import kotlinx.android.synthetic.main.activity_register_user.*
+import java.util.*
 
 
 class RegisterUser : AppCompatActivity() {
@@ -24,11 +25,8 @@ class RegisterUser : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var userRef: DatabaseReference
     private lateinit var dialog: AlertDialog
-    private lateinit var fullName: TextView
-    private lateinit var phone: TextView
     private lateinit var chipCustomer: Chip
     private lateinit var chipVendor: Chip
-    private lateinit var userType: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,31 +40,24 @@ class RegisterUser : AppCompatActivity() {
 
 
         binding.registerUser.setOnClickListener {
-            fullName = binding.fullName
-            phone = binding.phone
             chipCustomer = binding.chipCustomer
             chipVendor = binding.chipVendor
-            chipCustomer.setOnCheckedChangeListener { _, b ->
-                if (b) {
-                    userType = "Customer"
-                }
-            }
-            chipVendor.setOnCheckedChangeListener { _, b ->
-                if (b) {
-                    userType = "Vendor"
-                }
-            }
-            val email = binding.email.text.toString()
-            val password = binding.password.text.toString()
+            val newEmail = binding.email.text.toString().trim()
+            val newPassword = binding.password.text.toString().trim()
+            val newName = binding.fullName.text.toString().trim()
+            val newPhone = binding.phone.text.toString().trim()
+            val firstNums = arrayOf('6', '8', '9')
 
-            if (fullName.text.toString().isEmpty() || email.isEmpty() || password.isEmpty()) {
+            if (newName.isEmpty() || newEmail.isEmpty() || newPassword.isEmpty() || newPhone.isEmpty())
                 Toast.makeText(this, "Empty fields are not allowed!!", Toast.LENGTH_SHORT).show()
-            }
-            else if (!chipCustomer.isChecked && !chipVendor.isChecked) {
+            else if (!chipCustomer.isChecked && !chipVendor.isChecked)
                 Toast.makeText(this, "Please select a user type.", Toast.LENGTH_SHORT).show()
-            }
+            else if (!Arrays.stream(firstNums).anyMatch { t -> t == newPhone[0] } || newPhone.length != 8)
+                Toast.makeText(this, "Invalid phone number", Toast.LENGTH_SHORT).show()
+            else if (newPassword.length < 6)
+                Toast.makeText(this, "Password requires at least 6 characters", Toast.LENGTH_SHORT).show()
             else {
-                firebaseAuth.createUserWithEmailAndPassword(email, password)
+                firebaseAuth.createUserWithEmailAndPassword(newEmail, newPassword)
                     .addOnCompleteListener(this) {
                         if (it.isSuccessful) {
                             val newUser = firebaseAuth.currentUser
@@ -78,13 +69,18 @@ class RegisterUser : AppCompatActivity() {
                                             val currentUser = snapshot.getValue(User::class.java)
                                             goToMainActivity(currentUser)
                                         } else {
+
                                             val currentUser = User()
                                             currentUser.uid = newUser.uid
-                                            currentUser.name = fullName.text.toString()
-                                            currentUser.phone = phone.text.toString()
-                                            currentUser.email = email
-                                            currentUser.password = password
-                                            currentUser.userType = userType
+                                            currentUser.name = newName
+                                            currentUser.phone = newPhone
+                                            currentUser.email = newEmail
+                                            currentUser.password = newPassword
+                                            if (chipCustomer.isChecked)
+                                                currentUser.userType = "Customer"
+                                            else
+                                                currentUser.userType = "Vendor"
+
                                             userRef.child(newUser.uid)
                                                 .setValue(currentUser)
                                                 .addOnCompleteListener { task ->
