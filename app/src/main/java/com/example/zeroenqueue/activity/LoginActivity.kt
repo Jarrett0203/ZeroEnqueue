@@ -106,8 +106,14 @@ class LoginActivity : AppCompatActivity() {
 
     private fun goToMainActivity(user: User?) {
         Common.currentUser = user!!
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        if (user.userType == "Customer") {
+            val intent = Intent(this, MainCustomerActivity::class.java)
+            startActivity(intent)
+        }
+        else {
+            val intent = Intent(this, MainVendorActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
 
