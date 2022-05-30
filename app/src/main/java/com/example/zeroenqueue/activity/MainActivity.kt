@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_categories, R.id.navigation_order_status,
+                R.id.navigation_customer_home, R.id.navigation_categories, R.id.navigation_order_status,
                 R.id.navigation_foodStall, R.id.navigation_profile, R.id.navigation_food_list,
                 R.id.navigation_cart
             ), drawerLayout
@@ -87,8 +88,8 @@ class MainActivity : AppCompatActivity() {
             val navHostFragment = supportFragmentManager.primaryNavigationFragment
             val currentFragment = navHostFragment!!.childFragmentManager.fragments[0]
             drawerLayout.closeDrawers()
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.home.HomeFragment")
-                navController.navigate(R.id.home_to_profile)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.customerHome.CustomerHomeFragment")
+                navController.navigate(R.id.customer_home_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.foodStall.FoodStallFragment")
                 navController.navigate(R.id.foodStall_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.categories.CategoriesFragment")
@@ -97,6 +98,8 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(R.id.food_list_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.orderStatus.OrderStatusFragment")
                 navController.navigate(R.id.order_status_to_profile)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.cart.CartFragment")
+                navController.navigate(R.id.cart_to_profile)
         }
 
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -109,7 +112,7 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
             when (item.itemId) {
                 R.id.navigation_sign_out -> signout()
-                R.id.navigation_home -> navController.navigate(R.id.navigation_home)
+                R.id.navigation_home -> navController.navigate(R.id.navigation_customer_home)
                 R.id.navigation_food_list -> navController.navigate(R.id.navigation_food_list)
                 R.id.navigation_categories -> navController.navigate(R.id.navigation_categories)
                 R.id.navigation_order_status -> navController.navigate(R.id.navigation_order_status)

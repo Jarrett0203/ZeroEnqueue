@@ -3,28 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_customer_home">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.example.zeroenqueue.ui.home.HomeFragment"
+        android:id="@+id/navigation_customer_home"
+        android:name="com.example.zeroenqueue.ui.customerHome.CustomerHomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_customer_home" >
         <action
-            android:id="@+id/home_to_food_list"
-            app:destination="@id/navigation_food_list" />
-        <action
-            android:id="@+id/home_to_foodStall"
-            app:destination="@id/navigation_foodStall" />
-        <action
-            android:id="@+id/home_to_categories"
-            app:destination="@id/navigation_categories" />
-        <action
-            android:id="@+id/home_to_profile"
+            android:id="@+id/customer_home_to_profile"
             app:destination="@id/navigation_profile" />
-        <action
-            android:id="@+id/home_to_order_status"
-            app:destination="@id/navigation_order_status" />
     </fragment>
 
     <fragment
@@ -92,6 +80,10 @@
         android:id="@+id/navigation_cart"
         android:name="com.example.zeroenqueue.ui.cart.CartFragment"
         android:label="@string/menu_cart"
-        tools:layout="@layout/fragment_cart" />
+        tools:layout="@layout/fragment_cart" >
+        <action
+                android:id="@+id/cart_to_profile"
+                app:destination="@id/navigation_profile" />
+    </fragment>
 
 </navigation>

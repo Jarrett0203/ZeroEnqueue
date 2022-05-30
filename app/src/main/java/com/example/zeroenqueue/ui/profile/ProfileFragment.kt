@@ -14,21 +14,24 @@ import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentProfileBinding
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_register_user.*
+import java.util.*
 
 
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -38,6 +41,7 @@ class ProfileFragment : Fragment() {
     private lateinit var editEmail: TextInputEditText
     private lateinit var editPassword: TextInputEditText
     private lateinit var profileViewModel: ProfileViewModel
+    val currentUser = FirebaseAuth.getInstance().currentUser
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,21 +61,15 @@ class ProfileFragment : Fragment() {
         editPassword = binding.inputPassword
         val customerChip: Chip = binding.chipCustomer
         val vendorChip: Chip = binding.chipVendor
-        val editStore: MaterialCardView = binding.editStore
-        val addNewFood: MaterialCardView = binding.addNewFood
         val updateBtn: Button = binding.btnUpdate
 
         if (Common.currentUser!!.userType!! == "Customer") {
             customerChip.isChecked = true
-            editStore.visibility = View.GONE
-            addNewFood.visibility = View.GONE
-        }
-        else {
+        } else {
             vendorChip.isChecked = true
         }
 
         updateBtn.setOnClickListener {
-            dialog.show()
             updateDetails()
         }
 
@@ -89,57 +87,93 @@ class ProfileFragment : Fragment() {
     }
 
     private fun updateDetails() {
-        FirebaseDatabase.getInstance()
-            .getReference(Common.USER_REF)
-            .child(Common.currentUser!!.uid!!)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        val user = snapshot.getValue(User::class.java)
-                        val updateData = HashMap<String, Any>()
+        val newName = editName.text.toString().trim()
+        val newPhone = editPhone.text.toString().trim()
+        val newEmail = editEmail.text.toString().trim()
+        val newPassword = editPassword.text.toString().trim()
+        val firstNums = arrayOf('6', '8', '9')
 
-                        updateData["name"] = editName.text.toString()
-                        updateData["phone"] = editPhone.text.toString()
-                        updateData["email"] = editEmail.text.toString()
-                        updateData["password"] = editPassword.text.toString()
-                        if (chipCustomer.isChecked)
-                            updateData["userType"] = "Customer"
-                        else
-                            updateData["userType"] = "Vendor"
+        if (newName.isEmpty() || newPhone.isEmpty() || newEmail.isEmpty() || newPassword.isEmpty())
+            Toast.makeText(requireContext(), "Empty fields are not allowed!!", Toast.LENGTH_SHORT).show()
+        else if (!Arrays.stream(firstNums).anyMatch { t -> t == newPhone[0] } || newPhone.length != 8)
+            Toast.makeText(requireContext(), "Invalid phone number", Toast.LENGTH_SHORT).show()
+        else if (newPassword.length < 6)
+            Toast.makeText(requireContext(), "Password requires at least 6 characters", Toast.LENGTH_SHORT).show()
+        else {
+            dialog.show()
+            FirebaseDatabase.getInstance()
+                .getReference(Common.USER_REF)
+                .child(Common.currentUser!!.uid!!)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (snapshot.exists()) {
+                            val user = snapshot.getValue(User::class.java)
+                            val updateData = HashMap<String, Any>()
 
-                        user!!.name = editName.text.toString()
-                        user.phone = editPhone.text.toString()
-                        user.email = editEmail.text.toString()
-                        user.password = editPassword.text.toString()
-                        if (chipCustomer.isChecked)
-                            user.userType = "Customer"
-                        else
-                            user.userType = "Vendor"
+                            updateData["name"] = newName
+                            updateData["phone"] = newPhone
+                            updateData["email"] = newEmail
+                            updateData["password"] = newPassword
+                            if (chipCustomer.isChecked)
+                                updateData["userType"] = "Customer"
+                            else
+                                updateData["userType"] = "Vendor"
 
-                        snapshot.ref
-                            .updateChildren(updateData)
-                            .addOnCompleteListener { task ->
-                                dialog.dismiss()
-                                if (task.isSuccessful) {
-                                    profileViewModel.setProfile(user)
-                                    Common.currentUser = user
-                                    Toast.makeText(
-                                        context!!,
-                                        "Update successful",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                            user!!.name = newName
+                            user.phone = newPhone
+                            user.email = newEmail
+                            user.password = newPassword
+                            if (chipCustomer.isChecked)
+                                user.userType = "Customer"
+                            else
+                                user.userType = "Vendor"
+
+                            currentUser?.let { firebaseUser ->
+                                val credential = EmailAuthProvider.getCredential(firebaseUser.email!!, Common.currentUser!!.password!!)
+                                firebaseUser.reauthenticate(credential).addOnCompleteListener { reAuthTask ->
+                                    if (reAuthTask.isSuccessful) {
+                                        firebaseUser.updateEmail(newEmail).addOnCompleteListener { emailTask ->
+                                            if (emailTask.isSuccessful) {
+                                                firebaseUser.updatePassword(newPassword).addOnCompleteListener { pwTask ->
+                                                    if (pwTask.isSuccessful) {
+                                                        snapshot.ref
+                                                            .updateChildren(updateData)
+                                                            .addOnCompleteListener { task ->
+                                                                dialog.dismiss()
+                                                                if (task.isSuccessful) {
+                                                                    profileViewModel.setProfile(user)
+                                                                    Common.currentUser = user
+                                                                    Toast.makeText(
+                                                                        context!!,
+                                                                        "Update successful",
+                                                                        Toast.LENGTH_SHORT
+                                                                    ).show()
+                                                                }
+                                                            }
+                                                    } else
+                                                        Toast.makeText(requireContext(), "Password failed to update", Toast.LENGTH_SHORT).show()
+                                                }
+                                            }
+                                            else
+                                                Toast.makeText(requireContext(), "Email failed to update", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                    else
+                                        Toast.makeText(requireContext(), "Re-authentication failed", Toast.LENGTH_SHORT).show()
                                 }
                             }
-                    }
-                    else
-                        dialog.dismiss()
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-                    dialog.dismiss()
-                    Toast.makeText(context!!, error.message, Toast.LENGTH_SHORT).show()
-                }
-            })
+
+                            dialog.dismiss()
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        dialog.dismiss()
+                        Toast.makeText(context!!, error.message, Toast.LENGTH_SHORT).show()
+                    }
+                })
+        }
     }
 
     override fun onDestroyView() {
@@ -155,10 +189,10 @@ class ProfileFragment : Fragment() {
         Common.setSpanString("Hey, ", Common.currentUser!!.name, txtUser)
     }
 
-    companion object{
+    companion object {
         private var instance: ProfileFragment? = null
         fun getInstance(): ProfileFragment {
-            if (instance == null){
+            if (instance == null) {
                 instance = ProfileFragment()
             }
             return instance!!

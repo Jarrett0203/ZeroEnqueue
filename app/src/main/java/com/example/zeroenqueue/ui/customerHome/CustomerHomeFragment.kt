@@ -1,4 +1,4 @@
-package com.example.zeroenqueue.ui.home
+package com.example.zeroenqueue.ui.customerHome
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,12 +14,12 @@ import com.asksira.loopingviewpager.LoopingViewPager
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.PopularCategoryAdapter
 import com.example.zeroenqueue.adapters.RecommendedAdapter
-import com.example.zeroenqueue.databinding.FragmentHomeBinding
+import com.example.zeroenqueue.databinding.FragmentCustomerHomeBinding
 
 
-class HomeFragment : Fragment() {
+class CustomerHomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentCustomerHomeBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -32,21 +32,21 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+        val customerHomeViewModel =
+            ViewModelProvider(this)[CustomerHomeViewModel::class.java]
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentCustomerHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         recyclerView = binding.recyclerPopular
         viewPager = binding.viewpager
         initView()
 
-        homeViewModel.popularList.observe(viewLifecycleOwner) {
+        customerHomeViewModel.popularList.observe(viewLifecycleOwner) {
             recyclerView.adapter = PopularCategoryAdapter(requireContext(), it)
             recyclerView.layoutAnimation = layoutAnimationController
         }
-        homeViewModel.recommendedList.observe(viewLifecycleOwner) {
+        customerHomeViewModel.recommendedList.observe(viewLifecycleOwner) {
             viewPager.adapter = RecommendedAdapter(it, true)
         }
 

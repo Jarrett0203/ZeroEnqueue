@@ -1,6 +1,6 @@
 package com.example.zeroenqueue.classes
 
-class User {
+open class User {
     var uid:String?= null
     var name:String?= null
     var email:String?= null

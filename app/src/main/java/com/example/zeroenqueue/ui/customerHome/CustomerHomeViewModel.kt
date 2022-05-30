@@ -1,4 +1,4 @@
-package com.example.zeroenqueue.ui.home
+package com.example.zeroenqueue.ui.customerHome
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +13,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class HomeViewModel : ViewModel(), IPopularLoadCallback, IRecommendedLoadCallback {
+class CustomerHomeViewModel : ViewModel(), IPopularLoadCallback, IRecommendedLoadCallback {
 
     private var popularListMutableLiveData: MutableLiveData<List<PopularCategory>> ?= null
     private var recommendedListMutableLiveData: MutableLiveData<List<Recommended>> ?= null
