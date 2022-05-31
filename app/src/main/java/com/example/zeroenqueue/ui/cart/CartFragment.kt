@@ -5,9 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
@@ -25,6 +23,7 @@ import com.example.zeroenqueue.common.SwipeHelper
 import com.example.zeroenqueue.db.CartDataSource
 import com.example.zeroenqueue.db.CartDatabase
 import com.example.zeroenqueue.db.LocalCartDataSource
+import com.example.zeroenqueue.eventBus.CountCartEvent
 import com.example.zeroenqueue.eventBus.HideFABCart
 import com.example.zeroenqueue.eventBus.UpdateCartItems
 import com.example.zeroenqueue.interfaces.IDeleteBtnCallback
@@ -50,6 +49,7 @@ class CartFragment: Fragment() {
     var total_prices: TextView?=null
     var group_place_holder: CardView?=null
     var recycler_cart:RecyclerView?=null
+    var adapter: MyCartAdapter?=null
 
     override fun onResume() {
         super.onResume()
@@ -76,7 +76,7 @@ class CartFragment: Fragment() {
                 group_place_holder!!.visibility = View.VISIBLE
                 empty_cart!!.visibility = View.GONE
 
-                val adapter = MyCartAdapter(requireContext(), it)
+                adapter = MyCartAdapter(requireContext(), it)
                 recycler_cart!!.adapter = adapter
             }
         }
@@ -84,6 +84,9 @@ class CartFragment: Fragment() {
     }
 
     private fun initViews(root:View) {
+
+        setHasOptionsMenu(true);
+
         cartDataSource = LocalCartDataSource(CartDatabase.getInstance(requireContext()).cartDAO())
 
         recycler_cart = root.findViewById(R.id.recycler_cart) as RecyclerView
@@ -108,13 +111,54 @@ class CartFragment: Fragment() {
                     Color.parseColor("#FF3c30"),
                     object: IDeleteBtnCallback {
                         override fun onClick(pos: Int) {
-                            Toast.makeText(context, "Delete Item", Toast.LENGTH_SHORT).show()
+                            val itemDelete = adapter!!.getItemAtPosition(pos)
+                            cartDataSource!!.deleteCart(itemDelete)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(object:SingleObserver<Int> {
+                                    override fun onSubscribe(d: Disposable) {
+
+                                    }
+
+                                    override fun onSuccess(t: Int) {
+                                        adapter!!.notifyItemRemoved(pos)
+                                        //sumCart()
+                                        EventBus.getDefault().postSticky(CountCartEvent(true))
+                                        Toast.makeText(context, "Delete item success", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                    override fun onError(e: Throwable) {
+                                        Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()
+                                    }
+
+                                })
                         }
                     }
 
                 ))
             }
         }
+    }
+
+    private fun sumCart() {
+        cartDataSource!!.totalPrice(Common.currentUser!!.uid!!)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object: SingleObserver<Double> {
+                override fun onSubscribe(d: Disposable) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onSuccess(t: Double) {
+                    txt_total_price!!.text = StringBuilder("Total: ").append(t)
+                }
+
+                override fun onError(e: Throwable) {
+                    if(!e.message!!.contains("Query returned empty"))
+                        Toast.makeText(context, "" + e.message!!, Toast.LENGTH_SHORT).show()
+                }
+
+            })
     }
 
     override fun onStart() {
@@ -164,7 +208,7 @@ class CartFragment: Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object: SingleObserver<Double> {
                 override fun onSuccess(t: Double) {
-                    txt_total_price!!.text = StringBuilder("Total: $")
+                    txt_total_price!!.text = StringBuilder("Total: ")
                         .append(Common.formatPrice(t))
                     recycler_cart!!.layoutManager!!.onRestoreInstanceState(recyclerViewState)
                 }
@@ -179,6 +223,40 @@ class CartFragment: Fragment() {
                 }
 
             })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater!!.inflate(R.menu.cart_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu!!.findItem(R.id.action_settings).setVisible(false)
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item!!.itemId == R.id.action_clear_cart) {
+            cartDataSource!!.cleanCart((Common.currentUser!!.uid!!))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object: SingleObserver<Int> {
+                    override fun onSubscribe(d: Disposable) {
+
+                    }
+
+                    override fun onSuccess(t: Int) {
+                        Toast.makeText(context, "Clear cart success", Toast.LENGTH_SHORT).show()
+                        EventBus.getDefault().postSticky(CountCartEvent(true))
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()
+                    }
+                })
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
 }

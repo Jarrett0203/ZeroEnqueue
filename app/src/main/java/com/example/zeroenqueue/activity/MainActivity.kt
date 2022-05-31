@@ -262,6 +262,8 @@ class MainActivity : AppCompatActivity() {
                             "[COUNT CART]" + e.message,
                             Toast.LENGTH_SHORT
                         ).show()
+                    else
+                        fab.count = 0;
                 }
 
             })
