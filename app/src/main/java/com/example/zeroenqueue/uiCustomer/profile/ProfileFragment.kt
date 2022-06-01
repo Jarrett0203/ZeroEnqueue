@@ -45,6 +45,7 @@ class ProfileFragment : Fragment() {
     private lateinit var profileViewModel: ProfileViewModel
     val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,6 +70,8 @@ class ProfileFragment : Fragment() {
             customerChip.isChecked = true
         } else {
             vendorChip.isChecked = true
+            val balance = binding.balance
+            balance.visibility = View.INVISIBLE
         }
 
         updateBtn.setOnClickListener {

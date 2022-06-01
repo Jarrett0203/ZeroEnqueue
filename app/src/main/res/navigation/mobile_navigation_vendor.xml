@@ -27,9 +27,9 @@
 
     <fragment
             android:id="@+id/navigation_stall_overview"
-            android:name="com.example.zeroenqueue.uiVendor.stallOverview.StallOverviewFragment"
+            android:name="com.example.zeroenqueue.uiVendor.menu.MenuFragment"
             android:label="@string/menu_stall_overview"
-            tools:layout="@layout/fragment_stall_overview" >
+            tools:layout="@layout/fragment_menu" >
         <action
                 android:id="@+id/stall_overview_to_profile"
                 app:destination="@id/profileFragment" />

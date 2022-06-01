@@ -111,7 +111,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
         else {
-            val intent = Intent(this, MainVendorActivity::class.java)
+            val intent = Intent(this, VendorFoodStallsActivity::class.java)
             startActivity(intent)
         }
     }

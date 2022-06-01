@@ -6,19 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.FoodStall
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.eventBus.FoodStallClick
+import com.example.zeroenqueue.eventBus.VendorFoodStallClick
 import com.example.zeroenqueue.interfaces.IRecyclerItemClickListener
 import org.greenrobot.eventbus.EventBus
 
-class FoodStallAdapter(
+class VendorFoodStallAdapter(
     var context: Context,
     val foodStallList: List<FoodStall>
-) : RecyclerView.Adapter<FoodStallAdapter.FoodStallViewHolder>() {
+) : RecyclerView.Adapter<VendorFoodStallAdapter.FoodStallViewHolder>() {
 
     inner class FoodStallViewHolder(val view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
@@ -46,7 +48,7 @@ class FoodStallAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): FoodStallAdapter.FoodStallViewHolder {
+    ): VendorFoodStallAdapter.FoodStallViewHolder {
         return FoodStallViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.layout_food_stall, parent, false)
@@ -56,7 +58,7 @@ class FoodStallAdapter(
     override fun getItemCount(): Int = foodStallList.size
 
     override fun onBindViewHolder(
-        holder: FoodStallAdapter.FoodStallViewHolder,
+        holder: VendorFoodStallAdapter.FoodStallViewHolder,
         position: Int
     ) {
         Glide.with(context).load(foodStallList[position].image)
@@ -67,7 +69,8 @@ class FoodStallAdapter(
         holder.setListener(object : IRecyclerItemClickListener {
             override fun onItemClick(view: View, pos: Int) {
                 Common.foodStallSelected = foodStallList[pos]
-                EventBus.getDefault().postSticky(FoodStallClick(true, foodStallList[pos]))
+                Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()
+                EventBus.getDefault().postSticky(VendorFoodStallClick(true, foodStallList[pos]))
             }
         })
     }

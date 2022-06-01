@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".activity.VendorFoodStallsActivity">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <TextView
+                android:id="@+id/stall_overview_greeting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Please choose a stall to edit..."
+                android:textStyle="bold|italic"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_food_stalls"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                />
+    </LinearLayout>
+
+    <TextView
+            android:id="@+id/noFoodStall"
+            android:text="Don't have a food stall?"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="24sp" />
+
+    <TextView
+            android:id="@+id/createNewStall"
+            android:text="@string/create_new_food_stall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="16sp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/noFoodStall"
+            android:textStyle="bold|italic" />
+
+</RelativeLayout>

@@ -78,4 +78,6 @@
     <string name="title_orders">Orders</string>
     <string name="menu_orders">Orders</string>
     <string name="menu_stall_overview">Stalls Overview</string>
+    <string name="empty_cart">EMPTY CART</string>
+    <string name="create_new_food_stall"><u>Create a new one here.</u></string>
 </resources>

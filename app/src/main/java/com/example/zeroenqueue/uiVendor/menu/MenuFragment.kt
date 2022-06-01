@@ -1,4 +1,4 @@
-package com.example.zeroenqueue.uiVendor.stallOverview
+package com.example.zeroenqueue.uiVendor.menu
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.zeroenqueue.databinding.FragmentStallOverviewBinding
+import com.example.zeroenqueue.databinding.FragmentMenuBinding
 
-class StallOverviewFragment : Fragment() {
+class MenuFragment : Fragment() {
 
-    private var _binding: FragmentStallOverviewBinding? = null
+    private var _binding: FragmentMenuBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -23,9 +23,9 @@ class StallOverviewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val slideshowViewModel =
-            ViewModelProvider(this).get(SlideshowViewModel::class.java)
+            ViewModelProvider(this)[MenuViewModel::class.java]
 
-        _binding = FragmentStallOverviewBinding.inflate(inflater, container, false)
+        _binding = FragmentMenuBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textSlideshow

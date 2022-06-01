@@ -12,6 +12,12 @@
             android:theme="@style/Theme.ZeroEnqueue"
             tools:replace="android:theme">
         <activity
+                android:name=".activity.CreateNewStallActivity"
+                android:exported="false" />
+        <activity
+                android:name=".activity.VendorFoodStallsActivity"
+                android:exported="false" />
+        <activity
                 android:name=".activity.MainVendorActivity"
                 android:exported="false"
                 android:label="@string/title_activity_main_vendor" />
