@@ -120,19 +120,18 @@ class ProfileFragment : Fragment() {
                             updateData["phone"] = newPhone
                             updateData["email"] = newEmail
                             updateData["password"] = newPassword
-                            if (chipCustomer.isChecked)
-                                updateData["userType"] = "Customer"
-                            else
-                                updateData["userType"] = "Vendor"
-
                             user!!.name = newName
                             user.phone = newPhone
                             user.email = newEmail
                             user.password = newPassword
-                            if (chipCustomer.isChecked)
+                            if (chipCustomer.isChecked) {
+                                updateData["userType"] = "Customer"
                                 user.userType = "Customer"
-                            else
+                            }
+                            else {
+                                updateData["userType"] = "Vendor"
                                 user.userType = "Vendor"
+                            }
 
                             currentFirebaseUser?.let { firebaseUser ->
                                 val credential = EmailAuthProvider.getCredential(firebaseUser.email!!, Common.currentUser!!.password!!)
@@ -145,7 +144,6 @@ class ProfileFragment : Fragment() {
                                                         snapshot.ref
                                                             .updateChildren(updateData)
                                                             .addOnCompleteListener { task ->
-                                                                dialog.dismiss()
                                                                 if (task.isSuccessful) {
                                                                     profileViewModel.setProfile(user)
                                                                     Common.currentUser = user
@@ -156,6 +154,7 @@ class ProfileFragment : Fragment() {
                                                                     ).show()
                                                                     dialog.dismiss()
                                                                 }
+                                                                dialog.dismiss()
                                                             }
                                                     } else{
                                                         Toast.makeText(context, "Password failed to update", Toast.LENGTH_SHORT).show()
@@ -175,9 +174,6 @@ class ProfileFragment : Fragment() {
                                     }
                                 }
                             }
-
-
-
                         }
                     }
 

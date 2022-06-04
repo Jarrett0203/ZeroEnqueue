@@ -7,6 +7,7 @@ class FoodStall {
     var address: String? = null
     var image: String? = null
     var id: String? = null
+    var phone: String? = null
     var description: String? = null
     var ownerName: String? = null
     var ownerUid: String? = null
