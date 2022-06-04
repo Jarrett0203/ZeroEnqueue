@@ -17,7 +17,6 @@ import com.example.zeroenqueue.db.CartDatabase
 import com.example.zeroenqueue.db.CartItem
 import com.example.zeroenqueue.db.LocalCartDataSource
 import com.example.zeroenqueue.eventBus.UpdateCartItems
-import com.example.zeroenqueue.ui.foodDetail.FoodDetailViewModel
 import io.reactivex.disposables.CompositeDisposable
 import org.greenrobot.eventbus.EventBus
 

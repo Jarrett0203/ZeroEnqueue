@@ -71,4 +71,14 @@
     <string name="zeroenqueue">ZeroEnqueue</string>
     <string name="cart">Cart</string>
     <string name="action_clear_cart">Clear cart</string>
+    <string name="title_activity_main_vendor">MainVendorActivity</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="title_orders">Orders</string>
+    <string name="menu_orders">Orders</string>
+    <string name="menu_stall_overview">Stalls Overview</string>
+    <string name="empty_cart">EMPTY CART</string>
+    <string name="create_new_food_stall"><u>Create a new one here.</u></string>
+    <string name="Confirm">Confirm</string>
 </resources>
