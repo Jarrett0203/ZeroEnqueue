@@ -6,20 +6,19 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.*
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.MyCartAdapter
-import com.example.zeroenqueue.cart
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
+import com.example.zeroenqueue.databinding.LayoutPlaceOrderBinding
 import com.example.zeroenqueue.db.CartDataSource
 import com.example.zeroenqueue.db.CartDatabase
 import com.example.zeroenqueue.db.LocalCartDataSource
@@ -36,7 +35,6 @@ import kotlinx.android.synthetic.main.fragment_cart.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.w3c.dom.Text
 
 class CartFragment: Fragment() {
 
@@ -44,6 +42,7 @@ class CartFragment: Fragment() {
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private var cartDataSource:CartDataSource?=null
     private var recyclerViewState: Parcelable?=null
+    private lateinit var btn_place_order: Button
 
     var empty_cart: TextView?=null
     var total_prices: TextView?=null
@@ -61,6 +60,8 @@ class CartFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreate(savedInstanceState)
+
         EventBus.getDefault().postSticky(HideFABCart(true))
         cartViewModel = ViewModelProvider(this).get(CartViewModel::class.java)
         cartViewModel.initCartDataSource(requireContext())
@@ -122,7 +123,7 @@ class CartFragment: Fragment() {
 
                                     override fun onSuccess(t: Int) {
                                         adapter!!.notifyItemRemoved(pos)
-                                        //sumCart()
+                                        sumCart()
                                         EventBus.getDefault().postSticky(CountCartEvent(true))
                                         Toast.makeText(context, "Delete item success", Toast.LENGTH_SHORT).show()
                                     }
@@ -138,6 +139,28 @@ class CartFragment: Fragment() {
                 ))
             }
         }
+
+        btn_place_order = root.findViewById(R.id.btn_place_order) as Button
+
+        btn_place_order.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("One more step!")
+
+            val view = LayoutInflater.from(context).inflate(R.layout.layout_place_order, null)
+            val collectionTime = view.findViewById<View>(R.id.time) as EditText
+            val cash = view.findViewById<View>(R.id.cash) as RadioButton
+            val braintree = view.findViewById<View>(R.id.braintree) as RadioButton
+
+            collectionTime.setText(Common.currentUser!!.address)
+
+            builder.setView(view)
+            builder.setNegativeButton("No", {dialogInterface, _ -> dialogInterface.dismiss()})
+                .setPositiveButton("YES", {dialogInterface, _ -> Toast.makeText(requireContext(), "Implement late", Toast.LENGTH_SHORT).show() })
+
+            val dialog = builder.create()
+            dialog.show()
+
+        }
     }
 
     private fun sumCart() {
@@ -146,11 +169,10 @@ class CartFragment: Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object: SingleObserver<Double> {
                 override fun onSubscribe(d: Disposable) {
-                    TODO("Not yet implemented")
                 }
 
                 override fun onSuccess(t: Double) {
-                    txt_total_price!!.text = StringBuilder("Total: ").append(t)
+                    total_prices!!.text = StringBuilder("Total: $").append(t)
                 }
 
                 override fun onError(e: Throwable) {
@@ -160,6 +182,8 @@ class CartFragment: Fragment() {
 
             })
     }
+
+
 
     override fun onStart() {
         super.onStart()
@@ -190,7 +214,6 @@ class CartFragment: Fragment() {
                     }
 
                     override fun onSubscribe(d: Disposable) {
-                        TODO("Not yet implemented")
                     }
 
 
