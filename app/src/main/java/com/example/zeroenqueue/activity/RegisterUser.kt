@@ -2,9 +2,11 @@ package com.example.zeroenqueue.activity
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
@@ -28,11 +30,13 @@ class RegisterUser : AppCompatActivity() {
     private lateinit var chipCustomer: Chip
     private lateinit var chipVendor: Chip
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityRegisterUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val toolbar = binding.toolbar
 
         userRef = FirebaseDatabase.getInstance().getReference(Common.USER_REF)
         firebaseAuth = Firebase.auth
@@ -112,12 +116,12 @@ class RegisterUser : AppCompatActivity() {
             }
         }
 
-        /*
+
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
-        actionBar!!.title = "RegisterUser"
+        actionBar!!.title = "Register User"
 
-        actionBar.setDisplayHomeAsUpEnabled(true)*/
+        actionBar.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun goToMainActivity(user: User?) {

@@ -266,31 +266,4 @@ class MainCustomerActivity : AppCompatActivity() {
                 }
             })
     }
-
-    private fun countCartItem() {
-        cartDataSource.countCartItems(Common.currentUser!!.uid!!)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : SingleObserver<Int> {
-                override fun onSubscribe(d: Disposable) {
-                }
-
-                override fun onSuccess(t: Int) {
-                    fab.count = t
-                }
-
-                override fun onError(e: Throwable) {
-                    if (!e.message!!.contains("empty"))
-                        Toast.makeText(
-                            this@MainActivity,
-                            "[COUNT CART]" + e.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    else
-                        fab.count = 0;
-                }
-
-            })
-
-    }
 }

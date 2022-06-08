@@ -26,12 +26,12 @@
     </fragment>
 
     <fragment
-            android:id="@+id/navigation_stall_overview"
+            android:id="@+id/navigation_stall_menu"
             android:name="com.example.zeroenqueue.uiVendor.menu.MenuFragment"
-            android:label="@string/menu_stall_overview"
+            android:label="@string/food_stall_menu"
             tools:layout="@layout/fragment_menu" >
         <action
-                android:id="@+id/stall_overview_to_profile"
+                android:id="@+id/stall_menu_to_profile"
                 app:destination="@id/profileFragment" />
     </fragment>
     <fragment

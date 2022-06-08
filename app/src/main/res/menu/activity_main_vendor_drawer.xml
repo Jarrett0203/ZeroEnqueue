@@ -11,13 +11,19 @@
                 android:icon="@drawable/ic_home"
                 android:title="@string/title_home" />
         <item
-                android:id="@+id/navigation_stall_overview"
+                android:id="@+id/navigation_stall_menu"
                 android:icon="@drawable/ic_food_stall"
-                android:title="@string/menu_stall_overview" />
+                android:title="@string/food_stall_menu" />
         <item
                 android:id="@+id/navigation_orders"
                 android:icon="@drawable/ic_order_status"
                 android:title="@string/title_orders" />
+
+        <item
+                android:id="@+id/navigation_switch_stall"
+                android:icon="@drawable/ic_switch_stall"
+                android:title="@string/switch_stall" />
+
         <item
                 android:id="@+id/navigation_sign_out"
                 android:icon="@drawable/ic_baseline_exit_to_app_24"

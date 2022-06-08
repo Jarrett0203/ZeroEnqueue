@@ -1,198 +1,262 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.CreateNewStallActivity"
         android:background="@color/white">
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-        <com.google.android.material.card.MaterialCardView
-                android:layout_width="wrap_content"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                app:cardBackgroundColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:cardCornerRadius="30dp"
-                app:cardElevation="20dp"
-                android:layout_marginTop="50dp"
-                android:id="@+id/materialCardView">
-            <LinearLayout
+                android:background="@color/white"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.AppBarLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="350dp"
+                    android:theme="@style/Theme.ZeroEnqueue.AppBarOverlay"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/appBarLayout2">
+
+                <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:background="?attr/colorPrimary"
+                        app:titleTextColor="@color/black"
+                        android:theme="@style/ToolbarColoredBackArrow"
+                        app:popupTheme="@style/Theme.ZeroEnqueue.PopupOverlay" />
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    app:cardBackgroundColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:cardCornerRadius="30dp"
+                    app:cardElevation="20dp"
+                    android:id="@+id/material_card_view_stall_image"
+                    app:layout_constraintTop_toBottomOf="@+id/appBarLayout2"
+                    android:layout_marginTop="20dp"
+                    android:focusable="true"
+                    android:clickable="true">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <ImageView
+                            android:id="@+id/addStallImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:scaleType="centerCrop"
+                            android:layout_alignTop="@+id/linear"
+                            android:layout_alignBottom="@+id/linear"/>
+
+                    <LinearLayout
+                            android:id="@+id/linear"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:background="@color/transparent_50"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                            <ImageView
+                                    android:id="@+id/addImageIcon"
+                                    android:layout_width="150dp"
+                                    android:layout_height="150dp"
+                                    app:srcCompat="@drawable/ic_add_photo"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:tint="@color/white"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                    android:text="Add a stall image..."
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/add_stall_image_text"
+                                    android:textColor="@color/white"
+                                    android:textStyle="bold"
+                                    android:textSize="24sp"
+                                    app:layout_constraintTop_toBottomOf="@+id/addImageIcon"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    android:layout_marginBottom="10dp" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    app:cardCornerRadius="30dp"
+                    app:cardElevation="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/material_card_view_stall_image"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="40dp"
+                    android:id="@+id/materialCardView2">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Stall Name">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input_stall_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/ic_food"
+                                android:drawablePadding="10dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Phone Number">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input_stall_phone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/ic_phone"
+                                android:drawablePadding="10dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Address">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input_stall_address"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/ic_location"
+                                android:drawablePadding="10dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Brief Description">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input_description"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/ic_description"
+                                android:drawablePadding="10dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    app:cardCornerRadius="30dp"
+                    app:cardElevation="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/materialCardView2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="40dp"
+                    android:id="@+id/materialCardView3">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
                     <TextView
-                            android:text="Add a stall image..."
+                            android:id="@+id/empty_menu"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginTop="10dp"
-                            app:layout_constraintHorizontal_bias="0.5"
-                            android:id="@+id/add_stall_image_text"
-                            android:textColor="@color/black"
-                            android:textSize="24sp" />
+                            android:text="Empty Menu"
+                            android:textSize="20sp"
+                            android:layout_gravity="center"
+                            android:textStyle="italic"
+                            android:padding="20dp" />
 
-                    <ImageView
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_temp_menu"
                             android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            app:srcCompat="@drawable/ic_add_photo"
-                            android:id="@+id/addStallImage"
-                            app:layout_constraintTop_toBottomOf="@+id/add_stall_image_text"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent" />
+                            android:layout_height="wrap_content"
+                            tools:listitem="@layout/layout_food_item" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </LinearLayout>
+                    <Button
+                            android:id="@+id/addNewFoodItem"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Add new food item"
+                            android:layout_marginBottom="-6dp" />
+
+                </LinearLayout>
 
 
+            </com.google.android.material.card.MaterialCardView>
 
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                app:cardCornerRadius="30dp"
-                app:cardElevation="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/materialCardView"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="40dp"
-                android:id="@+id/materialCardView2">
-
-            <LinearLayout
-                    android:layout_width="match_parent"
+            <Button
+                    android:text="@string/Confirm"
+                    android:layout_width="350dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Stall Name">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/input_stall_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_food"
-                            android:drawablePadding="10dp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Phone Number">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/input_stall_phone"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_phone"
-                            android:drawablePadding="10dp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Address">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/input_stall_address"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_location"
-                            android:drawablePadding="10dp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Brief Description">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/input_description"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_description"
-                            android:drawablePadding="10dp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                app:cardCornerRadius="30dp"
-                app:cardElevation="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/materialCardView2"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="40dp"
-                android:id="@+id/materialCardView3">
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                <androidx.recyclerview.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        tools:listitem="@layout/layout_food_item"/>
-
-                <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Add new food item"
-                        android:layout_marginBottom="-6dp"/>
-
-            </LinearLayout>
+                    android:id="@+id/BtnConfirm"
+                    app:layout_constraintTop_toBottomOf="@+id/materialCardView3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    app:cornerRadius="20dp"
+                    android:elevation="10dp" />
 
 
-        </com.google.android.material.card.MaterialCardView>
-
-        <Button
-                android:text="@string/Confirm"
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/BtnConfirm"
-                app:layout_constraintTop_toBottomOf="@+id/materialCardView3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                app:cornerRadius="20dp"
-                android:elevation="10dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ProgressBar
+                android:id="@+id/createNewStallProgressBar"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/createNewStallProgressBar"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/constraint"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                app:layout_constraintBottom_toBottomOf="@id/constraint"
+                app:layout_constraintTop_toTopOf="@id/constraint" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </ScrollView>

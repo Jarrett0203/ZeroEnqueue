@@ -16,10 +16,8 @@ import com.example.zeroenqueue.R
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityMainVendorBinding
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.nav_header_main_customer.view.*
-import org.greenrobot.eventbus.EventBus
 
 class MainVendorActivity : AppCompatActivity() {
 
@@ -43,7 +41,7 @@ class MainVendorActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_vendor_home, R.id.navigation_orders, R.id.navigation_stall_overview
+                R.id.navigation_vendor_home, R.id.navigation_orders, R.id.navigation_stall_menu
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -55,8 +53,8 @@ class MainVendorActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiVendor.vendorHome.VendorHomeFragment")
                 navController.navigate(R.id.vendor_home_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiVendor.stallOverview.StallOverviewFragment")
-                navController.navigate(R.id.stall_overview_to_profile)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiVendor.menu.MenuFragment")
+                navController.navigate(R.id.stall_menu_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiVendor.orders.OrdersFragment")
                 navController.navigate(R.id.orders_to_profile)
         }
@@ -67,14 +65,30 @@ class MainVendorActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener { item ->
             drawerLayout.closeDrawers()
             when (item.itemId) {
-                R.id.navigation_sign_out -> signout()
                 R.id.navigation_vendor_home -> navController.navigate(R.id.navigation_vendor_home)
                 R.id.navigation_orders -> navController.navigate(R.id.navigation_orders)
-                R.id.navigation_stall_overview -> navController.navigate(R.id.navigation_stall_overview)
+                R.id.navigation_stall_menu -> navController.navigate(R.id.navigation_stall_menu)
                 R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
+                R.id.navigation_sign_out -> signout()
+                R.id.navigation_switch_stall -> switchStall()
             }
             true
         }
+    }
+
+    private fun switchStall() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Switch Stall")
+            .setMessage("Are you sure you want to switch stalls?")
+            .setNegativeButton("CANCEL") { dialogInterface, _ -> dialogInterface.dismiss() }
+            .setPositiveButton("OK") { _, _ ->
+                Common.foodStallSelected = null
+                val intent = Intent(this@MainVendorActivity, VendorFoodStallsActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
+        val dialog = builder.create()
+        dialog.show()
     }
 
     private fun signout() {

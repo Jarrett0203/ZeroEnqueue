@@ -40,7 +40,7 @@ class VendorFoodStallsViewModel: ViewModel(), IFoodStallLoadCallback {
         return messageError!!
     }
 
-    private fun loadFoodStall() {
+    fun loadFoodStall() {
         val tempList = ArrayList<FoodStall>()
         val foodStallRef =
             FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODSTALL_REF)
