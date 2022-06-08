@@ -81,4 +81,5 @@
     <string name="empty_cart">EMPTY CART</string>
     <string name="create_new_food_stall"><u>Create a new one here.</u></string>
     <string name="Confirm">Confirm</string>
+    <string name="switch_stall">Switch Stall</string>
 </resources>

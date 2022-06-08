@@ -102,7 +102,6 @@ class FoodListFragment : Fragment() {
         btnFilter = layout_filter.findViewById(R.id.btnFilter) as Button
         filterBottomSheetDialog.setContentView(layout_filter)
 
-
         setHasOptionsMenu(true)
         dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
         dialog.show()

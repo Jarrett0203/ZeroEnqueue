@@ -69,7 +69,6 @@ class VendorFoodStallAdapter(
         holder.setListener(object : IRecyclerItemClickListener {
             override fun onItemClick(view: View, pos: Int) {
                 Common.foodStallSelected = foodStallList[pos]
-                Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()
                 EventBus.getDefault().postSticky(VendorFoodStallClick(true, foodStallList[pos]))
             }
         })

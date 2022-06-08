@@ -6,16 +6,12 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zeroenqueue.R
-import com.example.zeroenqueue.adapters.FoodStallAdapter
 import com.example.zeroenqueue.adapters.VendorFoodStallAdapter
 import com.example.zeroenqueue.databinding.ActivityVendorFoodStallsBinding
-import com.example.zeroenqueue.eventBus.FoodStallClick
 import com.example.zeroenqueue.eventBus.VendorFoodStallClick
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_vendor_food_stalls.*
@@ -36,26 +32,32 @@ class VendorFoodStallsActivity : AppCompatActivity() {
         val vendorFoodStallsViewModel =
             ViewModelProvider(this)[VendorFoodStallsViewModel::class.java]
 
+        val toolbar = binding.toolbar
+        setSupportActionBar(toolbar)
+        supportActionBar!!.title = "Stalls Overview"
+
         val recyclerFoodStall = binding.recyclerFoodStalls
+        val createNewStall = binding.addNewStall
+        val swipeRefreshLayout = binding.swipeRefresh
         dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
         dialog.show()
         layoutAnimationController = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_item_from_left)
         recyclerFoodStall.setHasFixedSize(true)
         recyclerFoodStall.layoutManager = LinearLayoutManager(this)
+        createNewStall.setOnClickListener {
+            val intent = Intent(this@VendorFoodStallsActivity, CreateNewStallActivity::class.java)
+            startActivity(intent)
+        }
+        swipeRefreshLayout.setOnRefreshListener {
+            vendorFoodStallsViewModel.loadFoodStall()
+            swipeRefreshLayout.isRefreshing = false
+        }
         vendorFoodStallsViewModel.foodStallList.observe(this) {
             dialog.dismiss()
             if (it == null || it.isEmpty()) {
                 recyclerFoodStall.visibility = View.GONE
-                noFoodStall!!.visibility = View.VISIBLE
-                createNewStall!!.visibility = View.VISIBLE
-                createNewStall.setOnClickListener {
-                    val intent = Intent(this, CreateNewStallActivity::class.java)
-                    startActivity(intent)
-                }
             } else {
                 recyclerFoodStall.visibility = View.VISIBLE
-                noFoodStall!!.visibility = View.GONE
-                createNewStall!!.visibility = View.GONE
                 recyclerFoodStall.adapter = VendorFoodStallAdapter(this, it)
                 recyclerFoodStall.layoutAnimation = layoutAnimationController
             }
@@ -77,6 +79,11 @@ class VendorFoodStallsActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
+        val event: VendorFoodStallClick? = EventBus.getDefault().getStickyEvent(
+            VendorFoodStallClick::class.java
+        )
+        if (event != null)
+            EventBus.getDefault().removeStickyEvent(event)
         EventBus.getDefault().unregister(this)
         super.onStop()
     }
