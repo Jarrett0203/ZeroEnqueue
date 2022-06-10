@@ -6,30 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.common.Common
-import com.example.zeroenqueue.db.CartDataSource
-import com.example.zeroenqueue.db.CartDatabase
-import com.example.zeroenqueue.db.CartItem
-import com.example.zeroenqueue.db.LocalCartDataSource
-import com.example.zeroenqueue.eventBus.CountCartEvent
 import com.example.zeroenqueue.eventBus.FoodItemClick
 import com.example.zeroenqueue.interfaces.IRecyclerItemClickListener
-import io.reactivex.SingleObserver
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 
-class NewStallFoodListAdapter(
+class VendorFoodListAdapter(
     var context: Context,
     val foodList: List<Food>
-) : RecyclerView.Adapter<NewStallFoodListAdapter.FoodListViewHolder>() {
+) : RecyclerView.Adapter<VendorFoodListAdapter.FoodListViewHolder>() {
 
     inner class FoodListViewHolder(val view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
@@ -38,6 +27,11 @@ class NewStallFoodListAdapter(
         var food_image: ImageView? = null
         var food_rating: TextView? = null
         var food_review_count: TextView? = null
+        private var listener: IRecyclerItemClickListener? = null
+
+        fun setListener(listener: IRecyclerItemClickListener) {
+            this.listener = listener
+        }
 
         init {
             food_name = itemView.findViewById(R.id.food_name)
@@ -47,14 +41,15 @@ class NewStallFoodListAdapter(
             food_review_count = itemView.findViewById(R.id.food_review_count)
         }
 
-        override fun onClick(p0: View?) {
+        override fun onClick(view: View?) {
+            listener!!.onItemClick(view!!, adapterPosition)
         }
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): NewStallFoodListAdapter.FoodListViewHolder {
+    ): VendorFoodListAdapter.FoodListViewHolder {
         return FoodListViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.layout_food_item_vendor, parent, false)
@@ -64,7 +59,7 @@ class NewStallFoodListAdapter(
     override fun getItemCount(): Int = foodList.size
 
     override fun onBindViewHolder(
-        holder: NewStallFoodListAdapter.FoodListViewHolder,
+        holder: VendorFoodListAdapter.FoodListViewHolder,
         position: Int
     ) {
         Glide.with(context).load(foodList[position].image)
@@ -72,5 +67,21 @@ class NewStallFoodListAdapter(
         holder.food_name!!.text = foodList[position].name
         holder.food_price!!.text =
             StringBuilder("").append(Common.formatPrice(foodList[position].price)).toString()
+        if (holder.food_rating != null)
+            holder.food_rating!!.text = foodList[position].ratingValue.toString()
+        if (holder.food_review_count != null)
+            if (foodList[position].ratingCount == 1L)
+                holder.food_review_count!!.text = StringBuilder(foodList[position].ratingCount.toString()).append(" review")
+            else
+                holder.food_review_count!!.text = StringBuilder(foodList[position].ratingCount.toString()).append(" reviews")
+
+
+        holder.setListener(object : IRecyclerItemClickListener {
+            override fun onItemClick(view: View, pos: Int) {
+                Common.foodSelected = foodList[pos]
+                Common.foodSelected!!.key = pos.toString()
+                EventBus.getDefault().postSticky(FoodItemClick(true, foodList[pos]))
+            }
+        })
     }
 }
