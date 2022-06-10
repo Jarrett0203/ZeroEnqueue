@@ -82,4 +82,5 @@
     <string name="create_new_food_stall"><u>Create a new one here.</u></string>
     <string name="Confirm">Confirm</string>
     <string name="switch_stall">Switch Stall</string>
+    <string name="popular_food">Popular Food</string>
 </resources>

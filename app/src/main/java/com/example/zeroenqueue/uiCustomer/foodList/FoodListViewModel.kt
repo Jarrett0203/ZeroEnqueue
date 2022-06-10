@@ -14,11 +14,7 @@ import com.google.firebase.database.ValueEventListener
 class FoodListViewModel : ViewModel(), IFoodLoadCallback {
     private var foodListMutableLiveData: MutableLiveData<List<Food>> ?= null
     private lateinit var messageError:MutableLiveData<String>
-    private var foodCallbackListener : IFoodLoadCallback
-
-    init {
-        foodCallbackListener = this
-    }
+    private var foodCallbackListener : IFoodLoadCallback = this
 
     val foodList:LiveData<List<Food>>
         get(){

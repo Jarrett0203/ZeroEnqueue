@@ -22,7 +22,7 @@
                 android:exported="false"
                 android:label="@string/title_activity_main_vendor" />
         <activity
-                android:name=".activity.RegisterUser"
+                android:name=".activity.RegisterUserActivity"
                 android:parentActivityName=".activity.LoginActivity" />
         <activity
                 android:name=".activity.LoginActivity"

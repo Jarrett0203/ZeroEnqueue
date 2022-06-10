@@ -15,11 +15,7 @@ class VendorFoodStallsViewModel: ViewModel(), IFoodStallLoadCallback {
 
     private var foodStallListMutableLiveData: MutableLiveData<List<FoodStall>>? = null
     private var messageError: MutableLiveData<String>? = null
-    private var foodStallCallbackListener: IFoodStallLoadCallback
-
-    init {
-        foodStallCallbackListener = this
-    }
+    private var foodStallCallbackListener: IFoodStallLoadCallback = this
 
     val foodStallList: LiveData<List<FoodStall>>
     get() {

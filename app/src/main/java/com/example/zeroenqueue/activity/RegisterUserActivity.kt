@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -17,11 +16,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import dmax.dialog.SpotsDialog
-import kotlinx.android.synthetic.main.activity_register_user.*
 import java.util.*
 
 
-class RegisterUser : AppCompatActivity() {
+class RegisterUserActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterUserBinding
     private lateinit var firebaseAuth: FirebaseAuth
@@ -90,7 +88,7 @@ class RegisterUser : AppCompatActivity() {
                                                 .addOnCompleteListener { task ->
                                                     if (task.isSuccessful) {
                                                         Toast.makeText(
-                                                            this@RegisterUser,
+                                                            this@RegisterUserActivity,
                                                             "Registration success",
                                                             Toast.LENGTH_SHORT
                                                         ).show()
@@ -103,7 +101,7 @@ class RegisterUser : AppCompatActivity() {
 
                                     override fun onCancelled(error: DatabaseError) {
                                         Toast.makeText(
-                                            this@RegisterUser,
+                                            this@RegisterUserActivity,
                                             error.message,
                                             Toast.LENGTH_SHORT
                                         ).show()

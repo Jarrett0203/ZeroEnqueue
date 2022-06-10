@@ -202,6 +202,7 @@ class CreateNewStallActivity : AppCompatActivity() {
                 }
 
                 newFoodImage.setImageURI(null)
+                foodImagePrompt.text = "Click here to add image..."
                 addNewFoodBottomSheetDialog.dismiss()
             }
             dialog.dismiss()
