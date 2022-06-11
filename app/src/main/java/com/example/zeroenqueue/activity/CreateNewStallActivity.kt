@@ -15,15 +15,19 @@ import android.webkit.MimeTypeMap
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.view.contains
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.NewStallFoodListAdapter
+import com.example.zeroenqueue.classes.Category
 import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.classes.FoodStall
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityCreateNewStallBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -51,6 +55,7 @@ class CreateNewStallActivity : AppCompatActivity() {
     private lateinit var newStallDescription: String
     private lateinit var dialog: AlertDialog
     private lateinit var addNewFoodBottomSheetDialog: BottomSheetDialog
+    private lateinit var chipGroupCategory: ChipGroup
 
     @SuppressLint("InflateParams")
     @RequiresApi(Build.VERSION_CODES.N)
@@ -96,6 +101,7 @@ class CreateNewStallActivity : AppCompatActivity() {
         val addAddOn = layoutAddNewFood.findViewById<ImageView>(R.id.add_addon_image)
         val confirmAddNewFoodItem = layoutAddNewFood.findViewById<Button>(R.id.btnAddNewFood)
         var foodImageUri: Uri? = null
+        chipGroupCategory = layoutAddNewFood.findViewById(R.id.layout_chip_group_category)
         addNewFoodBottomSheetDialog.setContentView(layoutAddNewFood)
 
         val newFoodStallMenu: ArrayList<Food> = ArrayList()
@@ -136,6 +142,7 @@ class CreateNewStallActivity : AppCompatActivity() {
 
         addNewFoodItem.setOnClickListener {
             addNewFoodBottomSheetDialog.show()
+            showAllCategories()
         }
 
         addSize.setOnClickListener {
@@ -151,6 +158,12 @@ class CreateNewStallActivity : AppCompatActivity() {
         confirmAddNewFoodItem.setOnClickListener {
             dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
             dialog.show()
+            var categoryName: String? = null
+            for (i in 0 until chipGroupCategory.childCount) {
+                val chip = chipGroupCategory.getChildAt(i) as Chip
+                if (chip.isChecked)
+                    categoryName = chip.text.toString()
+            }
             if (foodImageUri == null)
                 Toast.makeText(
                     this@CreateNewStallActivity,
@@ -166,8 +179,18 @@ class CreateNewStallActivity : AppCompatActivity() {
                     "Empty fields are not allowed!!",
                     Toast.LENGTH_SHORT
                 ).show()
+            else if (categoryName == null) {
+                Toast.makeText(
+                    this@CreateNewStallActivity,
+                    "Please select a category",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
             else {
                 //add food item to recycler view
+                val newFoodNameText = newFoodName.text.toString().trim()
+                val newFoodPriceDouble = newFoodPrice.text.toString().trim().toDouble()
+                val newFoodDescriptionText = newFoodDescription.text.toString().trim()
                 var newFoodImageUri: String?
                 if (newFoodStallMenu.isEmpty())
                     emptyMenu.visibility = View.GONE
@@ -180,9 +203,10 @@ class CreateNewStallActivity : AppCompatActivity() {
                         newFoodImageUri = it.toString()
                         val newFood = Food()
                         newFood.image = newFoodImageUri
-                        newFood.name = newFoodName.text.toString().trim()
-                        newFood.price = newFoodPrice.text.toString().trim().toDouble()
-                        newFood.description = newFoodDescription.text.toString().trim()
+                        newFood.name = newFoodNameText
+                        newFood.price = newFoodPriceDouble
+                        newFood.description = newFoodDescriptionText
+                        newFood.categories = categoryName
                         newFoodStallMenu.add(newFood)
                         recyclerNewStallMenu.adapter =
                             NewStallFoodListAdapter(this, newFoodStallMenu)
@@ -202,11 +226,15 @@ class CreateNewStallActivity : AppCompatActivity() {
                 }
 
                 newFoodImage.setImageURI(null)
+                foodImageUri = null
                 foodImagePrompt.text = "Click here to add image..."
+                newFoodName.text!!.clear()
+                newFoodPrice.text!!.clear()
+                newFoodDescription.text!!.clear()
+                chipGroupCategory.clearCheck()
                 addNewFoodBottomSheetDialog.dismiss()
             }
             dialog.dismiss()
-            foodImageUri = null
         }
 
         confirm.setOnClickListener {
@@ -347,5 +375,51 @@ class CreateNewStallActivity : AppCompatActivity() {
         val cr: ContentResolver = contentResolver
         val mime: MimeTypeMap = MimeTypeMap.getSingleton()
         return mime.getExtensionFromMimeType(cr.getType(imageUri))
+    }
+
+    private fun showAllCategories() {
+        val selectedDataCategory: ArrayList<String> = arrayListOf()
+        val categoryRef =
+            FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.CATEGORY_REF)
+        categoryRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            @SuppressLint("InflateParams")
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (itemSnapShot in snapshot.children) {
+                    val category = itemSnapShot.getValue(Category::class.java)
+                    val chip =
+                        layoutInflater.inflate(R.layout.layout_chip_filter, null, false) as Chip
+                    chip.text = category!!.name
+                    val checkedChangedListenerCategory =
+                        CompoundButton.OnCheckedChangeListener { compoundButton, b ->
+                            if (b) {
+                                Toast.makeText(
+                                    this@CreateNewStallActivity,
+                                    compoundButton.text.toString() + " selected",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                selectedDataCategory.add(compoundButton.text.toString())
+                            } else {
+                                Toast.makeText(
+                                    this@CreateNewStallActivity,
+                                    compoundButton.text.toString() + " unselected",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                selectedDataCategory.remove(compoundButton.text.toString())
+                            }
+                        }
+                    chip.setOnCheckedChangeListener(checkedChangedListenerCategory)
+                    if (Common.categorySelected != null) {
+                        if (chip.text.toString().uppercase() == Common.categorySelected!!.name!!) {
+                            chip.isChecked = true
+                        }
+                    }
+                    if (!chipGroupCategory.contains(chip))
+                        chipGroupCategory.addView(chip)
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@CreateNewStallActivity, "Failed to load categories", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

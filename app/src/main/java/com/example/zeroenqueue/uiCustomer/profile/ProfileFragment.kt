@@ -1,6 +1,7 @@
 package com.example.zeroenqueue.uiCustomer.profile
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +13,10 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.example.zeroenqueue.R
+import com.example.zeroenqueue.activity.MainCustomerActivity
+import com.example.zeroenqueue.activity.VendorFoodStallsActivity
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentProfileBinding
@@ -43,6 +47,7 @@ class ProfileFragment : Fragment() {
     private lateinit var editEmail: TextInputEditText
     private lateinit var editPassword: TextInputEditText
     private lateinit var profileViewModel: ProfileViewModel
+    private var switchUserDialog: AlertDialog? = null
     val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -133,7 +138,120 @@ class ProfileFragment : Fragment() {
                                 user.userType = "Vendor"
                             }
 
-                            currentFirebaseUser?.let { firebaseUser ->
+                            if (Common.currentUser!!.userType!! != user.userType) {
+                                val builder = AlertDialog.Builder(requireContext())
+                                if (chipCustomer.isChecked) {
+                                    builder.setTitle("Switch Account")
+                                        .setMessage("Are you sure you want to switch to customer account?")
+                                        .setNegativeButton("CANCEL") { dialogInterface, _ ->
+                                            chipCustomer.isChecked = false
+                                            chipVendor.isChecked = true
+                                            dialogInterface.dismiss()
+                                        }
+                                        .setPositiveButton("OK") { _, _ ->
+                                            currentFirebaseUser?.let { firebaseUser ->
+                                                val credential = EmailAuthProvider.getCredential(firebaseUser.email!!, Common.currentUser!!.password!!)
+                                                firebaseUser.reauthenticate(credential).addOnCompleteListener { reAuthTask ->
+                                                    if (reAuthTask.isSuccessful) {
+                                                        firebaseUser.updateEmail(newEmail).addOnCompleteListener { emailTask ->
+                                                            if (emailTask.isSuccessful) {
+                                                                firebaseUser.updatePassword(newPassword).addOnCompleteListener { pwTask ->
+                                                                    if (pwTask.isSuccessful) {
+                                                                        snapshot.ref
+                                                                            .updateChildren(updateData)
+                                                                            .addOnCompleteListener { task ->
+                                                                                if (task.isSuccessful) {
+                                                                                    profileViewModel.setProfile(user)
+                                                                                    Common.currentUser = user
+                                                                                }
+                                                                            }
+                                                                    } else{
+                                                                        Toast.makeText(context, "Password failed to update", Toast.LENGTH_SHORT).show()
+                                                                        dialog.dismiss()
+                                                                    }
+                                                                }
+                                                            }
+                                                            else {
+                                                                Toast.makeText(context, "Email failed to update", Toast.LENGTH_SHORT).show()
+                                                                dialog.dismiss()
+                                                            }
+                                                        }
+                                                    }
+                                                    else {
+                                                        Toast.makeText(requireContext(), "Re-authentication failed", Toast.LENGTH_SHORT).show()
+                                                        dialog.dismiss()
+                                                    }
+                                                }
+                                            }
+                                            val intent = Intent(
+                                                requireContext(),
+                                                MainCustomerActivity::class.java
+                                            )
+                                            Common.foodStallSelected = null
+                                            intent.flags =
+                                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                            startActivity(intent)
+                                        }
+                                }
+
+                                else {
+                                    builder.setTitle("Switch Account")
+                                        .setMessage("Are you sure you want to switch to vendor account?")
+                                        .setNegativeButton("CANCEL") { dialogInterface, _ ->
+                                            chipCustomer.isChecked = true
+                                            chipVendor.isChecked = false
+                                            dialogInterface.dismiss()
+                                        }
+                                        .setPositiveButton("OK") { _, _ ->
+                                            currentFirebaseUser?.let { firebaseUser ->
+                                                val credential = EmailAuthProvider.getCredential(firebaseUser.email!!, Common.currentUser!!.password!!)
+                                                firebaseUser.reauthenticate(credential).addOnCompleteListener { reAuthTask ->
+                                                    if (reAuthTask.isSuccessful) {
+                                                        firebaseUser.updateEmail(newEmail).addOnCompleteListener { emailTask ->
+                                                            if (emailTask.isSuccessful) {
+                                                                firebaseUser.updatePassword(newPassword).addOnCompleteListener { pwTask ->
+                                                                    if (pwTask.isSuccessful) {
+                                                                        snapshot.ref
+                                                                            .updateChildren(updateData)
+                                                                            .addOnCompleteListener { task ->
+                                                                                if (task.isSuccessful) {
+                                                                                    profileViewModel.setProfile(user)
+                                                                                    Common.currentUser = user
+                                                                                }
+                                                                            }
+                                                                    } else{
+                                                                        Toast.makeText(context, "Password failed to update", Toast.LENGTH_SHORT).show()
+                                                                        dialog.dismiss()
+                                                                    }
+                                                                }
+                                                            }
+                                                            else {
+                                                                Toast.makeText(context, "Email failed to update", Toast.LENGTH_SHORT).show()
+                                                                dialog.dismiss()
+                                                            }
+                                                        }
+                                                    }
+                                                    else {
+                                                        Toast.makeText(requireContext(), "Re-authentication failed", Toast.LENGTH_SHORT).show()
+                                                        dialog.dismiss()
+                                                    }
+                                                }
+                                            }
+                                            Common.foodStallSelected = null
+                                            val intent = Intent(
+                                                requireContext(),
+                                                VendorFoodStallsActivity::class.java
+                                            )
+                                            intent.flags =
+                                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                            startActivity(intent)
+                                        }
+                                }
+                                switchUserDialog = builder.create()
+                                switchUserDialog!!.show()
+                            }
+                            else {
+                                currentFirebaseUser?.let { firebaseUser ->
                                 val credential = EmailAuthProvider.getCredential(firebaseUser.email!!, Common.currentUser!!.password!!)
                                 firebaseUser.reauthenticate(credential).addOnCompleteListener { reAuthTask ->
                                     if (reAuthTask.isSuccessful) {
@@ -147,11 +265,7 @@ class ProfileFragment : Fragment() {
                                                                 if (task.isSuccessful) {
                                                                     profileViewModel.setProfile(user)
                                                                     Common.currentUser = user
-                                                                    Toast.makeText(
-                                                                        context,
-                                                                        "Update successful",
-                                                                        Toast.LENGTH_SHORT
-                                                                    ).show()
+
                                                                     dialog.dismiss()
                                                                 }
                                                                 dialog.dismiss()
@@ -173,6 +287,7 @@ class ProfileFragment : Fragment() {
                                         dialog.dismiss()
                                     }
                                 }
+                            }
                             }
                         }
                     }
@@ -196,6 +311,14 @@ class ProfileFragment : Fragment() {
         val headerView = navigationView.getHeaderView(0)
         val txtUser = headerView.findViewById<TextView>(R.id.txt_user)
         Common.setSpanString("Hey, ", Common.currentUser!!.name, txtUser)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (switchUserDialog != null) {
+            switchUserDialog!!.dismiss()
+            switchUserDialog = null
+        }
     }
 
     companion object {
