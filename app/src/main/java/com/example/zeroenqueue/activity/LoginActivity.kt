@@ -31,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
 
         val registerBtn = findViewById<Button>(R.id.registerBtn)
         registerBtn.setOnClickListener {
-            val intent = Intent(this, RegisterUser::class.java)
+            val intent = Intent(this, RegisterUserActivity::class.java)
             startActivity(intent)
         }
 
@@ -106,8 +106,14 @@ class LoginActivity : AppCompatActivity() {
 
     private fun goToMainActivity(user: User?) {
         Common.currentUser = user!!
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        if (user.userType == "Customer") {
+            val intent = Intent(this, MainCustomerActivity::class.java)
+            startActivity(intent)
+        }
+        else {
+            val intent = Intent(this, VendorFoodStallsActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
 

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".uiVendor.vendorHome.VendorHomeFragment"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:weightSum="5">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+    <TextView
+            android:id="@+id/stallName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="stall name"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="30sp"
+            android:textStyle="italic|bold"/>
+
+    <TextView
+            android:id="@+id/stallAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:layout_marginStart="10dp"
+            android:textSize="20sp"
+            android:text="stall address"/>
+
+    <com.google.android.material.card.MaterialCardView
+            android:id="@+id/salesCardView"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/yellow"
+            app:cardCornerRadius="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center">
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_margin="20dp">
+
+            <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_payment" />
+
+            <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp">
+
+                <TextView
+                        android:id="@+id/totalSales"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Sales"
+                        android:textStyle="bold"
+                        android:textSize="24sp" />
+
+                <TextView
+                        android:id="@+id/sgd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="SGD"
+                        android:layout_marginBottom="8dp"
+                        android:layout_below="@+id/totalSales" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="13,500.00"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:layout_toEndOf="@+id/sgd"
+                        android:layout_below="@+id/totalSales" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+        <TextView
+                android:id="@+id/currentOrders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 orders"
+                android:textSize="16sp"
+                android:layout_gravity="center"
+                android:textStyle="bold|italic"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/popular_food"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+            <ImageView
+                    android:id="@+id/filter_popular_food"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_filter"
+                    android:layout_marginStart="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_gravity="center"/>
+        </LinearLayout>
+
+
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefresh"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_popular"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:listitem="@layout/layout_food_item"/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

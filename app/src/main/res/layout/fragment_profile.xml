@@ -1,265 +1,268 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/profile_fragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.profile.ProfileFragment">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/profile_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".uiCustomer.profile.ProfileFragment">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
         <!--profile-->
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@color/yellow"
-            android:padding="20dp">
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@color/yellow"
+                android:padding="20dp">
 
             <ImageView
-                android:id="@+id/profile_image"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_centerVertical="true"
-                android:contentDescription="@string/title_profile"
-                android:src="@drawable/default_profile" />
+                    android:id="@+id/profile_image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/title_profile"
+                    android:src="@drawable/default_profile" />
 
             <TextView
-                android:id="@+id/tvName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@id/profile_image"
-                android:includeFontPadding="false"
-                android:text="John Smith"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                    android:id="@+id/tvName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@id/profile_image"
+                    android:includeFontPadding="false"
+                    android:text="John Smith"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
         </RelativeLayout>
 
         <!--cards-->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-100dp"
-            android:padding="20dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-100dp"
+                android:padding="20dp">
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="125dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/yellow"
-                app:cardElevation="10dp">
+                    android:layout_width="0dp"
+                    android:layout_height="125dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/yellow"
+                    app:cardElevation="10dp">
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_payment" />
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/ic_order" />
 
                     <TextView
-                        android:id="@+id/tvPaymentLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:includeFontPadding="false"
-                        android:text="$123"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                            android:id="@+id/tvOrdersLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:includeFontPadding="false"
+                            android:text="2"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvPaymentDesc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tvPaymentLabel"
-                        android:layout_centerInParent="true"
-                        android:layout_centerHorizontal="true"
-                        android:includeFontPadding="false"
-                        android:text="Balance"
-                        android:textSize="14sp" />
+                            android:id="@+id/tvOrdersDesc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tvOrdersLabel"
+                            android:layout_centerInParent="true"
+                            android:layout_centerHorizontal="true"
+                            android:includeFontPadding="false"
+                            android:text="Orders"
+                            android:textSize="14sp" />
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="125dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/yellow"
-                app:cardElevation="10dp">
+                    android:id="@+id/balance"
+                    android:layout_width="0dp"
+                    android:layout_height="125dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/yellow"
+                    app:cardElevation="10dp">
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_order" />
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/ic_payment" />
 
                     <TextView
-                        android:id="@+id/tvOrdersLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:includeFontPadding="false"
-                        android:text="2"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                            android:id="@+id/tvPaymentLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:includeFontPadding="false"
+                            android:text="$123"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvOrdersDesc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tvOrdersLabel"
-                        android:layout_centerInParent="true"
-                        android:layout_centerHorizontal="true"
-                        android:includeFontPadding="false"
-                        android:text="Orders"
-                        android:textSize="14sp" />
+                            android:id="@+id/tvPaymentDesc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tvPaymentLabel"
+                            android:layout_centerInParent="true"
+                            android:layout_centerHorizontal="true"
+                            android:includeFontPadding="false"
+                            android:text="Balance"
+                            android:textSize="14sp" />
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
 
         <!--edit profile-->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Name">
+                android:orientation="vertical"
+                android:padding="20dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_name"
+            <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_profile"
-                    android:drawablePadding="10dp"
-                    android:text="John Smith" />
+                    android:hint="Name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_profile"
+                        android:drawablePadding="10dp"
+                        android:text="John Smith" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Phone Number">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_phone"
-                    android:drawablePadding="10dp"
-                    android:text="91232312" />
+                    android:hint="Phone Number">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_phone"
+                        android:drawablePadding="10dp"
+                        android:text="91232312" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_email"
-                    android:drawablePadding="10dp"
-                    android:text="johnsmith@gmail.com" />
+                    android:hint="Email">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_email"
+                        android:drawablePadding="10dp"
+                        android:text="johnsmith@gmail.com" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Password">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_password"
-                    android:drawablePadding="10dp"
-                    android:text="asdfs1234" />
+                    android:hint="Password">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_password"
+                        android:drawablePadding="10dp"
+                        android:text="asdfs1234" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardElevation="10dp"
-                app:strokeColor="@color/yellow">
-
-                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginTop="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardElevation="10dp"
+                    app:strokeColor="@color/yellow">
 
-                    <TextView
-                        android:id="@+id/usertype"
+                <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/user_type"
-                        android:textAlignment="center"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="5dp"/>
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/usertype"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/user_type"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="5dp" />
 
                     <com.google.android.material.chip.ChipGroup
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:selectionRequired="true"
-                        app:singleSelection="true"
-                        android:layout_gravity="center_horizontal">
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipCustomer"
-                            style="@style/Colors_Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:checkable="true"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:text="@string/customer"
-                            android:textAlignment="center"
-                            android:textSize="18sp" />
+                            android:layout_height="wrap_content"
+                            app:selectionRequired="true"
+                            app:singleSelection="true"
+                            android:layout_gravity="center_horizontal">
 
                         <com.google.android.material.chip.Chip
-                            android:id="@+id/chipVendor"
-                            style="@style/Colors_Widget.MaterialComponents.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:checkable="true"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:text="@string/vendor"
-                            android:textAlignment="center"
-                            android:textSize="18sp" />
+                                android:id="@+id/chipCustomer"
+                                style="@style/Colors_Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:checkable="true"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/customer"
+                                android:textAlignment="center"
+                                android:textSize="18sp" />
+
+                        <com.google.android.material.chip.Chip
+                                android:id="@+id/chipVendor"
+                                style="@style/Colors_Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:checkable="true"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/vendor"
+                                android:textAlignment="center"
+                                android:textSize="18sp" />
                     </com.google.android.material.chip.ChipGroup>
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
             <Button
-                android:id="@+id/btnUpdate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/Update" />
+                    android:id="@+id/btnUpdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Update" />
         </LinearLayout>
 
         <!--<LinearLayout

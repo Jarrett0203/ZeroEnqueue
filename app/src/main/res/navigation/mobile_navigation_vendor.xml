@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mobile_navigation_vendor"
+        app:startDestination="@+id/navigation_vendor_home">
+
+    <fragment
+            android:id="@+id/navigation_vendor_home"
+            android:name="com.example.zeroenqueue.uiVendor.vendorHome.VendorHomeFragment"
+            android:label="@string/menu_home"
+            tools:layout="@layout/fragment_vendor_home" >
+        <action
+                android:id="@+id/vendor_home_to_profile"
+                app:destination="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/navigation_orders"
+            android:name="com.example.zeroenqueue.uiVendor.orders.OrdersFragment"
+            android:label="@string/menu_orders"
+            tools:layout="@layout/fragment_orders" >
+        <action
+                android:id="@+id/orders_to_profile"
+                app:destination="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/navigation_stall_menu"
+            android:name="com.example.zeroenqueue.uiVendor.menu.MenuFragment"
+            android:label="@string/food_stall_menu"
+            tools:layout="@layout/fragment_menu" >
+        <action
+                android:id="@+id/stall_menu_to_profile"
+                app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/profileFragment"
+            android:name="com.example.zeroenqueue.uiCustomer.profile.ProfileFragment"
+            android:label="@string/title_profile"
+            tools:layout="@layout/fragment_profile" >
+        <action
+                android:id="@+id/profile_to_home"
+                app:destination="@id/navigation_vendor_home" />
+    </fragment>
+</navigation>

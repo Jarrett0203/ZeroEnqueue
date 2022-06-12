@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:showIn="navigation_view">
+
+    <group
+            android:id="@+id/home_group"
+            android:checkableBehavior="single">
+        <item
+                android:id="@+id/navigation_vendor_home"
+                android:icon="@drawable/ic_home"
+                android:title="@string/title_home" />
+        <item
+                android:id="@+id/navigation_stall_menu"
+                android:icon="@drawable/ic_food_stall"
+                android:title="@string/food_stall_menu" />
+        <item
+                android:id="@+id/navigation_orders"
+                android:icon="@drawable/ic_order_status"
+                android:title="@string/title_orders" />
+
+        <item
+                android:id="@+id/navigation_switch_stall"
+                android:icon="@drawable/ic_switch_stall"
+                android:title="@string/switch_stall" />
+
+        <item
+                android:id="@+id/navigation_sign_out"
+                android:icon="@drawable/ic_baseline_exit_to_app_24"
+                android:title="@string/sign_out" />
+    </group>
+
+</menu>
