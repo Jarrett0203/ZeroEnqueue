@@ -39,16 +39,34 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <TextView
-                android:id="@+id/txt_total_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="Total price = 0, 0"
-                android:textSize="24sp" />
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Total: $"
+                        android:textSize="24sp" />
+
+                <TextView
+                        android:id="@+id/txt_total_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="Total price = 0, 0"
+                        android:textSize="24sp" />
+
+            </LinearLayout>
+
+
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_place_order"

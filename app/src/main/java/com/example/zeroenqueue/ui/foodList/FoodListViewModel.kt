@@ -95,7 +95,7 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
                 for(itemSnapShot in snapshot.children){
                     val categoryFood = itemSnapShot.getValue(Food::class.java)
                     categoryList.forEach{ s ->
-                        if (categoryFood!!.categories!!.uppercase() == s.uppercase())
+                        if (categoryFood!!.categories!!.uppercase() == s!!.uppercase())
                             tempList.add(categoryFood)
                     }
                 }

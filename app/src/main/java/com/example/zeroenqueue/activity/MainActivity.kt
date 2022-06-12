@@ -96,8 +96,8 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(R.id.categories_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.foodList.FoodListFragment")
                 navController.navigate(R.id.food_list_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.orderStatus.OrderStatusFragment")
-                navController.navigate(R.id.order_status_to_profile)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.orderStatus.OrderSummaryFragment")
+                navController.navigate(R.id.navigation_order_status)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.cart.CartFragment")
                 navController.navigate(R.id.cart_to_profile)
         }
@@ -262,6 +262,8 @@ class MainActivity : AppCompatActivity() {
                             "[COUNT CART]" + e.message,
                             Toast.LENGTH_SHORT
                         ).show()
+                    else
+                        fab.count = 0;
                 }
 
             })

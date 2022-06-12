@@ -10,6 +10,8 @@ import com.example.zeroenqueue.R
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+import com.example.zeroenqueue.cart
+import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.db.CartDataSource
 import com.example.zeroenqueue.db.CartDatabase
 import com.example.zeroenqueue.db.CartItem
@@ -73,6 +75,10 @@ class MyCartAdapter(
 
     override fun getItemCount(): Int {
         return cartItem.size
+    }
+
+    fun getItemAtPosition(pos: Int): CartItem {
+        return cartItem[pos]
     }
 
 

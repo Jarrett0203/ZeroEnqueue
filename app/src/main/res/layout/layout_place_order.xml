@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="8dp">
+
+    <TextView
+            android:id="@+id/collection_time"
+            android:text="Collection Time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <EditText
+                android:id="@+id/time"
+                android:hint="Enter your preferred collection time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+        </EditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+            android:id="@+id/payment_method"
+            android:text="Payment method"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            />
+
+    <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <RadioButton
+                android:id="@+id/cash"
+                android:text="Cash"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="22sp"
+                android:textStyle="bold"/>
+
+        <RadioButton
+                android:id="@+id/braintree"
+                android:text="Braintree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="22sp"
+                android:textStyle="bold"/>
+
+    </RadioGroup>
+
+    <TextView
+            android:id="@+id/txt_address_detail"
+            android:text="Comments or special requests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            />
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <EditText
+                android:id="@+id/comment"
+                android:hint="Enter comments or any special requests"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+        </EditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>
