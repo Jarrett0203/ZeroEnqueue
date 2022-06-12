@@ -7,10 +7,9 @@ import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.widget.TextView
 import com.example.zeroenqueue.classes.*
+import java.lang.StringBuilder
 import java.math.RoundingMode
 import java.text.DecimalFormat
-import kotlin.random.Random
-import kotlin.text.StringBuilder
 
 object Common {
     fun formatPrice(price: Double): String {
@@ -33,7 +32,7 @@ object Common {
     }
 
     fun getDateOfWeek(i: Int): String {
-        when(i) {
+        when (i) {
             1 -> return "Monday"
             2 -> return "Tuesday"
             3 -> return "Wednesday"
@@ -46,7 +45,7 @@ object Common {
     }
 
     fun convertStatusToText(orderStatus: Int): String {
-        when(orderStatus) {
+        when (orderStatus) {
             0 -> return "Order placed"
             1 -> return "Preparing"
             2 -> return "Ready to be collected"
@@ -75,13 +74,6 @@ object Common {
                 result += addOn.price
             return result
         }
-    }
-
-    fun orderId(): String {
-        return StringBuilder()
-            .append(System.currentTimeMillis())
-            .append(Math.abs(Random.nextInt()))
-            .toString()
     }
 
     var foodStallSelected: FoodStall? = null

@@ -10,7 +10,7 @@ class OrderSummaryModel : ViewModel() {
         mutableLiveDataOrderList = MutableLiveData()
     }
 
-    fun setMutableLiveDataOrderList(orderList: List<Order>) {
-        mutableLiveDataOrderList.value = orderList
-    }
+//    fun setMutableLiveDataOrderList.value(orderList: List<Order>) {
+//        mutableLiveDataOrderList.value = orderList
+//    }
 }

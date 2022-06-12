@@ -44,7 +44,7 @@
                 <item
                     android:id="@+id/navigation_order_status"
                     android:icon="@drawable/ic_order_status"
-                    android:title="@string/menu_order_status" />
+                    android:title="@string/title_order_status" />
             </group>
         </menu>
     </item>

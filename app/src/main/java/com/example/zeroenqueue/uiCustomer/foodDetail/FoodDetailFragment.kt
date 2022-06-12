@@ -293,7 +293,7 @@ class FoodDetailFragment : Fragment(), TextWatcher {
 
                 chipGroupAddonSelected.addView(chip)
             }
-        } else
+        } else if (Common.foodSelected!!.addOnSelected!!.size == 0)
             chipGroupAddonSelected.removeAllViews()
     }
 

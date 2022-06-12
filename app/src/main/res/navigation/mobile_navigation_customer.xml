@@ -43,9 +43,9 @@
 
     <fragment
         android:id="@+id/navigation_order_status"
-        android:name="com.example.zeroenqueue.ui.orderStatus.OrderSummaryFragment"
-        android:label="@string/menu_order_status"
-        tools:layout="@layout/fragment_order_summary" >
+        android:name="com.example.zeroenqueue.uiCustomer.orderStatus.OrderStatusFragment"
+        android:label="@string/title_order_status"
+        tools:layout="@layout/fragment_order_status" >
         <action
             android:id="@+id/order_status_to_profile"
             app:destination="@id/navigation_profile" />
