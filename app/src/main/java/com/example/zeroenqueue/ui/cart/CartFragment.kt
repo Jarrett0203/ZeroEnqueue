@@ -141,7 +141,7 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
 
                                     override fun onSuccess(t: Int) {
                                         adapter!!.notifyItemRemoved(pos)
-                                        sumCart()
+                                        calculateTotalPrice()
                                         EventBus.getDefault().postSticky(CountCartEvent(true))
                                         Toast.makeText(context, "Delete item success", Toast.LENGTH_SHORT).show()
                                     }
@@ -175,7 +175,7 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
             builder.setNegativeButton("No", {dialogInterface, _ -> dialogInterface.dismiss()})
                 .setPositiveButton("YES", {dialogInterface, _ -> 
                     if(cash.isChecked)
-                        paymentCash(collectionTime, comments!!.text.toString())
+                        paymentCash(collectionTime.text.toString(), comments!!.text.toString())
                 })
 
             val dialog = builder.create()
@@ -184,26 +184,27 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
         }
     }
 
-    private fun sumCart() {
+    private fun calculateTotalPrice() {
         cartDataSource!!.totalPrice(Common.currentUser!!.uid!!)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object: SingleObserver<Double> {
+                override fun onSuccess(t: Double) {
+                    total_prices!!.text = Common.formatPrice(t)
+                    recycler_cart!!.layoutManager!!.onRestoreInstanceState(recyclerViewState)
+                }
+
                 override fun onSubscribe(d: Disposable) {
                 }
 
-                override fun onSuccess(t: Double) {
-                    total_prices!!.text = StringBuilder("Total: $").append(t)
-                }
 
                 override fun onError(e: Throwable) {
-                    if(!e.message!!.contains("Query returned empty"))
-                        Toast.makeText(context, "" + e.message!!, Toast.LENGTH_SHORT).show()
+                    if (!e.message!!.contains("empty"))
+                        Toast.makeText(context, "[SUM CART]" + e.message, Toast.LENGTH_SHORT).show()
                 }
 
             })
     }
-
 
 
     override fun onStart() {
@@ -246,28 +247,7 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
 
     }
 
-    private fun calculateTotalPrice() {
-        cartDataSource!!.totalPrice(Common.currentUser!!.uid!!)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object: SingleObserver<Double> {
-                override fun onSuccess(t: Double) {
-                    txt_total_price!!.text = StringBuilder("Total: ")
-                        .append(Common.formatPrice(t))
-                    recycler_cart!!.layoutManager!!.onRestoreInstanceState(recyclerViewState)
-                }
 
-                override fun onSubscribe(d: Disposable) {
-                }
-
-
-                override fun onError(e: Throwable) {
-                    if (!e.message!!.contains("empty"))
-                        Toast.makeText(context, "[SUM CART]" + e.message, Toast.LENGTH_SHORT).show()
-                }
-
-            })
-    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater!!.inflate(R.menu.cart_menu, menu)
@@ -303,7 +283,7 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun paymentCash(collectionTime: EditText, comments: String?) {
+    private fun paymentCash(collectionTime: String, comments: String?) {
         compositeDisposable.add(cartDataSource!!.getAllCart(Common.currentUser!!.uid!!)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -316,17 +296,18 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
 
                         }
 
-                        override fun onSuccess(t: Double) {
-                            val finalPrice = total_prices
+                        override fun onSuccess(t: Double) { //
+                            // val finalPrice = total_prices!!.toString().toDouble()
                             val order = Order()
+//                            val temp = total_prices!!.text.toString().toDouble()
                             order.userId = Common.currentUser!!.uid!!
                             order.userName = Common.currentUser!!.name!!
                             order.userPhone = Common.currentUser!!.phone!!
                             order.collectionTime = collectionTime
                             order.comment = comments
                             order.cartItemList = cartItemList
-                            order.totalPayment = total_prices
-                            order.finalPayment = finalPrice
+                            order.totalPayment = total_prices!!.text.toString().toDouble()
+                            order.finalPayment = total_prices!!.text.toString().toDouble()
                             order.discount = 0
                             order.isCod = true
                             order.transactionId = "Cash On Delivery"
@@ -368,32 +349,33 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
         FirebaseDatabase.getInstance()
             .getReference(Common.ORDER_REF)
             .child(Common.orderId())
-//            .setValue(order)
-//            /.addOnFailureListener { e -> Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()}
-//            .addOnCompleteListener{ task ->
-//                if(task.isSuccessful) {
-//                    cartDataSource!!.cleanCart(Common!!.currentUser!!.uid!!)
-//                        .subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe(object: SingleObserver<Int> {
-//                            override fun onSubscribe(d: Disposable) {
-//                                Toast.makeText(context, "Order placed successfully", Toast.LENGTH_SHORT).show()
-//                            }
-//
-//                            override fun onSuccess(t: Int) {
-//                            }
-//
-//                            override fun onError(e: Throwable) {
-//                                Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()
-//                            }
-//
-//                        })
-//                }
-//                }
+            .setValue(order)
+            .addOnFailureListener { e -> Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()}
+            .addOnCompleteListener{ task ->
+                if(task.isSuccessful) {
+                    cartDataSource!!.cleanCart(Common!!.currentUser!!.uid!!)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(object: SingleObserver<Int> {
+                            override fun onSubscribe(d: Disposable) {
+                                Toast.makeText(context, "Order placed successfully", Toast.LENGTH_SHORT).show()
+                            }
+
+                            override fun onSuccess(t: Int) {
+                            }
+
+                            override fun onError(e: Throwable) {
+                                Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()
+                            }
+
+                        })
+                }
+            }
     }
 
     override fun onLoadTimeSuccess(order: Order, estimatedTimeMs: Long) {
         order.createDate = (estimatedTimeMs)
+        order.orderStatus = 0;
         submitToFirebase(order)
     }
 

@@ -33,7 +33,7 @@ object Common {
     }
 
     fun getDateOfWeek(i: Int): String {
-        when (i) {
+        when(i) {
             1 -> return "Monday"
             2 -> return "Tuesday"
             3 -> return "Wednesday"
@@ -46,7 +46,7 @@ object Common {
     }
 
     fun convertStatusToText(orderStatus: Int): String {
-        when (orderStatus) {
+        when(orderStatus) {
             0 -> return "Order placed"
             1 -> return "Preparing"
             2 -> return "Ready to be collected"
