@@ -98,9 +98,9 @@ class MainCustomerActivity : AppCompatActivity() {
                 navController.navigate(R.id.categories_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.foodList.FoodListFragment")
                 navController.navigate(R.id.food_list_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.orderStatus.OrderStatusFragment")
-                navController.navigate(R.id.order_status_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.cart.CartFragment")
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.orderStatus.OrderSummaryFragment")
+                navController.navigate(R.id.navigation_order_status)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.cart.CartFragment")
                 navController.navigate(R.id.cart_to_profile)
         }
 
