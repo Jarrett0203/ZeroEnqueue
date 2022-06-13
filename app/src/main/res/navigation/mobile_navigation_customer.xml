@@ -1,86 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation_customer"
-    app:startDestination="@+id/navigation_customer_home">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mobile_navigation_customer"
+        app:startDestination="@+id/navigation_customer_home">
 
     <fragment
-        android:id="@+id/navigation_customer_home"
-        android:name="com.example.zeroenqueue.uiCustomer.customerHome.CustomerHomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_customer_home" >
+            android:id="@+id/navigation_customer_home"
+            android:name="com.example.zeroenqueue.uiCustomer.customerHome.CustomerHomeFragment"
+            android:label="@string/title_home"
+            tools:layout="@layout/fragment_customer_home">
         <action
-            android:id="@+id/customer_home_to_profile"
-            app:destination="@id/navigation_profile" />
+                android:id="@+id/customer_home_to_profile"
+                app:destination="@id/navigation_profile" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_foodStall"
-        android:name="com.example.zeroenqueue.uiCustomer.foodStall.FoodStallFragment"
-        android:label="@string/title_food_stall"
-        tools:layout="@layout/fragment_food_stall" >
+            android:id="@+id/navigation_foodStall"
+            android:name="com.example.zeroenqueue.uiCustomer.foodStall.FoodStallFragment"
+            android:label="@string/title_food_stall"
+            tools:layout="@layout/fragment_food_stall">
         <action
-            android:id="@+id/foodStall_to_food_list"
-            app:destination="@id/navigation_food_list" />
+                android:id="@+id/foodStall_to_food_list"
+                app:destination="@id/navigation_food_list" />
         <action
-            android:id="@+id/foodStall_to_profile"
-            app:destination="@id/navigation_profile" />
+                android:id="@+id/foodStall_to_profile"
+                app:destination="@id/navigation_profile" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_categories"
-        android:name="com.example.zeroenqueue.uiCustomer.categories.CategoriesFragment"
-        android:label="@string/title_categories"
-        tools:layout="@layout/fragment_categories" >
+            android:id="@+id/navigation_categories"
+            android:name="com.example.zeroenqueue.uiCustomer.categories.CategoriesFragment"
+            android:label="@string/title_categories"
+            tools:layout="@layout/fragment_categories">
         <action
-            android:id="@+id/categories_to_food_list"
-            app:destination="@id/navigation_food_list" />
+                android:id="@+id/categories_to_food_list"
+                app:destination="@id/navigation_food_list" />
         <action
-            android:id="@+id/categories_to_profile"
-            app:destination="@id/navigation_profile" />
+                android:id="@+id/categories_to_profile"
+                app:destination="@id/navigation_profile" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_order_status"
-        android:name="com.example.zeroenqueue.uiCustomer.orderStatus.OrderStatusFragment"
-        android:label="@string/title_order_status"
-        tools:layout="@layout/fragment_order_status" >
+            android:id="@+id/navigation_order_status"
+            android:name="com.example.zeroenqueue.uiCustomer.orderStatus.OrderSummaryFragment"
+            android:label="@string/menu_order_status"
+            tools:layout="@layout/fragment_order_summary">
         <action
-            android:id="@+id/order_status_to_profile"
-            app:destination="@id/navigation_profile" />
+                android:id="@+id/order_status_to_profile"
+                app:destination="@id/navigation_profile" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_profile"
-        android:name="com.example.zeroenqueue.uiCustomer.profile.ProfileFragment"
-        android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile" />
+            android:id="@+id/navigation_profile"
+            android:name="com.example.zeroenqueue.uiCustomer.profile.ProfileFragment"
+            android:label="@string/title_profile"
+            tools:layout="@layout/fragment_profile" />
 
     <fragment
-        android:id="@+id/navigation_food_detail"
-        android:name="com.example.zeroenqueue.uiCustomer.foodDetail.FoodDetailFragment"
-        android:label="@string/title_food_detail"
-        tools:layout="@layout/fragment_food_detail" >
-    </fragment>
+            android:id="@+id/navigation_food_detail"
+            android:name="com.example.zeroenqueue.uiCustomer.foodDetail.FoodDetailFragment"
+            android:label="@string/title_food_detail"
+            tools:layout="@layout/fragment_food_detail" />
     <fragment
-        android:id="@+id/navigation_food_list"
-        android:name="com.example.zeroenqueue.uiCustomer.foodList.FoodListFragment"
-        android:label="@string/title_food_list"
-        tools:layout="@layout/fragment_food_list" >
+            android:id="@+id/navigation_food_list"
+            android:name="com.example.zeroenqueue.uiCustomer.foodList.FoodListFragment"
+            android:label="@string/title_food_list"
+            tools:layout="@layout/fragment_food_list">
         <action
-            android:id="@+id/food_list_to_food_detail"
-            app:destination="@id/navigation_food_detail" />
+                android:id="@+id/food_list_to_food_detail"
+                app:destination="@id/navigation_food_detail" />
         <action
-            android:id="@+id/food_list_to_profile"
-            app:destination="@id/navigation_profile" />
+                android:id="@+id/food_list_to_profile"
+                app:destination="@id/navigation_profile" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_cart"
-        android:name="com.example.zeroenqueue.uiCustomer.cart.CartFragment"
-        android:label="@string/menu_cart"
-        tools:layout="@layout/fragment_cart" >
+            android:id="@+id/navigation_cart"
+            android:name="com.example.zeroenqueue.uiCustomer.cart.CartFragment"
+            android:label="@string/menu_cart"
+            tools:layout="@layout/fragment_cart">
         <action
                 android:id="@+id/cart_to_profile"
                 app:destination="@id/navigation_profile" />
