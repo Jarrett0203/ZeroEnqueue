@@ -3,9 +3,13 @@ package com.example.zeroenqueue.activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -15,14 +19,22 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityMainVendorBinding
+import com.example.zeroenqueue.eventBus.FoodItemClick
+import com.example.zeroenqueue.eventBus.VendorFoodItemClick
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.app_bar_main_vendor.*
 import kotlinx.android.synthetic.main.nav_header_main_customer.view.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class MainVendorActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainVendorBinding
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +44,7 @@ class MainVendorActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMainVendor.toolbar)
 
-        val drawerLayout: DrawerLayout = binding.drawerLayout
+        drawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val headView = navView.getHeaderView(0)
         val profileImage: ImageView? = headView!!.profile_image
@@ -83,7 +95,7 @@ class MainVendorActivity : AppCompatActivity() {
             .setNegativeButton("CANCEL") { dialogInterface, _ -> dialogInterface.dismiss() }
             .setPositiveButton("OK") { _, _ ->
                 Common.foodStallSelected = null
-                val intent = Intent(this@MainVendorActivity, VendorFoodStallsActivity::class.java)
+                val intent = Intent(this@MainVendorActivity, StallsOverviewActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             }
@@ -110,18 +122,29 @@ class MainVendorActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main_vendor, menu)
-        return true
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onVendorFoodSelected(event: VendorFoodItemClick) {
+        if (event.isSuccess) {
+            findNavController(R.id.nav_host_fragment_content_main_vendor).navigate(R.id.navigation_vendorFoodDetail)
+        }
+    }
+
+    /*fun setActionBarTitle(Title: String) {
+        toolbar.setText(title)
     }*/
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main_vendor)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    /*override fun onStart() {
+    override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
     }
@@ -129,5 +152,12 @@ class MainVendorActivity : AppCompatActivity() {
     override fun onStop() {
         EventBus.getDefault().unregister(this)
         super.onStop()
-    }*/
+    }
+
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START))
+            drawerLayout.closeDrawer(GravityCompat.START)
+        else
+            super.onBackPressed()
+    }
 }

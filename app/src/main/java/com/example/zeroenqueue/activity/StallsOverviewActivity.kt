@@ -11,26 +11,25 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.VendorFoodStallAdapter
-import com.example.zeroenqueue.databinding.ActivityVendorFoodStallsBinding
+import com.example.zeroenqueue.databinding.ActivityStallsOverviewBinding
 import com.example.zeroenqueue.eventBus.VendorFoodStallClick
 import dmax.dialog.SpotsDialog
-import kotlinx.android.synthetic.main.activity_vendor_food_stalls.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class VendorFoodStallsActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityVendorFoodStallsBinding
+class StallsOverviewActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityStallsOverviewBinding
     private lateinit var dialog: AlertDialog
     private lateinit var layoutAnimationController: LayoutAnimationController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityVendorFoodStallsBinding.inflate(layoutInflater)
+        binding = ActivityStallsOverviewBinding.inflate(layoutInflater)
         val root: View = binding.root
 
-        val vendorFoodStallsViewModel =
-            ViewModelProvider(this)[VendorFoodStallsViewModel::class.java]
+        val stallsOverviewViewModel =
+            ViewModelProvider(this)[StallsOverviewViewModel::class.java]
 
         val toolbar = binding.toolbar
         setSupportActionBar(toolbar)
@@ -45,14 +44,14 @@ class VendorFoodStallsActivity : AppCompatActivity() {
         recyclerFoodStall.setHasFixedSize(true)
         recyclerFoodStall.layoutManager = LinearLayoutManager(this)
         createNewStall.setOnClickListener {
-            val intent = Intent(this@VendorFoodStallsActivity, CreateNewStallActivity::class.java)
+            val intent = Intent(this@StallsOverviewActivity, CreateNewStallActivity::class.java)
             startActivity(intent)
         }
         swipeRefreshLayout.setOnRefreshListener {
-            vendorFoodStallsViewModel.loadFoodStall()
+            stallsOverviewViewModel.loadFoodStall()
             swipeRefreshLayout.isRefreshing = false
         }
-        vendorFoodStallsViewModel.foodStallList.observe(this) {
+        stallsOverviewViewModel.foodStallList.observe(this) {
             dialog.dismiss()
             if (it == null || it.isEmpty()) {
                 recyclerFoodStall.visibility = View.GONE
