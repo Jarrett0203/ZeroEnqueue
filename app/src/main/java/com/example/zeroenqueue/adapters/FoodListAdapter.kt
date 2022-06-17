@@ -100,7 +100,7 @@ class FoodListAdapter(
         holder.cart_image!!.setOnClickListener {
             val cartItem = CartItem()
             cartItem.uid = Common.currentUser!!.uid!!
-            //cartItem.userPhone = Common.currentUser!!.phone!!
+            cartItem.userPhone = Common.currentUser!!.phone!!
 
             cartItem.foodId = foodList[position].id!!
             cartItem.foodName = foodList[position].name!!

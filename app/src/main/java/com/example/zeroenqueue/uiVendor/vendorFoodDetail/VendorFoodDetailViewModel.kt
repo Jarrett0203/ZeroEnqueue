@@ -3,6 +3,7 @@ package com.example.zeroenqueue.uiVendor.vendorFoodDetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
 import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.common.Common
 
@@ -14,7 +15,7 @@ class VendorFoodDetailViewModel : ViewModel() {
                 foodDetailMutableLiveData = MutableLiveData()
             }
             foodDetailMutableLiveData!!.value = Common.foodSelected
-            return foodDetailMutableLiveData!!
+            return foodDetailMutableLiveData!!.distinctUntilChanged()
         }
     fun setFood(food: Food) {
         if(foodDetailMutableLiveData != null){

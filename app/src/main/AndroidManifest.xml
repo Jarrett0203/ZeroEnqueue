@@ -15,7 +15,7 @@
                 android:name=".activity.CreateNewStallActivity"
                 android:exported="false" />
         <activity
-                android:name=".activity.VendorFoodStallsActivity"
+                android:name=".activity.StallsOverviewActivity"
                 android:exported="false" />
         <activity
                 android:name=".activity.MainVendorActivity"

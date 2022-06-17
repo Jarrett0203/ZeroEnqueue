@@ -13,10 +13,9 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.activity.MainCustomerActivity
-import com.example.zeroenqueue.activity.VendorFoodStallsActivity
+import com.example.zeroenqueue.activity.StallsOverviewActivity
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentProfileBinding
@@ -240,7 +239,7 @@ class ProfileFragment : Fragment() {
                                             Common.foodStallSelected = null
                                             val intent = Intent(
                                                 requireContext(),
-                                                VendorFoodStallsActivity::class.java
+                                                StallsOverviewActivity::class.java
                                             )
                                             intent.flags =
                                                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

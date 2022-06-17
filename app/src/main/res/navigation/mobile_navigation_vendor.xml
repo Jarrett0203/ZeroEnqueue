@@ -33,6 +33,9 @@
         <action
                 android:id="@+id/stall_menu_to_profile"
                 app:destination="@id/profileFragment" />
+        <action
+                android:id="@+id/stall_menu_to_vendorFoodDetail"
+                app:destination="@id/navigation_vendorFoodDetail" />
     </fragment>
     <fragment
             android:id="@+id/profileFragment"
@@ -43,4 +46,9 @@
                 android:id="@+id/profile_to_home"
                 app:destination="@id/navigation_vendor_home" />
     </fragment>
+    <fragment
+            android:id="@+id/navigation_vendorFoodDetail"
+            android:name="com.example.zeroenqueue.uiVendor.vendorFoodDetail.VendorFoodDetailFragment"
+            android:label="Edit Food Details"
+            tools:layout="@layout/fragment_vendor_food_detail"/>
 </navigation>

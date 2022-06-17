@@ -138,7 +138,7 @@ class FoodDetailFragment : Fragment(), TextWatcher {
         btnCart.setOnClickListener {
             val cartItem = CartItem()
             cartItem.uid = Common.currentUser!!.uid!!
-            //cartItem.userPhone = Common.currentUser!!.phone!!
+            cartItem.userPhone = Common.currentUser!!.phone!!
 
             cartItem.foodId = Common.foodSelected!!.id!!
             cartItem.foodName = Common.foodSelected!!.name!!
@@ -341,7 +341,7 @@ class FoodDetailFragment : Fragment(), TextWatcher {
                                 if (task.isSuccessful) {
                                     foodDetailViewModel.setFood(food)
                                     Toast.makeText(
-                                        context!!,
+                                        requireContext(),
                                         "Thanks for reviewing",
                                         Toast.LENGTH_SHORT
                                     ).show()
@@ -353,7 +353,7 @@ class FoodDetailFragment : Fragment(), TextWatcher {
 
                 override fun onCancelled(error: DatabaseError) {
                     dialog.dismiss()
-                    Toast.makeText(context!!, error.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show()
                 }
 
             })
@@ -396,7 +396,7 @@ class FoodDetailFragment : Fragment(), TextWatcher {
         context?.let { it1 -> Glide.with(it1).load(it!!.image).into(food_image) }
         food_name.text = StringBuilder(it!!.name!!)
         food_description.text = StringBuilder(it.description!!)
-        food_price.text = StringBuilder("").append(Common.formatPrice(it.price)).toString()
+        food_price.text = Common.formatPrice(it.price)
         ratingBar.rating = it.ratingValue / it.ratingCount
         for (size in it.size) {
             val radioButton = RadioButton(context)

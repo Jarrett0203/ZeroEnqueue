@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentResolver
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -277,6 +276,7 @@ class CreateNewStallActivity : AppCompatActivity() {
                         ).show()
                     } else {
                         food.foodStall = newStallName
+                        food.id = id
                         foodListRef.child(id)
                             .setValue(food)
                             .addOnCompleteListener { task ->
@@ -367,7 +367,7 @@ class CreateNewStallActivity : AppCompatActivity() {
     }
 
     private fun goToStallOverview() {
-        val intent = Intent(this, VendorFoodStallsActivity::class.java)
+        val intent = Intent(this, StallsOverviewActivity::class.java)
         startActivity(intent)
     }
 
