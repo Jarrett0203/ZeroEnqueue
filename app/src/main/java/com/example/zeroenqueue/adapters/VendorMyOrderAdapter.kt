@@ -11,13 +11,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.Food
+import com.example.zeroenqueue.classes.Order
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.uiVendor.orders.OrderModel
 import java.text.SimpleDateFormat
 
 class VendorMyOrderAdapter (
     internal var context: Context,
-    internal val orderList: List<OrderModel>) : RecyclerView.Adapter<VendorMyOrderAdapter.MyViewHolder>() {
+    internal val orderList: MutableList<OrderModel>) : RecyclerView.Adapter<VendorMyOrderAdapter.MyViewHolder>() {
 
     lateinit var simpleDateFormat: SimpleDateFormat
 
@@ -72,6 +73,14 @@ class VendorMyOrderAdapter (
 
         Common.setSpanStringColor("Name", orderList[position].userName,
             holder.txt_name, Color.parseColor("#00574B"))
+    }
+
+    fun getItemAtPosition(pos: Int): OrderModel {
+        return orderList[pos]
+    }
+
+    fun removeItem(pos: Int) {
+        orderList.removeAt(pos)
     }
 
 }
