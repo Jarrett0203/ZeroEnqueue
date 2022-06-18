@@ -45,6 +45,11 @@
                     android:id="@+id/navigation_order_status"
                     android:icon="@drawable/ic_order_status"
                     android:title="@string/menu_order_status" />
+
+                <item
+                        android:id="@+id/navigation_discounts"
+                        android:icon="@drawable/ic_discount"
+                        android:title="@string/discounts" />
             </group>
         </menu>
     </item>

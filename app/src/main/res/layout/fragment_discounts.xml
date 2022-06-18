@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:padding="8dp"
+        tools:context=".uiCustomer.discounts.DiscountsFragment">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerDiscounts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/layout_discounts" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
+            android:id="@+id/NoDiscounts">
+
+        <TextView
+                android:text="No Discounts found..."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="35sp" />
+
+        <TextView
+                android:text="Swipe up to refresh page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="italic"
+                android:layout_gravity="center"
+                android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/notNUSLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+        <TextView
+                android:text="Are you a NUS student or staff?"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="24sp" />
+
+        <TextView
+                android:text="Upload your NUS card here to get exclusive discounts!"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:textStyle="italic"
+                android:textSize="16sp" />
+
+        <Button
+                android:id="@+id/btnUploadNUSCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Upload"
+                android:elevation="10dp"
+                app:cornerRadius="10dp" />
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -84,5 +84,14 @@
                 android:id="@+id/cart_to_profile"
                 app:destination="@id/navigation_profile" />
     </fragment>
+    <fragment
+            android:id="@+id/navigation_discounts"
+            android:name="com.example.zeroenqueue.uiCustomer.discounts.DiscountsFragment"
+            android:label="Discounts"
+            tools:layout="@layout/fragment_discounts" >
+        <action
+                android:id="@+id/discounts_to_profile"
+                app:destination="@id/navigation_profile" />
+    </fragment>
 
 </navigation>

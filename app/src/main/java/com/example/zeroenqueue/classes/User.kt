@@ -8,4 +8,7 @@ class User {
     var address:String?= null
     var phone:String?= null
     var userType: String?= null
+    var cardImage: String?= null
+    var nus: Boolean = false
+    var discounts: MutableList<Discount>?= ArrayList()
 }
