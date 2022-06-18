@@ -79,7 +79,7 @@ class MainCustomerActivity : AppCompatActivity() {
             setOf(
                 R.id.navigation_customer_home, R.id.navigation_categories, R.id.navigation_order_status,
                 R.id.navigation_foodStall, R.id.navigation_profile, R.id.navigation_food_list,
-                R.id.navigation_cart
+                R.id.navigation_cart, R.id.navigation_discounts
             ), drawerLayout
         )
 
@@ -102,6 +102,8 @@ class MainCustomerActivity : AppCompatActivity() {
                 navController.navigate(R.id.order_status_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.cart.CartFragment")
                 navController.navigate(R.id.cart_to_profile)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.discounts.DiscountsFragment")
+                navController.navigate(R.id.discounts_to_profile)
         }
 
         val txtUser = headView.findViewById<TextView>(R.id.txt_user)
@@ -118,6 +120,7 @@ class MainCustomerActivity : AppCompatActivity() {
                 R.id.navigation_foodStall -> navController.navigate(R.id.navigation_foodStall)
                 R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
                 R.id.navigation_cart -> navController.navigate(R.id.navigation_cart)
+                R.id.navigation_discounts -> navController.navigate(R.id.navigation_discounts)
             }
             true
         }
@@ -244,7 +247,7 @@ class MainCustomerActivity : AppCompatActivity() {
     fun onRecommendedSelected(event: RecommendedClick) {
         dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
         dialog.show()
-        FirebaseDatabase.getInstance().getReference("FoodList")
+        FirebaseDatabase.getInstance().getReference(Common.FOODLIST_REF)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
@@ -266,4 +269,12 @@ class MainCustomerActivity : AppCompatActivity() {
                 }
             })
     }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onDiscountSelected(event: DiscountItemClick) {
+        if (event.isSuccess) {
+            //findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_discountDetails)
+        }
+    }
+
 }

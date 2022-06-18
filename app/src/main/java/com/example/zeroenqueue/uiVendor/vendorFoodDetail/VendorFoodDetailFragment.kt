@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.contains
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
@@ -74,6 +75,10 @@ class VendorFoodDetailFragment : Fragment() {
         if (Common.foodSelected == null) {
             editFoodImagePrompt.text = "Add new food image..."
             ratingBar.visibility = View.GONE
+            (activity as AppCompatActivity).supportActionBar?.title = "Add Food Item"
+        }
+        else {
+            (activity as AppCompatActivity).supportActionBar?.title = "Edit Food Detail"
         }
 
         btnConfirmChanges.setOnClickListener {

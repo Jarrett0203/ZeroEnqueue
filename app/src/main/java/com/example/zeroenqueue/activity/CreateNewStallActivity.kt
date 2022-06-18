@@ -67,7 +67,7 @@ class CreateNewStallActivity : AppCompatActivity() {
         var stallImageUri: Uri? = null
         val stallImage = binding.addStallImage
         val stallImageCardView = binding.materialCardViewStallImage
-        val stallImagePrompt = binding.addStallImageText
+        val stallImagePrompt = binding.addCardImageText
         val addNewFoodItem = binding.addNewFoodItem
         editStallName = binding.inputStallName
         editStallPhone = binding.inputStallPhone

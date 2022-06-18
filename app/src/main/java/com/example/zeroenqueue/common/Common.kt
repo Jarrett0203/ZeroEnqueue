@@ -84,6 +84,7 @@ object Common {
             .toString()
     }
 
+    var discountSelected: Discount? = null
     var foodStallSelected: FoodStall? = null
     var categorySelected: Category? = null
     var foodSelected: Food? = null
