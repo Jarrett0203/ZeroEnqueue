@@ -25,6 +25,9 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:scaleType="centerCrop"
                     android:contentDescription="@string/title_profile"
                     android:src="@drawable/default_profile" />
 

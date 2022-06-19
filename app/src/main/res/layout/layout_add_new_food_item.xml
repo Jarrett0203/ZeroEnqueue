@@ -81,9 +81,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
+            android:fillViewport="true"
+            android:layout_gravity="fill_vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
+                android:focusableInTouchMode="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -200,7 +203,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 app:selectionRequired="true"
-                                app:singleSelection="true"/>
+                                app:singleSelection="true" />
                     </HorizontalScrollView>
 
                 </LinearLayout>
@@ -243,12 +246,12 @@
                                 app:tint="@color/yellow" />
                     </LinearLayout>
 
-                    <RadioGroup
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerSize"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/rdi_group_size"
-                            android:orientation="horizontal"
-                            android:weightSum="3" />
+                            tools:listitem="@layout/layout_size_item"/>
 
                 </LinearLayout>
 
@@ -290,10 +293,12 @@
                                 app:tint="@color/yellow" />
                     </LinearLayout>
 
-                    <com.google.android.material.chip.ChipGroup
-                            android:id="@+id/chip_group_addon_selected"
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerAddOns"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            tools:listitem="@layout/layout_addon_item"/>
 
                 </LinearLayout>
 

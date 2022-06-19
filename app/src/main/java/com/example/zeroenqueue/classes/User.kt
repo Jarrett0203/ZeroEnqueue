@@ -1,6 +1,7 @@
 package com.example.zeroenqueue.classes
 
 class User {
+    var image: String? = null
     var uid:String?= null
     var name:String?= null
     var email:String?= null

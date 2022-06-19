@@ -16,6 +16,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.common.Common
@@ -85,6 +86,9 @@ class MainCustomerActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        if (Common.currentUser!!.image != null)
+            Glide.with(this).load(Common.currentUser!!.image).into(profileImage!!)
 
         profileImage!!.setOnClickListener {
             val navHostFragment = supportFragmentManager.primaryNavigationFragment
