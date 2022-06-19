@@ -42,12 +42,12 @@
     </fragment>
 
     <fragment
-            android:id="@+id/navigation_order_status"
+            android:id="@+id/navigation_order_summary"
             android:name="com.example.zeroenqueue.uiCustomer.orderStatus.OrderSummaryFragment"
-            android:label="@string/menu_order_status"
-            tools:layout="@layout/fragment_order_summary">
+            android:label="@string/menu_order_summary"
+            tools:layout="@layout/fragment_order_summary_customer">
         <action
-                android:id="@+id/order_status_to_profile"
+                android:id="@+id/order_summary_to_profile"
                 app:destination="@id/navigation_profile" />
     </fragment>
 

@@ -78,7 +78,7 @@ class MainCustomerActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_customer_home, R.id.navigation_categories, R.id.navigation_order_status,
+                R.id.navigation_customer_home, R.id.navigation_categories, R.id.navigation_order_summary,
                 R.id.navigation_foodStall, R.id.navigation_profile, R.id.navigation_food_list,
                 R.id.navigation_cart, R.id.navigation_discounts
             ), drawerLayout
@@ -102,8 +102,8 @@ class MainCustomerActivity : AppCompatActivity() {
                 navController.navigate(R.id.categories_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.foodList.FoodListFragment")
                 navController.navigate(R.id.food_list_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.orderStatus.OrderStatusFragment")
-                navController.navigate(R.id.order_status_to_profile)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.orderStatus.OrderSummaryFragment")
+                navController.navigate(R.id.navigation_order_summary)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.cart.CartFragment")
                 navController.navigate(R.id.cart_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.discounts.DiscountsFragment")
@@ -120,7 +120,7 @@ class MainCustomerActivity : AppCompatActivity() {
                 R.id.navigation_customer_home -> navController.navigate(R.id.navigation_customer_home)
                 R.id.navigation_food_list -> navController.navigate(R.id.navigation_food_list)
                 R.id.navigation_categories -> navController.navigate(R.id.navigation_categories)
-                R.id.navigation_order_status -> navController.navigate(R.id.navigation_order_status)
+                R.id.navigation_order_summary -> navController.navigate(R.id.navigation_order_summary)
                 R.id.navigation_foodStall -> navController.navigate(R.id.navigation_foodStall)
                 R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
                 R.id.navigation_cart -> navController.navigate(R.id.navigation_cart)

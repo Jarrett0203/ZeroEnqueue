@@ -28,7 +28,7 @@ class MyOrderAdapter(private val context: Context,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(LayoutInflater.from(context!!)
-            .inflate(R.layout.layout_order_item, parent, false))
+            .inflate(R.layout.layout_order_item_customer, parent, false))
     }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
