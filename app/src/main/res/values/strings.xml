@@ -42,7 +42,7 @@
     <string name="sandwiches">Sandwiches</string>
     <string name="snacks">Snacks</string>
     <string name="western_soups">Western Soups</string>
-    <string name="menu_order_status">View order status</string>
+    <string name="menu_order_summary">View order status</string>
     <string name="chicken_stall">Chicken Stall</string>
     <string name="vegetarian_stall">Vegetarian Stall</string>
     <string name="soup_stall">Soup Stall</string>
