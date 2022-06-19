@@ -114,7 +114,7 @@ class DiscountsFragment : Fragment() {
 
                     val imageName = Common.currentUser!!.uid
                     val imageFolder = storageRef.child("NUSValidation/$imageName")
-                    imageFolder.putFile(cardImageUri!!).addOnFailureListener{
+                    imageFolder.putFile(cardImageUri!!).addOnFailureListener {
                         dialog.dismiss()
                         Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                     }.addOnProgressListener {

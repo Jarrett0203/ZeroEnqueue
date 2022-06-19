@@ -46,8 +46,11 @@
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_profile.xml" value="0.1838768115942029" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_vendor_food_detail.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_vendor_home.xml" value="0.2578125" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_add_addon.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_add_new_food_item.xml" value="0.1947463768115942" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_add_size.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_addon_display.xml" value="0.192578125" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_addon_item.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_cart_item.xml" value="0.23529411764705882" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_category_item.xml" value="0.1" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_category_menu.xml" value="0.2578125" />
@@ -65,6 +68,7 @@
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_popular_categories_item.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_rating_comment.xml" value="0.25677083333333334" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_recommended_food_items.xml" value="0.25677083333333334" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_size_item.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_upload_nus_card.xml" value="0.25677083333333334" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/nav_header.xml" value="0.25677083333333334" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/nav_header_main.xml" value="0.2578125" />

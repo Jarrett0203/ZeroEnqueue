@@ -84,4 +84,8 @@
     <string name="popular_food">Popular Food</string>
     <string name="discounts">Discounts</string>
     <string name="original_price"><strike>$ 1000</strike></string>
+    <string name="addSize">Add New Size</string>
+    <string name="name">Name</string>
+    <string name="price">Price</string>
+    <string name="addAddon">Add Add-On</string>
 </resources>

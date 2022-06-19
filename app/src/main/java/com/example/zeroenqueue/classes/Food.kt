@@ -7,8 +7,8 @@ class Food {
     var id: String? = null
     var description: String? = null
     var price: Double = 0.00
-    var addon:List<AddOn> = ArrayList()
-    var size:List<Size> = ArrayList()
+    var addon:ArrayList<AddOn> = ArrayList()
+    var size:ArrayList<Size> = ArrayList()
     var foodStall: String? = null
     var categories: String? = null
 

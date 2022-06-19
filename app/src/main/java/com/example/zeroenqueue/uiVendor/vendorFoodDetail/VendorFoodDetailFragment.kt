@@ -18,10 +18,16 @@ import androidx.core.view.contains
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
+import com.example.zeroenqueue.adapters.AddOnAdapter
+import com.example.zeroenqueue.adapters.SizeAdapter
+import com.example.zeroenqueue.classes.AddOn
 import com.example.zeroenqueue.classes.Category
 import com.example.zeroenqueue.classes.Food
+import com.example.zeroenqueue.classes.Size
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentVendorFoodDetailBinding
 import com.google.android.material.card.MaterialCardView
@@ -65,10 +71,19 @@ class VendorFoodDetailFragment : Fragment() {
         val editPrice: EditText = binding.inputPrice
         val editDescription: EditText = binding.inputFoodDescription
         val ratingBar: RatingBar = binding.ratingBar
+        val addSize: ImageView = binding.addSizeImage
+        val addAddOn: ImageView = binding.addAddonImage
+        val recyclerSize: RecyclerView = binding.recyclerSize
+        val recyclerAddOns: RecyclerView = binding.recyclerAddOns
         chipGroupCategory = binding.layoutChipGroupCategory
-        val rdiGroupSize = binding.rdiGroupSize
         val btnConfirmChanges: Button = binding.btnConfirmFood
         var foodImageUri: Uri? = null
+
+        recyclerSize.layoutManager = LinearLayoutManager(context)
+        recyclerAddOns.layoutManager = LinearLayoutManager(context)
+
+        var addOnAdapter = AddOnAdapter(requireContext(), ArrayList())
+        var sizeAdapter = SizeAdapter(requireContext(), ArrayList())
 
         showAllCategories()
 
@@ -76,9 +91,50 @@ class VendorFoodDetailFragment : Fragment() {
             editFoodImagePrompt.text = "Add new food image..."
             ratingBar.visibility = View.GONE
             (activity as AppCompatActivity).supportActionBar?.title = "Add Food Item"
-        }
-        else {
+        } else {
             (activity as AppCompatActivity).supportActionBar?.title = "Edit Food Detail"
+        }
+
+        addSize.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            val itemView = layoutInflater.inflate(R.layout.layout_add_size, null)
+            val sizeName = itemView.findViewById<EditText>(R.id.sizeName)
+            val sizePrice = itemView.findViewById<EditText>(R.id.sizePrice)
+            builder.setNegativeButton("CANCEL") { dialogInterface, _ -> dialogInterface.dismiss() }
+            builder.setPositiveButton("OK") { dialogInterface, _ ->
+                dialogInterface.dismiss()
+                val newSize = Size()
+                newSize.name = sizeName.text.toString()
+                newSize.price = sizePrice.text.toString().toDouble()
+                sizeAdapter.sizeList.add(0, newSize)
+                sizeAdapter.notifyItemInserted(0)
+                recyclerSize.adapter = sizeAdapter
+            }
+
+            builder.setView(itemView)
+            val uploadDialog = builder.create()
+            uploadDialog.show()
+        }
+
+        addAddOn.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            val itemView = layoutInflater.inflate(R.layout.layout_add_addon, null)
+            val addOnName = itemView.findViewById<EditText>(R.id.addOnName)
+            val addOnPrice = itemView.findViewById<EditText>(R.id.addOnPrice)
+            builder.setNegativeButton("CANCEL") { dialogInterface, _ -> dialogInterface.dismiss() }
+            builder.setPositiveButton("OK") { dialogInterface, _ ->
+                dialogInterface.dismiss()
+                val newAddOn = AddOn()
+                newAddOn.name = addOnName.text.toString()
+                newAddOn.price = addOnPrice.text.toString().toDouble()
+                addOnAdapter.addOnList.add(0, newAddOn)
+                addOnAdapter.notifyItemInserted(0)
+                recyclerAddOns.adapter = addOnAdapter
+            }
+
+            builder.setView(itemView)
+            val uploadDialog = builder.create()
+            uploadDialog.show()
         }
 
         btnConfirmChanges.setOnClickListener {
@@ -118,21 +174,21 @@ class VendorFoodDetailFragment : Fragment() {
                             "Please select an image for the new food.",
                             Toast.LENGTH_SHORT
                         ).show()
-                    }
-                    else {
+                    } else {
                         editFood.id = Common.foodSelected!!.id
                         editFood.image = Common.foodSelected!!.image
                         editFood.name = editFoodNameText
                         editFood.price = editFoodPriceDouble
                         editFood.description = editFoodDescriptionText
                         editFood.categories = confirmedCategoryName
+                        editFood.size = sizeAdapter.sizeList
+                        editFood.addon = addOnAdapter.addOnList
                         uploadFoodToFirebase(editFood)
                     }
-                }
-
-                else {
+                } else {
                     val fileRef: StorageReference = storageRef.child(
-                        System.currentTimeMillis().toString() + "." + getFileExtension(foodImageUri!!)
+                        System.currentTimeMillis()
+                            .toString() + "." + getFileExtension(foodImageUri!!)
                     )
                     dialog.show()
                     fileRef.putFile(foodImageUri!!).addOnSuccessListener {
@@ -147,6 +203,8 @@ class VendorFoodDetailFragment : Fragment() {
                             editFood.price = editFoodPriceDouble
                             editFood.description = editFoodDescriptionText
                             editFood.categories = confirmedCategoryName
+                            editFood.size = sizeAdapter.sizeList
+                            editFood.addon = addOnAdapter.addOnList
                             uploadFoodToFirebase(editFood)
                             Toast.makeText(
                                 requireContext(),
@@ -172,25 +230,11 @@ class VendorFoodDetailFragment : Fragment() {
                 editName.setText(it!!.name!!)
                 editDescription.setText(it.description!!)
                 editPrice.setText(Common.formatPrice(it.price))
-                ratingBar.rating = Common.foodSelected!!.ratingValue
-                for (size in it.size) {
-                    val radioButton = RadioButton(context)
-                    radioButton.setOnCheckedChangeListener { _, b ->
-                        if (b)
-                            Common.foodSelected!!.sizeSelected = size
-                    }
-                    val params = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f)
-                    radioButton.layoutParams = params
-                    radioButton.text = size.name
-                    radioButton.tag = size.price
-                    if (rdiGroupSize.size <= 1)
-                        rdiGroupSize.addView(radioButton)
-                }
-
-                if (rdiGroupSize.childCount > 0) {
-                    val radioButton = rdiGroupSize.getChildAt(0) as RadioButton
-                    radioButton.isChecked = true
-                }
+                ratingBar.rating = it.ratingValue
+                addOnAdapter = AddOnAdapter(requireContext(), it.addon)
+                sizeAdapter = SizeAdapter(requireContext(), it.size)
+                recyclerAddOns.adapter = addOnAdapter
+                recyclerSize.adapter = sizeAdapter
             }
         }
         val foodImageResultLauncher =
@@ -216,6 +260,7 @@ class VendorFoodDetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        Common.foodSelected = null
     }
 
     private fun getFileExtension(imageUri: Uri): Any? {
@@ -235,6 +280,8 @@ class VendorFoodDetailFragment : Fragment() {
                     updateData["price"] = food.price
                     updateData["description"] = food.description!!
                     updateData["categories"] = food.categories!!
+                    updateData["size"] = food.size
+                    updateData["addon"] = food.addon
                     snapshot.ref
                         .updateChildren(updateData)
                         .addOnCompleteListener { task ->
@@ -299,7 +346,9 @@ class VendorFoodDetailFragment : Fragment() {
                         }
                     chip.setOnCheckedChangeListener(checkedChangedListenerCategory)
                     if (Common.foodSelected != null) {
-                        if (Common.foodSelected!!.categories!!.uppercase() == chip.text.toString().uppercase()) {
+                        if (Common.foodSelected!!.categories!!.uppercase() == chip.text.toString()
+                                .uppercase()
+                        ) {
                             chip.isChecked = true
                         }
                     }
@@ -313,11 +362,6 @@ class VendorFoodDetailFragment : Fragment() {
                     .show()
             }
         })
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Common.foodSelected = null
     }
 
 }

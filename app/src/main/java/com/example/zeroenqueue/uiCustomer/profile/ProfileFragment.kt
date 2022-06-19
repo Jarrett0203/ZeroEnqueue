@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.activity.MainCustomerActivity
 import com.example.zeroenqueue.activity.StallsOverviewActivity
@@ -71,6 +72,7 @@ class ProfileFragment : Fragment() {
         editPhone = binding.inputPhone
         editEmail = binding.inputEmail
         editPassword = binding.inputPassword
+        val profileImage = binding.profileImage
         val customerChip = binding.chipCustomer
         val vendorChip = binding.chipVendor
         val updateBtn = binding.btnUpdate
@@ -94,6 +96,8 @@ class ProfileFragment : Fragment() {
         dialog.show()
         profileViewModel.profile.observe(viewLifecycleOwner) {
             dialog.dismiss()
+            if (it.image != null)
+                Glide.with(requireContext()).load(it.image).into(profileImage)
             headerName.text = it.name
             editName.setText(it.name)
             editPhone.setText(it.phone)
@@ -119,6 +123,55 @@ class ProfileFragment : Fragment() {
                     cardImagePrompt.text = "Change image..."
                 }
             }
+
+        profileImage.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Upload profile image")
+            builder.setMessage("Please upload your profile image here")
+
+            cardImage.setOnClickListener {
+                val intent = Intent()
+                intent.type = "image/*"
+                intent.action = Intent.ACTION_GET_CONTENT
+                cardImageResultLauncher.launch(intent)
+            }
+
+            builder.setNegativeButton("CANCEL") {dialogInterface, _ -> dialogInterface.dismiss()}
+            builder.setPositiveButton("OK") { dialogInterface, _ ->
+                if (cardImageUri != null) {
+                    dialog.setMessage("Uploading")
+                    dialog.show()
+
+                    val imageName = Common.currentUser!!.uid
+                    val imageFolder = storageRef.child("profileImages/$imageName")
+                    imageFolder.putFile(cardImageUri!!).addOnFailureListener{
+                        dialog.dismiss()
+                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                    }.addOnProgressListener {
+                        val progress = 100.0 * it.bytesTransferred/ it.totalByteCount
+                        dialog.setMessage("Uploaded $progress%")
+                    }.addOnSuccessListener {
+                        dialogInterface.dismiss()
+                        imageFolder.downloadUrl.addOnSuccessListener {
+                            val updateData = HashMap<String, Any>()
+                            updateData["image"] = it.toString()
+                            userRef.child(Common.currentUser!!.uid!!).updateChildren(updateData)
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                                }
+                                .addOnCompleteListener { _ ->
+                                    Common.currentUser!!.image = it.toString()
+                                    profileViewModel.loadProfile()
+                                    Toast.makeText(requireContext(), "Upload Success", Toast.LENGTH_SHORT).show()
+                                }
+                        }
+                    }
+                }
+            }
+            builder.setView(itemView)
+            val uploadDialog = builder.create()
+            uploadDialog.show()
+        }
 
         btnUploadNUSCard.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
