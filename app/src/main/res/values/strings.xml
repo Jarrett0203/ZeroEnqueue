@@ -82,6 +82,7 @@
     <string name="Confirm">Confirm</string>
     <string name="switch_stall">Switch Stall</string>
     <string name="popular_food">Popular Food</string>
+    <string name="action_filter">Filter</string>
     <string name="discounts">Discounts</string>
     <string name="original_price"><strike>$ 1000</strike></string>
     <string name="addSize">Add New Size</string>

@@ -7,14 +7,16 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.View.inflate
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.resources.Compatibility.Api21Impl.inflate
+import androidx.core.content.res.ColorStateListInflaterCompat.inflate
+import androidx.core.content.res.ComplexColorCompat.inflate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +27,8 @@ import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.VendorMyOrderAdapter
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
-import com.example.zeroenqueue.databinding.FragmentOrdersBinding
+import com.example.zeroenqueue.databinding.ActivityCreateNewStallBinding.inflate
+import com.example.zeroenqueue.databinding.ActivityMainCustomerBinding.inflate
 import com.example.zeroenqueue.eventBus.CountCartEvent
 import com.example.zeroenqueue.interfaces.IDeleteBtnCallback
 import com.google.firebase.database.FirebaseDatabase
@@ -41,15 +44,17 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_cart.*
 import org.greenrobot.eventbus.EventBus
-import java.lang.StringBuilder
+import android.view.LayoutInflater
+import com.example.zeroenqueue.common.BottomSheetOrderFragment
+import com.example.zeroenqueue.eventBus.FoodItemClick
+import com.example.zeroenqueue.eventBus.LoadOrderEvent
+import com.example.zeroenqueue.eventBus.UpdateCartItems
+import kotlinx.android.synthetic.main.fragment_order_summary_vendor.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import kotlin.text.StringBuilder
 
 class OrdersFragment : Fragment() {
-
-//    private var _binding: FragmentOrdersBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-//    private val binding get() = _binding!!
 
     lateinit var recycler_order: RecyclerView
     lateinit var layoutAnimationController: LayoutAnimationController
@@ -63,10 +68,7 @@ class OrdersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-
-//        _binding = FragmentOrdersBinding.inflate(inflater, container, false)
-//        val root: View = binding.root
-        val root = inflater.inflate(R.layout.fragment_orders, container, false)
+        val root = inflater.inflate(R.layout.fragment_order_summary_vendor, container, false)
         initView(root)
 
         ordersViewModel = ViewModelProvider(this).get(OrdersViewModel::class.java)
@@ -80,6 +82,9 @@ class OrdersFragment : Fragment() {
                 adapter = VendorMyOrderAdapter(requireContext(), orderList.toMutableList())
                 recycler_order.adapter = adapter
                 recycler_order.layoutAnimation = layoutAnimationController
+                txt_order_filter.setText(StringBuilder("Orders (")
+                    .append(orderList.size)
+                    .append(")"))
             }
         })
 //        val textView: TextView = binding.textGallery
@@ -90,11 +95,14 @@ class OrdersFragment : Fragment() {
     }
 
     private fun initView(root: View) {
+
+        setHasOptionsMenu(true);
+
         recycler_order = root.findViewById(R.id.recycler_order) as RecyclerView
         recycler_order.setHasFixedSize(true)
         recycler_order.layoutManager = LinearLayoutManager(context)
 
-        layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.item_animation_from_left)
+        layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
 
         val displayMetrics = DisplayMetrics()
         requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
@@ -213,6 +221,42 @@ class OrdersFragment : Fragment() {
                     }))
         }
     }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.vendor_order_list, menu);
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.filter_orders) {
+            val bottomSheet = BottomSheetOrderFragment.instance
+            bottomSheet!!.show(requireActivity().supportFragmentManager, "OrderList")
+        }
+        return true;
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        if (EventBus.getDefault().hasSubscriberForEvent((LoadOrderEvent::class.java)))
+            EventBus.getDefault().removeStickyEvent(LoadOrderEvent::class.java)
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this)
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().postSticky(CountCartEvent(true))
+        super.onDestroy()
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onLoadOrder(event: LoadOrderEvent) {
+        ordersViewModel.loadOrder(event.status)
     }
 
 //    override fun onDestroyView() {
