@@ -82,4 +82,5 @@
     <string name="Confirm">Confirm</string>
     <string name="switch_stall">Switch Stall</string>
     <string name="popular_food">Popular Food</string>
+    <string name="action_filter">Filter</string>
 </resources>

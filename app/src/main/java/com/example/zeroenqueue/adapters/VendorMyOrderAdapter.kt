@@ -67,7 +67,7 @@ class VendorMyOrderAdapter (
         Common.setSpanStringColor("Order status", Common.convertStatusToText(orderList[position].orderStatus),
             holder.txt_time, Color.parseColor("#00574B"))
 
-        Common.setSpanStringColor("Num of items", if(orderList[position].cartItemList != null) "0"
+        Common.setSpanStringColor("Num of items", if(orderList[position].cartItemList == null) "0"
         else orderList[position].cartItemList!!.size.toString(),
         holder.txt_num_item, Color.parseColor(("#00574B")))
 
