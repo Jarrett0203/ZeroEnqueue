@@ -71,16 +71,4 @@ class FoodStallAdapter(
             }
         })
     }
-    /*override fun getItemViewType(position: Int): Int {
-        return if(foodStallList.size == 1)
-            Common.DEFAULT_COLUMN_COUNT
-        else{
-            if(foodStallList.size % 2 == 0)
-                Common.DEFAULT_COLUMN_COUNT
-            else
-                if(position>1 && position == foodStallList.size-1)
-                    Common.FULL_WIDTH_COLUMN else Common.DEFAULT_COLUMN_COUNT
-
-        }
-    }*/
 }

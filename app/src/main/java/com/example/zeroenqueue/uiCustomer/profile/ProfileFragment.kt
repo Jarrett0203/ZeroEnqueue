@@ -1,26 +1,28 @@
 package com.example.zeroenqueue.uiCustomer.profile
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
+import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.activity.MainCustomerActivity
-import com.example.zeroenqueue.activity.VendorFoodStallsActivity
+import com.example.zeroenqueue.activity.StallsOverviewActivity
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentProfileBinding
-import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.EmailAuthProvider
@@ -29,6 +31,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_register_user.*
 import java.util.*
@@ -48,7 +51,9 @@ class ProfileFragment : Fragment() {
     private lateinit var editPassword: TextInputEditText
     private lateinit var profileViewModel: ProfileViewModel
     private var switchUserDialog: AlertDialog? = null
-    val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
+    private val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
+    private val storageRef = FirebaseStorage.getInstance().reference
+    private val userRef = FirebaseDatabase.getInstance().getReference(Common.USER_REF)
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
@@ -62,14 +67,18 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val headerName: TextView = binding.tvName
+        val headerName = binding.tvName
         editName = binding.inputName
         editPhone = binding.inputPhone
         editEmail = binding.inputEmail
         editPassword = binding.inputPassword
-        val customerChip: Chip = binding.chipCustomer
-        val vendorChip: Chip = binding.chipVendor
-        val updateBtn: Button = binding.btnUpdate
+        val profileImage = binding.profileImage
+        val customerChip = binding.chipCustomer
+        val vendorChip = binding.chipVendor
+        val updateBtn = binding.btnUpdate
+        val notNUSLayout = binding.notNUSLayout
+        val btnUploadNUSCard = binding.btnUploadNUSCard
+        val verifiedUserText = binding.verifiedUserText
 
         if (Common.currentUser!!.userType!! == "Customer") {
             customerChip.isChecked = true
@@ -87,12 +96,136 @@ class ProfileFragment : Fragment() {
         dialog.show()
         profileViewModel.profile.observe(viewLifecycleOwner) {
             dialog.dismiss()
+            if (it.image != null)
+                Glide.with(requireContext()).load(it.image).into(profileImage)
             headerName.text = it.name
             editName.setText(it.name)
             editPhone.setText(it.phone)
             editEmail.setText(it.email)
             editPassword.setText(it.password)
+            if (it.nus) {
+                notNUSLayout.visibility = View.GONE
+                verifiedUserText.visibility = View.VISIBLE
+            }
         }
+
+        val itemView = layoutInflater.inflate(R.layout.layout_upload_nus_card, null)
+        val cardImage = itemView.findViewById<ImageView>(R.id.addNUSCardImage)
+        val cardImagePrompt = itemView.findViewById<TextView>(R.id.add_card_image_text)
+        var cardImageUri : Uri? = null
+
+        val cardImageResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val data: Intent? = result.data
+                    cardImageUri = data!!.data
+                    cardImage.setImageURI(cardImageUri)
+                    cardImagePrompt.text = "Change image..."
+                }
+            }
+
+        profileImage.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Upload profile image")
+            builder.setMessage("Please upload your profile image here")
+
+            cardImage.setOnClickListener {
+                val intent = Intent()
+                intent.type = "image/*"
+                intent.action = Intent.ACTION_GET_CONTENT
+                cardImageResultLauncher.launch(intent)
+            }
+
+            builder.setNegativeButton("CANCEL") {dialogInterface, _ -> dialogInterface.dismiss()}
+            builder.setPositiveButton("OK") { dialogInterface, _ ->
+                if (cardImageUri != null) {
+                    dialog.setMessage("Uploading")
+                    dialog.show()
+
+                    val imageName = Common.currentUser!!.uid
+                    val imageFolder = storageRef.child("profileImages/$imageName")
+                    imageFolder.putFile(cardImageUri!!).addOnFailureListener{
+                        dialog.dismiss()
+                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                    }.addOnProgressListener {
+                        val progress = 100.0 * it.bytesTransferred/ it.totalByteCount
+                        dialog.setMessage("Uploaded $progress%")
+                    }.addOnSuccessListener {
+                        dialogInterface.dismiss()
+                        imageFolder.downloadUrl.addOnSuccessListener {
+                            val updateData = HashMap<String, Any>()
+                            updateData["image"] = it.toString()
+                            userRef.child(Common.currentUser!!.uid!!).updateChildren(updateData)
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                                }
+                                .addOnCompleteListener { _ ->
+                                    Common.currentUser!!.image = it.toString()
+                                    profileViewModel.loadProfile()
+                                    Toast.makeText(requireContext(), "Upload Success", Toast.LENGTH_SHORT).show()
+                                }
+                        }
+                    }
+                }
+            }
+            builder.setView(itemView)
+            val uploadDialog = builder.create()
+            uploadDialog.show()
+        }
+
+        btnUploadNUSCard.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Upload NUS card image")
+            builder.setMessage("Please upload your NUS card here")
+
+            cardImage.setOnClickListener {
+                val intent = Intent()
+                intent.type = "image/*"
+                intent.action = Intent.ACTION_GET_CONTENT
+                cardImageResultLauncher.launch(intent)
+            }
+
+            builder.setNegativeButton("CANCEL") {dialogInterface, _ -> dialogInterface.dismiss()}
+            builder.setPositiveButton("OK") {dialogInterface, _ ->
+                if (cardImageUri != null) {
+                    dialog.setMessage("Uploading")
+                    dialog.show()
+
+                    val imageName = Common.currentUser!!.uid
+                    val imageFolder = storageRef.child("NUSValidation/$imageName")
+                    imageFolder.putFile(cardImageUri!!).addOnFailureListener{
+                        dialog.dismiss()
+                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                    }.addOnProgressListener {
+                        val progress = 100.0 * it.bytesTransferred/ it.totalByteCount
+                        dialog.setMessage("Uploaded $progress%")
+                    }.addOnSuccessListener {
+                        dialogInterface.dismiss()
+                        imageFolder.downloadUrl.addOnSuccessListener {
+                            val updateData = HashMap<String, Any>()
+                            updateData["cardImage"] = it.toString()
+                            updateData["nus"] = true
+                            userRef.child(Common.currentUser!!.uid!!).updateChildren(updateData)
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                                }
+                                .addOnCompleteListener { _ ->
+                                    Common.currentUser!!.cardImage = it.toString()
+                                    Common.currentUser!!.nus = true
+                                    notNUSLayout.visibility = View.GONE
+                                    profileViewModel.loadProfile()
+                                    Toast.makeText(requireContext(), "Upload Success", Toast.LENGTH_SHORT).show()
+                                }
+                        }
+                    }
+                }
+            }
+
+            builder.setView(itemView)
+            val uploadDialog = builder.create()
+            uploadDialog.show()
+        }
+
         return root
     }
 
@@ -240,7 +373,7 @@ class ProfileFragment : Fragment() {
                                             Common.foodStallSelected = null
                                             val intent = Intent(
                                                 requireContext(),
-                                                VendorFoodStallsActivity::class.java
+                                                StallsOverviewActivity::class.java
                                             )
                                             intent.flags =
                                                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

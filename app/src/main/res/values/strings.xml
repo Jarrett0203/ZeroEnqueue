@@ -42,7 +42,7 @@
     <string name="sandwiches">Sandwiches</string>
     <string name="snacks">Snacks</string>
     <string name="western_soups">Western Soups</string>
-    <string name="menu_order_status">View order status</string>
+    <string name="menu_order_summary">View order status</string>
     <string name="chicken_stall">Chicken Stall</string>
     <string name="vegetarian_stall">Vegetarian Stall</string>
     <string name="soup_stall">Soup Stall</string>
@@ -83,4 +83,10 @@
     <string name="switch_stall">Switch Stall</string>
     <string name="popular_food">Popular Food</string>
     <string name="action_filter">Filter</string>
+    <string name="discounts">Discounts</string>
+    <string name="original_price"><strike>$ 1000</strike></string>
+    <string name="addSize">Add New Size</string>
+    <string name="name">Name</string>
+    <string name="price">Price</string>
+    <string name="addAddon">Add Add-On</string>
 </resources>

@@ -31,13 +31,8 @@ class FoodListAdapter(
     val foodList: List<Food>
 ) : RecyclerView.Adapter<FoodListAdapter.FoodListViewHolder>() {
 
-    private val compositeDisposable: CompositeDisposable
-    private val cartDataSource: CartDataSource
-
-    init {
-        compositeDisposable = CompositeDisposable()
-        cartDataSource = LocalCartDataSource(CartDatabase.getInstance(context).cartDAO())
-    }
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private val cartDataSource: CartDataSource = LocalCartDataSource(CartDatabase.getInstance(context).cartDAO())
 
     inner class FoodListViewHolder(val view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
@@ -85,7 +80,7 @@ class FoodListAdapter(
         Glide.with(context).load(foodList[position].image)
             .into(holder.food_image!!)
         holder.food_name!!.text = foodList[position].name
-        holder.food_price!!.text = StringBuilder("").append(Common.formatPrice(foodList[position].price)).toString()
+        holder.food_price!!.text = Common.formatPrice(foodList[position].price)
         Common.foodStallSelected = null
         Common.categorySelected = null
 
@@ -100,7 +95,7 @@ class FoodListAdapter(
         holder.cart_image!!.setOnClickListener {
             val cartItem = CartItem()
             cartItem.uid = Common.currentUser!!.uid!!
-            //cartItem.userPhone = Common.currentUser!!.phone!!
+            cartItem.userPhone = Common.currentUser!!.phone!!
 
             cartItem.foodId = foodList[position].id!!
             cartItem.foodName = foodList[position].name!!

@@ -5,25 +5,28 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentResolver
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.webkit.MimeTypeMap
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.view.contains
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.zeroenqueue.R
+import com.example.zeroenqueue.adapters.AddOnAdapter
+import com.example.zeroenqueue.adapters.DiscountsAdapter
 import com.example.zeroenqueue.adapters.NewStallFoodListAdapter
-import com.example.zeroenqueue.classes.Category
-import com.example.zeroenqueue.classes.Food
-import com.example.zeroenqueue.classes.FoodStall
+import com.example.zeroenqueue.adapters.SizeAdapter
+import com.example.zeroenqueue.classes.*
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityCreateNewStallBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
@@ -68,7 +71,7 @@ class CreateNewStallActivity : AppCompatActivity() {
         var stallImageUri: Uri? = null
         val stallImage = binding.addStallImage
         val stallImageCardView = binding.materialCardViewStallImage
-        val stallImagePrompt = binding.addStallImageText
+        val stallImagePrompt = binding.addCardImageText
         val addNewFoodItem = binding.addNewFoodItem
         editStallName = binding.inputStallName
         editStallPhone = binding.inputStallPhone
@@ -89,22 +92,41 @@ class CreateNewStallActivity : AppCompatActivity() {
 
         addNewFoodBottomSheetDialog = BottomSheetDialog(this, R.style.DialogStyle)
         val layoutAddNewFood = layoutInflater.inflate(R.layout.layout_add_new_food_item, null)
-        val addNewFoodImage =
-            layoutAddNewFood.findViewById<MaterialCardView>(R.id.addNewFoodCardView)
+        val addNewFoodImage = layoutAddNewFood.findViewById<MaterialCardView>(R.id.addNewFoodCardView)
         val newFoodImage = layoutAddNewFood.findViewById<ImageView>(R.id.food_image)
         val foodImagePrompt = layoutAddNewFood.findViewById<TextView>(R.id.image_prompt)
         val newFoodName = layoutAddNewFood.findViewById<TextInputEditText>(R.id.input_food_name)
         val newFoodPrice = layoutAddNewFood.findViewById<TextInputEditText>(R.id.input_price)
-        val newFoodDescription =
-            layoutAddNewFood.findViewById<TextInputEditText>(R.id.input_food_description)
+        val newFoodDescription = layoutAddNewFood.findViewById<TextInputEditText>(R.id.input_food_description)
         val addSize = layoutAddNewFood.findViewById<ImageView>(R.id.add_size_image)
         val addAddOn = layoutAddNewFood.findViewById<ImageView>(R.id.add_addon_image)
+        val recyclerSize = layoutAddNewFood.findViewById<RecyclerView>(R.id.recyclerSize)
+        val recyclerAddOns = layoutAddNewFood.findViewById<RecyclerView>(R.id.recyclerAddOns)
         val confirmAddNewFoodItem = layoutAddNewFood.findViewById<Button>(R.id.btnAddNewFood)
         var foodImageUri: Uri? = null
         chipGroupCategory = layoutAddNewFood.findViewById(R.id.layout_chip_group_category)
+        addNewFoodBottomSheetDialog.setOnShowListener {
+            val bottomSheetDialog = it as BottomSheetDialog
+            val parentLayout =
+                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            parentLayout?.let { it ->
+                val behaviour = BottomSheetBehavior.from(it)
+                val layoutParams = it.layoutParams
+                layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
+                it.layoutParams = layoutParams
+                behaviour.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
         addNewFoodBottomSheetDialog.setContentView(layoutAddNewFood)
 
+        recyclerSize.layoutManager = LinearLayoutManager(this)
+        recyclerAddOns.layoutManager = LinearLayoutManager(this)
+        recyclerSize.isNestedScrollingEnabled = false
+        recyclerAddOns.isNestedScrollingEnabled = false
+
         val newFoodStallMenu: ArrayList<Food> = ArrayList()
+        val addOnAdapter = AddOnAdapter(this, ArrayList())
+        val sizeAdapter = SizeAdapter(this, ArrayList())
 
         val stallImageResultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -146,13 +168,45 @@ class CreateNewStallActivity : AppCompatActivity() {
         }
 
         addSize.setOnClickListener {
-            //create dropdown menu somehow
-            //save food size string and size price
+            val builder = AlertDialog.Builder(this)
+            val itemView = layoutInflater.inflate(R.layout.layout_add_size, null)
+            val sizeName = itemView.findViewById<EditText>(R.id.sizeName)
+            val sizePrice = itemView.findViewById<EditText>(R.id.sizePrice)
+            builder.setNegativeButton("CANCEL") {dialogInterface, _ -> dialogInterface.dismiss()}
+            builder.setPositiveButton("OK") { dialogInterface, _ ->
+                dialogInterface.dismiss()
+                val newSize = Size()
+                newSize.name = sizeName.text.toString()
+                newSize.price = sizePrice.text.toString().toDouble()
+                sizeAdapter.sizeList.add(0, newSize)
+                sizeAdapter.notifyItemInserted(0)
+                recyclerSize.adapter = sizeAdapter
+            }
+
+            builder.setView(itemView)
+            val uploadDialog = builder.create()
+            uploadDialog.show()
         }
 
         addAddOn.setOnClickListener {
-            //create dropdown menu somehow
-            //save addOn string and addOn price
+            val builder = AlertDialog.Builder(this)
+            val itemView = layoutInflater.inflate(R.layout.layout_add_addon, null)
+            val addOnName = itemView.findViewById<EditText>(R.id.addOnName)
+            val addOnPrice = itemView.findViewById<EditText>(R.id.addOnPrice)
+            builder.setNegativeButton("CANCEL") {dialogInterface, _ -> dialogInterface.dismiss()}
+            builder.setPositiveButton("OK") { dialogInterface, _ ->
+                dialogInterface.dismiss()
+                val newAddOn = AddOn()
+                newAddOn.name = addOnName.text.toString()
+                newAddOn.price = addOnPrice.text.toString().toDouble()
+                addOnAdapter.addOnList.add(0, newAddOn)
+                addOnAdapter.notifyItemInserted(0)
+                recyclerAddOns.adapter = addOnAdapter
+            }
+
+            builder.setView(itemView)
+            val uploadDialog = builder.create()
+            uploadDialog.show()
         }
 
         confirmAddNewFoodItem.setOnClickListener {
@@ -207,6 +261,8 @@ class CreateNewStallActivity : AppCompatActivity() {
                         newFood.price = newFoodPriceDouble
                         newFood.description = newFoodDescriptionText
                         newFood.categories = categoryName
+                        newFood.size = sizeAdapter.sizeList
+                        newFood.addon = addOnAdapter.addOnList
                         newFoodStallMenu.add(newFood)
                         recyclerNewStallMenu.adapter =
                             NewStallFoodListAdapter(this, newFoodStallMenu)
@@ -232,6 +288,8 @@ class CreateNewStallActivity : AppCompatActivity() {
                 newFoodPrice.text!!.clear()
                 newFoodDescription.text!!.clear()
                 chipGroupCategory.clearCheck()
+                sizeAdapter.clearList()
+                addOnAdapter.clearList()
                 addNewFoodBottomSheetDialog.dismiss()
             }
             dialog.dismiss()
@@ -277,6 +335,7 @@ class CreateNewStallActivity : AppCompatActivity() {
                         ).show()
                     } else {
                         food.foodStall = newStallName
+                        food.id = id
                         foodListRef.child(id)
                             .setValue(food)
                             .addOnCompleteListener { task ->
@@ -300,6 +359,7 @@ class CreateNewStallActivity : AppCompatActivity() {
                 }
             })
         }
+        Toast.makeText(this@CreateNewStallActivity, "Please swipe up to refresh", Toast.LENGTH_SHORT).show()
         goToStallOverview()
     }
 
@@ -367,7 +427,7 @@ class CreateNewStallActivity : AppCompatActivity() {
     }
 
     private fun goToStallOverview() {
-        val intent = Intent(this, VendorFoodStallsActivity::class.java)
+        val intent = Intent(this, StallsOverviewActivity::class.java)
         startActivity(intent)
     }
 

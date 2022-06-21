@@ -63,14 +63,14 @@ class OrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
                 .limitToLast(100)
                 .addListenerForSingleValueEvent(object: ValueEventListener {
                     override fun onCancelled(error: DatabaseError) {
-                        listener.onLoadOrderFailed(error.message)
+                        listener.onLoadOrderFailed(error.message!!)
                     }
 
                     override fun onDataChange(snapshot: DataSnapshot) {
                         for(orderSnapShot in snapshot.children) {
                             val order = orderSnapShot.getValue(Order::class.java)
                             order!!.orderNumber = orderSnapShot.key
-                            orderList.add(order)
+                            orderList.add(order!!)
                         }
                         listener.onLoadOrderSuccess(orderList)
                     }
@@ -78,6 +78,7 @@ class OrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
         )
         dialog.dismiss()
     }
+
 
     private fun initView(root: View) {
         listener = this

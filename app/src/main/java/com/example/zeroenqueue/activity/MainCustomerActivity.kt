@@ -16,6 +16,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.common.Common
@@ -77,14 +78,17 @@ class MainCustomerActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_customer_home, R.id.navigation_categories, R.id.navigation_order_status,
+                R.id.navigation_customer_home, R.id.navigation_categories, R.id.navigation_order_summary,
                 R.id.navigation_foodStall, R.id.navigation_profile, R.id.navigation_food_list,
-                R.id.navigation_cart
+                R.id.navigation_cart, R.id.navigation_discounts
             ), drawerLayout
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        if (Common.currentUser!!.image != null)
+            Glide.with(this).load(Common.currentUser!!.image).into(profileImage!!)
 
         profileImage!!.setOnClickListener {
             val navHostFragment = supportFragmentManager.primaryNavigationFragment
@@ -98,10 +102,12 @@ class MainCustomerActivity : AppCompatActivity() {
                 navController.navigate(R.id.categories_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.foodList.FoodListFragment")
                 navController.navigate(R.id.food_list_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.orderStatus.OrderSummaryFragment")
-                navController.navigate(R.id.navigation_order_status)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.ui.cart.CartFragment")
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.orderStatus.OrderSummaryFragment")
+                navController.navigate(R.id.navigation_order_summary)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.cart.CartFragment")
                 navController.navigate(R.id.cart_to_profile)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.discounts.DiscountsFragment")
+                navController.navigate(R.id.discounts_to_profile)
         }
 
         val txtUser = headView.findViewById<TextView>(R.id.txt_user)
@@ -114,10 +120,11 @@ class MainCustomerActivity : AppCompatActivity() {
                 R.id.navigation_customer_home -> navController.navigate(R.id.navigation_customer_home)
                 R.id.navigation_food_list -> navController.navigate(R.id.navigation_food_list)
                 R.id.navigation_categories -> navController.navigate(R.id.navigation_categories)
-                R.id.navigation_order_status -> navController.navigate(R.id.navigation_order_status)
+                R.id.navigation_order_summary -> navController.navigate(R.id.navigation_order_summary)
                 R.id.navigation_foodStall -> navController.navigate(R.id.navigation_foodStall)
                 R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
                 R.id.navigation_cart -> navController.navigate(R.id.navigation_cart)
+                R.id.navigation_discounts -> navController.navigate(R.id.navigation_discounts)
             }
             true
         }
@@ -244,7 +251,7 @@ class MainCustomerActivity : AppCompatActivity() {
     fun onRecommendedSelected(event: RecommendedClick) {
         dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
         dialog.show()
-        FirebaseDatabase.getInstance().getReference("FoodList")
+        FirebaseDatabase.getInstance().getReference(Common.FOODLIST_REF)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
@@ -266,4 +273,12 @@ class MainCustomerActivity : AppCompatActivity() {
                 }
             })
     }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onDiscountSelected(event: DiscountItemClick) {
+        if (event.isSuccess) {
+            //findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_discountDetails)
+        }
+    }
+
 }

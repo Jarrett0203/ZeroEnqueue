@@ -96,9 +96,12 @@ object Common {
             .toString()
     }
 
+    var discountSelected: Discount? = null
     var foodStallSelected: FoodStall? = null
     var categorySelected: Category? = null
     var foodSelected: Food? = null
+    var sizeSelected: Size? = null
+    var addOnSelected: AddOn? = null
     var currentUser: User? = null
 
     val CATEGORY_REF: String = "Category"
