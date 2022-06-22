@@ -120,7 +120,7 @@ class FoodListAdapter(
 
                     override fun onSuccess(cartItemFromDB: CartItem) {
                         //if item is alr in db, update
-                        if(cartItemFromDB.equals(cartItem)) {
+                        if(cartItemFromDB == cartItem) {
                             cartItemFromDB.foodExtraPrice = cartItem.foodExtraPrice
                             cartItemFromDB.foodAddon = cartItem.foodAddon
                             cartItemFromDB.foodSize = cartItem.foodSize
