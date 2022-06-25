@@ -33,7 +33,7 @@ class MenuViewModel : ViewModel(), IFoodLoadCallback {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (itemSnapShot in snapshot.children) {
                     val food = itemSnapShot.getValue(Food::class.java)
-                    if (food!!.foodStall!!.uppercase() == Common.foodStallSelected!!.name!!.uppercase())
+                    if (food!!.foodStall!! == Common.foodStallSelected!!.id)
                         tempList.add(food)
                     foodCallbackListener.onFoodLoadSuccess(tempList)
                 }

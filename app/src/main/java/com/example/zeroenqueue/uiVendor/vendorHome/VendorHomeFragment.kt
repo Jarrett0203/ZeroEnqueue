@@ -1,18 +1,29 @@
 package com.example.zeroenqueue.uiVendor.vendorHome
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.VendorFoodListAdapter
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentVendorHomeBinding
+import com.google.android.material.card.MaterialCardView
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import dmax.dialog.SpotsDialog
 
 class VendorHomeFragment : Fragment() {
@@ -24,6 +35,8 @@ class VendorHomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var dialog: AlertDialog
+    private val storageRef = FirebaseStorage.getInstance().reference
+    private val foodStallRef = FirebaseDatabase.getInstance().getReference(Common.FOODSTALL_REF)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,22 +50,119 @@ class VendorHomeFragment : Fragment() {
         val root: View = binding.root
 
         val swipeRefreshLayout = binding.swipeRefresh
+        val recyclerViewPopularFood = binding.recyclerPopular
+        val editStallDetails = binding.editStallDetails
+        val filterPopularFood = binding.filterPopularFood
 
         val stallName = binding.stallName
+        val stallPhone = binding.stallPhone
         val stallAddress = binding.stallAddress
+        val stallDescription = binding.stallDescription
+        val stallImage = binding.stallImage
 
         stallName.text = Common.foodStallSelected!!.name
+        stallPhone.text = Common.foodStallSelected!!.phone
         stallAddress.text = Common.foodStallSelected!!.address
+        stallDescription.text = Common.foodStallSelected!!.description
+        Glide.with(activity!!).load(Common.foodStallSelected!!.image).into(stallImage)
 
         //implement when orders are set up
         val totalSales = binding.totalSales
         val currentOrders = binding.currentOrders
 
-        val recyclerViewPopularFood = binding.recyclerPopular
-        val filterPopularFood = binding.filterPopularFood
+        val itemView = layoutInflater.inflate(R.layout.layout_edit_food_stall_details, null)
+        val editStallImage = itemView.findViewById<ImageView>(R.id.editStallImage)
+        var stallImageUri: Uri? = null
+
+        val cardImageResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val data: Intent? = result.data
+                    stallImageUri = data!!.data
+                    editStallImage.setImageURI(stallImageUri)
+                }
+            }
+
+
+        editStallDetails.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            val editStallName = itemView.findViewById<EditText>(R.id.stallName)
+            val editStallAddress = itemView.findViewById<EditText>(R.id.stallAddress)
+            val editStallPhone = itemView.findViewById<EditText>(R.id.stallPhone)
+            val editStallDescription = itemView.findViewById<EditText>(R.id.stallDescription)
+            val editStallImageCard = itemView.findViewById<MaterialCardView>(R.id.editStallImageCard)
+
+            editStallName.setText(stallName.text)
+            editStallAddress.setText(stallAddress.text)
+            editStallPhone.setText(stallPhone.text)
+            editStallDescription.setText(stallDescription.text)
+            Glide.with(activity!!).load(Common.foodStallSelected!!.image).into(editStallImage)
+
+            editStallImageCard.setOnClickListener {
+                val intent = Intent()
+                intent.type = "image/*"
+                intent.action = Intent.ACTION_GET_CONTENT
+                cardImageResultLauncher.launch(intent)
+            }
+
+            builder.setNegativeButton("CANCEL") {dialogInterface, _ -> dialogInterface.dismiss()}
+            builder.setPositiveButton("OK") { dialogInterface, _ ->
+                if (stallImageUri != null) {
+                    dialog.setMessage("Uploading")
+                    dialog.show()
+
+                    val imageName = Common.currentUser!!.uid
+                    val imageFolder = storageRef.child("stallImage/$imageName")
+                    imageFolder.putFile(stallImageUri!!).addOnFailureListener {
+                        dialog.dismiss()
+                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                    }.addOnProgressListener {
+                        val progress = 100.0 * it.bytesTransferred/ it.totalByteCount
+                        dialog.setMessage("Uploaded $progress%")
+                    }.addOnSuccessListener {
+                        dialogInterface.dismiss()
+                        imageFolder.downloadUrl.addOnSuccessListener {
+                            val updateData = HashMap<String, Any>()
+                            updateData["image"] = it.toString()
+                            updateData["name"] = editStallName.text.toString()
+                            updateData["address"] = editStallAddress.text.toString()
+                            updateData["phone"] = editStallPhone.text.toString()
+                            updateData["description"] = editStallDescription.text.toString()
+                            foodStallRef.child(Common.foodStallSelected!!.key!!).updateChildren(updateData)
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                                }
+                                .addOnCompleteListener { _ ->
+                                    Common.foodStallSelected!!.image = it.toString()
+                                    Common.foodStallSelected!!.name = editStallName.text.toString()
+                                    Common.foodStallSelected!!.address = editStallAddress.text.toString()
+                                    Common.foodStallSelected!!.phone = editStallPhone.text.toString()
+                                    Common.foodStallSelected!!.description = editStallDescription.text.toString()
+
+                                    stallName.text = Common.foodStallSelected!!.name
+                                    stallAddress.text = Common.foodStallSelected!!.address
+                                    stallPhone.text = Common.foodStallSelected!!.phone
+                                    stallDescription.text = Common.foodStallSelected!!.description
+                                    Glide.with(activity!!).load(Common.foodStallSelected!!.image).into(stallImage)
+
+                                    Toast.makeText(requireContext(), "Upload Success", Toast.LENGTH_SHORT).show()
+                                }
+                            dialog.dismiss()
+                        }
+                    }
+                }
+            }
+            if (itemView.parent != null)
+                (itemView.parent as ViewGroup).removeView(itemView)
+            builder.setView(itemView)
+            val uploadDialog = builder.create()
+            uploadDialog.show()
+        }
+
+
 
         filterPopularFood.setOnClickListener {
-
+            //filter by rating or sales
         }
 
         dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()

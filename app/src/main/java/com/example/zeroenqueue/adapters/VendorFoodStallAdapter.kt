@@ -69,6 +69,7 @@ class VendorFoodStallAdapter(
         holder.setListener(object : IRecyclerItemClickListener {
             override fun onItemClick(view: View, pos: Int) {
                 Common.foodStallSelected = foodStallList[pos]
+                Common.foodStallSelected!!.key = foodStallList[pos].id
                 EventBus.getDefault().postSticky(VendorFoodStallClick(true, foodStallList[pos]))
             }
         })

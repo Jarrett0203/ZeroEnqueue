@@ -1,4 +1,4 @@
-package com.example.zeroenqueue.uiCustomer.orderStatus
+package com.example.zeroenqueue.uiCustomer.orders
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -26,7 +26,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class OrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
-    private var orderSummaryModel: OrderSummaryModel?=null
+    private var orderSummaryViewModel: OrderSummaryViewModel?=null
 
     internal lateinit var dialog: AlertDialog
 
@@ -39,16 +39,16 @@ class OrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        orderSummaryModel = ViewModelProvider(this).get(OrderSummaryModel::class.java!!)
-        val root = inflater.inflate(R.layout.fragment_order_summary_customer, container, false)
+        orderSummaryViewModel = ViewModelProvider(this)[OrderSummaryViewModel::class.java]
+        val root = inflater.inflate(R.layout.fragment_customer_order_summary, container, false)
         initView(root)
         loadOrderFromFirebase()
 
-        orderSummaryModel!!.mutableLiveDataOrderList.observe(viewLifecycleOwner, Observer {
+        orderSummaryViewModel!!.mutableLiveDataOrderList.observe(viewLifecycleOwner) {
             Collections.reverse(it!!)
-            val adapter = MyOrderAdapter(requireContext(), it!!)
-            recycler_order!!.adapter = adapter
-        })
+            val adapter = MyOrderAdapter(requireContext(), it)
+            recycler_order.adapter = adapter
+        }
 
         return root
     }
@@ -63,14 +63,14 @@ class OrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
                 .limitToLast(100)
                 .addListenerForSingleValueEvent(object: ValueEventListener {
                     override fun onCancelled(error: DatabaseError) {
-                        listener.onLoadOrderFailed(error.message!!)
+                        listener.onLoadOrderFailed(error.message)
                     }
 
                     override fun onDataChange(snapshot: DataSnapshot) {
                         for(orderSnapShot in snapshot.children) {
                             val order = orderSnapShot.getValue(Order::class.java)
                             order!!.orderNumber = orderSnapShot.key
-                            orderList.add(order!!)
+                            orderList.add(order)
                         }
                         listener.onLoadOrderSuccess(orderList)
                     }
@@ -83,7 +83,7 @@ class OrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
     private fun initView(root: View) {
         listener = this
         dialog = SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
-        recycler_order = root!!.findViewById(R.id.recycler_order) as RecyclerView
+        recycler_order = root.findViewById(R.id.recycler_order) as RecyclerView
         recycler_order.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(context)
         recycler_order.layoutManager = layoutManager
@@ -93,7 +93,7 @@ class OrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
 
     override fun onLoadOrderSuccess(orderList: List<Order>) {
         dialog.dismiss()
-        orderSummaryModel!!.setMutableLiveDataOrderList(orderList)
+        orderSummaryViewModel!!.setMutableLiveDataOrderList(orderList)
     }
 
     override fun onLoadOrderFailed(message: String) {

@@ -27,7 +27,7 @@ class MyOrderAdapter(private val context: Context,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        return MyViewHolder(LayoutInflater.from(context!!)
+        return MyViewHolder(LayoutInflater.from(context)
             .inflate(R.layout.layout_order_item_customer, parent, false))
     }
 
@@ -49,7 +49,7 @@ class MyOrderAdapter(private val context: Context,
   }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Glide.with(context!!)
+        Glide.with(context)
             .load(orderList[position].cartItemList!![0].foodImage)
             .into(holder.img_order!!)
         calendar.timeInMillis = orderList[position].createDate

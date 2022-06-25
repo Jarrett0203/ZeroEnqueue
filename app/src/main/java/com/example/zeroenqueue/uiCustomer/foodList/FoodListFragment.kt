@@ -127,7 +127,7 @@ class FoodListFragment : Fragment() {
     }
 
     private fun filter(
-        selectedDataFoodStall: ArrayList<String>,
+        selectedDataFoodStall: ArrayList<FoodStall>,
         selectedDataCategory: ArrayList<String>
     ) {
         binding.recyclerFoodList.scrollToPosition(0)
@@ -146,8 +146,8 @@ class FoodListFragment : Fragment() {
         }
     }
 
-    private fun showAllFoodStalls(): ArrayList<String> {
-        val selectedDataFoodStall: ArrayList<String> = arrayListOf()
+    private fun showAllFoodStalls(): ArrayList<FoodStall> {
+        val selectedDataFoodStall: ArrayList<FoodStall> = arrayListOf()
         val stallRef =
             FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODSTALL_REF)
         stallRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -166,14 +166,14 @@ class FoodListFragment : Fragment() {
                                     compoundButton.text.toString() + " selected",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                selectedDataFoodStall.add(compoundButton.text.toString())
+                                selectedDataFoodStall.add(foodStall)
                             } else {
                                 Toast.makeText(
                                     context,
                                     compoundButton.text.toString() + " unselected",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                selectedDataFoodStall.remove(compoundButton.text.toString())
+                                selectedDataFoodStall.remove(foodStall)
                             }
                         }
                     chip.setOnCheckedChangeListener(checkedChangedListenerFoodStall)

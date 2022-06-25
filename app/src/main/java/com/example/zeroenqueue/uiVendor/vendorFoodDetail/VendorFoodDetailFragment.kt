@@ -30,6 +30,7 @@ import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.classes.Size
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentVendorFoodDetailBinding
+import com.example.zeroenqueue.uiCustomer.comment.CommentFragment
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -76,6 +77,7 @@ class VendorFoodDetailFragment : Fragment() {
         val recyclerSize: RecyclerView = binding.recyclerSize
         val recyclerAddOns: RecyclerView = binding.recyclerAddOns
         chipGroupCategory = binding.layoutChipGroupCategory
+        val btnShowComments = binding.btnShowComments
         val btnConfirmChanges: Button = binding.btnConfirmFood
         var foodImageUri: Uri? = null
 
@@ -90,6 +92,7 @@ class VendorFoodDetailFragment : Fragment() {
         if (Common.foodSelected == null) {
             editFoodImagePrompt.text = "Add new food image..."
             ratingBar.visibility = View.GONE
+            btnShowComments.visibility = View.GONE
             (activity as AppCompatActivity).supportActionBar?.title = "Add Food Item"
         } else {
             (activity as AppCompatActivity).supportActionBar?.title = "Edit Food Detail"
@@ -135,6 +138,11 @@ class VendorFoodDetailFragment : Fragment() {
             builder.setView(itemView)
             val uploadDialog = builder.create()
             uploadDialog.show()
+        }
+
+        btnShowComments.setOnClickListener {
+            val commentFragment = CommentFragment.getInstance()
+            commentFragment.show(requireActivity().supportFragmentManager, "CommentFragment")
         }
 
         btnConfirmChanges.setOnClickListener {

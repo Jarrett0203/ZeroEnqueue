@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.zeroenqueue.classes.Food
+import com.example.zeroenqueue.classes.FoodStall
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.interfaces.IFoodLoadCallback
 import com.google.firebase.database.DataSnapshot
@@ -41,7 +42,7 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
             if(foodListMutableLiveData == null){
                 foodListMutableLiveData = MutableLiveData()
                 messageError = MutableLiveData()
-                loadFoodListWithFoodStall(arrayListOf(Common.foodStallSelected!!.name!!))
+                loadFoodListWithFoodStall(arrayListOf(Common.foodStallSelected!!))
             }
             return foodListMutableLiveData!!
         }
@@ -91,7 +92,7 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
                 for(itemSnapShot in snapshot.children){
                     val categoryFood = itemSnapShot.getValue(Food::class.java)
                     categoryList.forEach{ s ->
-                        if (categoryFood!!.categories!!.uppercase() == s!!.uppercase())
+                        if (categoryFood!!.categories!!.uppercase() == s.uppercase())
                             tempList.add(categoryFood)
                     }
                 }
@@ -104,7 +105,7 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
         })
     }
 
-    fun loadFoodListWithFoodStall(foodStallList: List<String>) {
+    fun loadFoodListWithFoodStall(foodStallList: List<FoodStall>) {
         val tempList = ArrayList<Food>()
         val foodListRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODLIST_REF)
         foodListRef.addListenerForSingleValueEvent(object: ValueEventListener {
@@ -112,7 +113,7 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
                 for (itemSnapShot in snapshot.children) {
                     val food = itemSnapShot.getValue(Food::class.java)
                     foodStallList.forEach { s ->
-                        if (food!!.foodStall!!.uppercase() == s.uppercase())
+                        if (food!!.foodStall!! == s.id)
                             tempList.add(food)
                     }
                     foodCallbackListener.onFoodLoadSuccess(tempList)
@@ -125,7 +126,7 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
         })
     }
 
-    fun loadFoodListWithFoodStallAndCategories(foodStallList: List<String>, categoryList: List<String>) {
+    fun loadFoodListWithFoodStallAndCategories(foodStallList: List<FoodStall>, categoryList: List<String>) {
         val tempList = ArrayList<Food>()
         val foodListRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODLIST_REF)
         foodListRef.addListenerForSingleValueEvent(object: ValueEventListener {
@@ -133,7 +134,7 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
                 for (itemSnapShot in snapshot.children) {
                     val food = itemSnapShot.getValue(Food::class.java)
                     foodStallList.forEach { s ->
-                        if (food!!.foodStall!!.uppercase() == s.uppercase())
+                        if (food!!.foodStall!! == s.id)
                             tempList.add(food)
                     }
                     categoryList.forEach { s ->

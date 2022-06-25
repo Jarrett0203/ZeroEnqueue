@@ -42,7 +42,7 @@
         <menu>
             <group android:checkableBehavior="single">
                 <item
-                    android:id="@+id/navigation_order_summary"
+                    android:id="@+id/navigation_customer_order_summary"
                     android:icon="@drawable/ic_order_status"
                     android:title="@string/menu_order_summary" />
 

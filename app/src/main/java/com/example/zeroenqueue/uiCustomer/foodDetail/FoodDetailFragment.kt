@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.contains
+import androidx.core.view.iterator
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -94,20 +96,8 @@ class FoodDetailFragment : Fragment(), TextWatcher {
         rdi_group_size = binding.rdiGroupSize
         addon_image = binding.addAddonImage
 
-        initView()
-
-        foodDetailViewModel.foodDetail.observe(viewLifecycleOwner) {
-            displayInfo(it)
-        }
-
-        foodDetailViewModel.comment.observe(viewLifecycleOwner) {
-            submitRatingToFirebase(it)
-        }
-        return root
-    }
-
-    @SuppressLint("InflateParams")
-    private fun initView() {
+        cartDataSource = LocalCartDataSource(CartDatabase.getInstance(requireContext()).cartDAO())
+        dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
 
         addOnBottomSheetDialog = BottomSheetDialog(requireContext(), R.style.DialogStyle)
         val layout_selected_addon = layoutInflater.inflate(R.layout.layout_addon_display, null)
@@ -120,16 +110,14 @@ class FoodDetailFragment : Fragment(), TextWatcher {
             calculateTotalPrice()
         }
 
-        cartDataSource = LocalCartDataSource(CartDatabase.getInstance(requireContext()).cartDAO())
-        dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
-
         addon_image.setOnClickListener {
-            displayAllAddons()
             addOnBottomSheetDialog.show()
         }
+
         btnRating.setOnClickListener {
             showDialogRating()
         }
+
         btnShowComments.setOnClickListener {
             val commentFragment = CommentFragment.getInstance()
             commentFragment.show(requireActivity().supportFragmentManager, "CommentFragment")
@@ -139,17 +127,18 @@ class FoodDetailFragment : Fragment(), TextWatcher {
             val cartItem = CartItem()
             cartItem.uid = Common.currentUser!!.uid!!
             cartItem.userPhone = Common.currentUser!!.phone!!
-
             cartItem.foodId = Common.foodSelected!!.id!!
             cartItem.foodName = Common.foodSelected!!.name!!
             cartItem.foodImage = Common.foodSelected!!.image!!
             cartItem.foodPrice = Common.foodSelected!!.price
             cartItem.foodQuantity = number_button!!.number.toInt()
             cartItem.foodExtraPrice = Common.calculateExtraPrice(Common.foodSelected!!.sizeSelected, Common.foodSelected!!.addOnSelected)
+
             if (Common.foodSelected!!.addOnSelected != null)
                 cartItem.foodAddon = Gson().toJson(Common.foodSelected!!.addOnSelected)
             else
                 cartItem.foodAddon = "Default"
+
             if (Common.foodSelected!!.sizeSelected != null)
                 cartItem.foodSize = Gson().toJson(Common.foodSelected!!.sizeSelected)
             else
@@ -248,6 +237,17 @@ class FoodDetailFragment : Fragment(), TextWatcher {
                     }
                 })
         }
+
+        foodDetailViewModel.foodDetail.observe(viewLifecycleOwner) {
+            displayInfo(it)
+            displayAllAddons()
+            displayUserSelectedAddon()
+        }
+
+        foodDetailViewModel.comment.observe(viewLifecycleOwner) {
+            submitRatingToFirebase(it)
+        }
+        return root
     }
 
     @SuppressLint("InflateParams")
@@ -265,7 +265,11 @@ class FoodDetailFragment : Fragment(), TextWatcher {
                     if (b) {
                         if (Common.foodSelected!!.addOnSelected == null)
                             Common.foodSelected!!.addOnSelected = ArrayList()
-                        Common.foodSelected!!.addOnSelected!!.add(addOn)
+                        if (!Common.foodSelected!!.addOnSelected!!.contains(addOn))
+                            Common.foodSelected!!.addOnSelected!!.add(addOn)
+                    }
+                    else {
+                        Common.foodSelected!!.addOnSelected!!.remove(addOn)
                     }
                 }
                 chipGroupAddon.addView(chip)
@@ -317,12 +321,12 @@ class FoodDetailFragment : Fragment(), TextWatcher {
     private fun addRatingToFood(ratingValue: Float) {
         FirebaseDatabase.getInstance()
             .getReference(Common.FOODLIST_REF)
-            .child(Common.foodSelected!!.key!!)
+            .child(Common.foodSelected!!.id!!)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         val food = snapshot.getValue(Food::class.java)
-                        food!!.key = Common.foodSelected!!.key
+                        food!!.id = Common.foodSelected!!.id
 
                         val sumRating = food.ratingValue + ratingValue
                         val ratingCount = food.ratingCount + 1
@@ -340,6 +344,7 @@ class FoodDetailFragment : Fragment(), TextWatcher {
                                 dialog.dismiss()
                                 if (task.isSuccessful) {
                                     foodDetailViewModel.setFood(food)
+                                    calculateTotalPrice()
                                     Toast.makeText(
                                         requireContext(),
                                         "Thanks for reviewing",
@@ -393,12 +398,13 @@ class FoodDetailFragment : Fragment(), TextWatcher {
     }
 
     private fun displayInfo(it: Food?) {
-        context?.let { it1 -> Glide.with(it1).load(it!!.image).into(food_image) }
-        food_name.text = StringBuilder(it!!.name!!)
-        food_description.text = StringBuilder(it.description!!)
+        context?.let { context -> Glide.with(context).load(it!!.image).into(food_image) }
+        food_name.text = it!!.name!!
+        food_description.text = it.description!!
         food_price.text = Common.formatPrice(it.price)
         ratingBar.rating = it.ratingValue / it.ratingCount
         for (size in it.size) {
+            var duplicateButton = false
             val radioButton = RadioButton(context)
             radioButton.setOnCheckedChangeListener { _, b ->
                 if (b)
@@ -409,7 +415,14 @@ class FoodDetailFragment : Fragment(), TextWatcher {
             radioButton.layoutParams = params
             radioButton.text = size.name
             radioButton.tag = size.price
-            if (rdi_group_size.size <= 1)
+            for (i in 0 until rdi_group_size.childCount) {
+                val radio = rdi_group_size.getChildAt(i) as RadioButton
+                if (radio.text == radioButton.text && radio.tag == radioButton.tag) {
+                    duplicateButton = true
+                    break
+                }
+            }
+            if (!duplicateButton)
                 rdi_group_size.addView(radioButton)
         }
 
@@ -431,7 +444,7 @@ class FoodDetailFragment : Fragment(), TextWatcher {
         val displayPrice: Double =
             ((totalPrice * number_button.number.toInt()) * 100).roundToInt() / 100.0
 
-        food_price.text = StringBuilder("").append(Common.formatPrice(displayPrice)).toString()
+        food_price.text = Common.formatPrice(displayPrice)
     }
 
     override fun onDestroyView() {

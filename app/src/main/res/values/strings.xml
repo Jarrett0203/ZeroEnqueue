@@ -89,4 +89,7 @@
     <string name="name">Name</string>
     <string name="price">Price</string>
     <string name="addAddon">Add Add-On</string>
+    <string name="editFoodStallDetails">Edit Food Stall Details</string>
+    <string name="address">Address</string>
+    <string name="description">Description</string>
 </resources>

@@ -23,6 +23,15 @@ object Common {
         return "0.00"
     }
 
+    fun formatRating(rating: Double): String {
+        if (rating != 0.0) {
+            val df = DecimalFormat("###0.00")
+            df.roundingMode = RoundingMode.HALF_UP
+            return StringBuilder(df.format(rating)).toString()
+        }
+        return rating.toString()
+    }
+
     fun setSpanString(s: String, name: String?, txtUser: TextView?) {
         val builder = SpannableStringBuilder()
         builder.append(s)
@@ -39,7 +48,7 @@ object Common {
         val txtSpannable = SpannableString(name)
         val boldSpan = StyleSpan(Typeface.BOLD)
         txtSpannable.setSpan(boldSpan, 0, name!!.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        txtSpannable.setSpan(ForegroundColorSpan(color), 0, name!!.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        txtSpannable.setSpan(ForegroundColorSpan(color), 0, name.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         builder.append(txtSpannable)
         txtUser!!.setText(builder, TextView.BufferType.SPANNABLE)
     }

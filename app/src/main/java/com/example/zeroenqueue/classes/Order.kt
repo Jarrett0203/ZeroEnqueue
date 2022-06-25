@@ -1,10 +1,9 @@
 package com.example.zeroenqueue.classes
 
-import android.widget.EditText
-import android.widget.TextView
 import com.example.zeroenqueue.db.CartItem
 
 class Order {
+    var key: String? = null
     var userId: String? = null
     var userName: String? = null
     var comment: String? = null

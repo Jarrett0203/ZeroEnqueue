@@ -68,7 +68,7 @@ class MainCustomerActivity : AppCompatActivity() {
         navView = binding.navView
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener {
             navController.navigate(R.id.navigation_cart)
         }
         val headView = navView.getHeaderView(0)
@@ -78,7 +78,7 @@ class MainCustomerActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_customer_home, R.id.navigation_categories, R.id.navigation_order_summary,
+                R.id.navigation_customer_home, R.id.navigation_categories, R.id.navigation_customer_order_summary,
                 R.id.navigation_foodStall, R.id.navigation_profile, R.id.navigation_food_list,
                 R.id.navigation_cart, R.id.navigation_discounts
             ), drawerLayout
@@ -102,8 +102,8 @@ class MainCustomerActivity : AppCompatActivity() {
                 navController.navigate(R.id.categories_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.foodList.FoodListFragment")
                 navController.navigate(R.id.food_list_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.orderStatus.OrderSummaryFragment")
-                navController.navigate(R.id.navigation_order_summary)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.orders.OrderSummaryFragment")
+                navController.navigate(R.id.customer_order_summary_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.cart.CartFragment")
                 navController.navigate(R.id.cart_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.discounts.DiscountsFragment")
@@ -113,14 +113,14 @@ class MainCustomerActivity : AppCompatActivity() {
         val txtUser = headView.findViewById<TextView>(R.id.txt_user)
         Common.setSpanString("Hey, ", Common.currentUser!!.name, txtUser)
 
-        navView.setNavigationItemSelectedListener { item ->
+        navView.setNavigationItemSelectedListener {
             drawerLayout.closeDrawers()
-            when (item.itemId) {
+            when (it.itemId) {
                 R.id.navigation_sign_out -> signout()
                 R.id.navigation_customer_home -> navController.navigate(R.id.navigation_customer_home)
                 R.id.navigation_food_list -> navController.navigate(R.id.navigation_food_list)
                 R.id.navigation_categories -> navController.navigate(R.id.navigation_categories)
-                R.id.navigation_order_summary -> navController.navigate(R.id.navigation_order_summary)
+                R.id.navigation_customer_order_summary -> navController.navigate(R.id.navigation_customer_order_summary)
                 R.id.navigation_foodStall -> navController.navigate(R.id.navigation_foodStall)
                 R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
                 R.id.navigation_cart -> navController.navigate(R.id.navigation_cart)
