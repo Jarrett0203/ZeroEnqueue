@@ -79,95 +79,92 @@ class RegisterUserActivity : AppCompatActivity() {
             val newPhone = binding.phone.text.toString().trim()
             val firstNums = arrayOf('6', '8', '9')
 
-            if (newName.isEmpty() || newEmail.isEmpty() || newPassword.isEmpty() || newPhone.isEmpty())
-                Toast.makeText(this, "Empty fields are not allowed!!", Toast.LENGTH_SHORT).show()
-            else if (!chipCustomer.isChecked && !chipVendor.isChecked)
-                Toast.makeText(this, "Please select a user type.", Toast.LENGTH_SHORT).show()
-            else if (!Arrays.stream(firstNums).anyMatch { t -> t == newPhone[0] } || newPhone.length != 8)
-                Toast.makeText(this, "Invalid phone number", Toast.LENGTH_SHORT).show()
-            else if (newPassword.length < 6)
-                Toast.makeText(this, "Password requires at least 6 characters", Toast.LENGTH_SHORT).show()
-            else {
-                firebaseAuth.createUserWithEmailAndPassword(newEmail, newPassword)
-                    .addOnCompleteListener(this) {
-                        if (it.isSuccessful) {
-                            val newUser = firebaseAuth.currentUser
-                            dialog.show()
-                            userRef.child(newUser!!.uid)
-                                .addListenerForSingleValueEvent(object : ValueEventListener {
-                                    override fun onDataChange(snapshot: DataSnapshot) {
-                                        if (snapshot.exists()) {
-                                            val currentUser = snapshot.getValue(User::class.java)
-                                            goToMainActivity(currentUser)
-                                        } else {
+            if(RegisterUser.validateRegistrationInput(newEmail, newPassword, newName, newPhone, firstNums)) {
+                if (!chipCustomer.isChecked && !chipVendor.isChecked)
+                    Toast.makeText(this, "Please select a user type.", Toast.LENGTH_SHORT).show()
+                else {
+                    firebaseAuth.createUserWithEmailAndPassword(newEmail, newPassword)
+                        .addOnCompleteListener(this) {
+                            if (it.isSuccessful) {
+                                val newUser = firebaseAuth.currentUser
+                                dialog.show()
+                                userRef.child(newUser!!.uid)
+                                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            if (snapshot.exists()) {
+                                                val currentUser = snapshot.getValue(User::class.java)
+                                                goToMainActivity(currentUser)
+                                            } else {
 
-                                            val currentUser = User()
-                                            currentUser.uid = newUser.uid
-                                            currentUser.name = newName
-                                            currentUser.phone = newPhone
-                                            currentUser.email = newEmail
-                                            currentUser.password = newPassword
-                                            if (chipCustomer.isChecked)
-                                                currentUser.userType = "Customer"
-                                            else
-                                                currentUser.userType = "Vendor"
+                                                val currentUser = User()
+                                                currentUser.uid = newUser.uid
+                                                currentUser.name = newName
+                                                currentUser.phone = newPhone
+                                                currentUser.email = newEmail
+                                                currentUser.password = newPassword
+                                                if (chipCustomer.isChecked)
+                                                    currentUser.userType = "Customer"
+                                                else
+                                                    currentUser.userType = "Vendor"
 
-                                            if (cardImageUri != null) {
-                                                val fileRef: StorageReference = storageRef.child(
-                                                    System.currentTimeMillis().toString() + "." + getFileExtension(cardImageUri!!)
-                                                )
-                                                fileRef.putFile(cardImageUri!!).addOnSuccessListener {
-                                                    fileRef.downloadUrl.addOnSuccessListener {
-                                                        currentUser.cardImage = it.toString()
-                                                        currentUser.nus = true
-                                                        userRef.child(newUser.uid)
-                                                            .setValue(currentUser)
-                                                            .addOnCompleteListener { task ->
-                                                                if (task.isSuccessful) {
-                                                                    Toast.makeText(
-                                                                        this@RegisterUserActivity,
-                                                                        "Registration success",
-                                                                        Toast.LENGTH_SHORT
-                                                                    ).show()
+                                                if (cardImageUri != null) {
+                                                    val fileRef: StorageReference = storageRef.child(
+                                                        System.currentTimeMillis().toString() + "." + getFileExtension(cardImageUri!!)
+                                                    )
+                                                    fileRef.putFile(cardImageUri!!).addOnSuccessListener {
+                                                        fileRef.downloadUrl.addOnSuccessListener {
+                                                            currentUser.cardImage = it.toString()
+                                                            currentUser.nus = true
+                                                            userRef.child(newUser.uid)
+                                                                .setValue(currentUser)
+                                                                .addOnCompleteListener { task ->
+                                                                    if (task.isSuccessful) {
+                                                                        Toast.makeText(
+                                                                            this@RegisterUserActivity,
+                                                                            "Registration success",
+                                                                            Toast.LENGTH_SHORT
+                                                                        ).show()
+                                                                    }
+                                                                    goToMainActivity(currentUser)
                                                                 }
-                                                                goToMainActivity(currentUser)
-                                                            }
+                                                        }
                                                     }
                                                 }
-                                            }
 
-                                            else {
-                                                currentUser.nus = false
-                                                userRef.child(newUser.uid)
-                                                    .setValue(currentUser)
-                                                    .addOnCompleteListener { task ->
-                                                        if (task.isSuccessful) {
-                                                            Toast.makeText(
-                                                                this@RegisterUserActivity,
-                                                                "Registration success",
-                                                                Toast.LENGTH_SHORT
-                                                            ).show()
+                                                else {
+                                                    currentUser.nus = false
+                                                    userRef.child(newUser.uid)
+                                                        .setValue(currentUser)
+                                                        .addOnCompleteListener { task ->
+                                                            if (task.isSuccessful) {
+                                                                Toast.makeText(
+                                                                    this@RegisterUserActivity,
+                                                                    "Registration success",
+                                                                    Toast.LENGTH_SHORT
+                                                                ).show()
+                                                            }
+                                                            goToMainActivity(currentUser)
                                                         }
-                                                        goToMainActivity(currentUser)
-                                                    }
+                                                }
                                             }
+                                            dialog.dismiss()
                                         }
-                                        dialog.dismiss()
-                                    }
 
-                                    override fun onCancelled(error: DatabaseError) {
-                                        Toast.makeText(
-                                            this@RegisterUserActivity,
-                                            error.message,
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                })
-                        } else {
-                            Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
+                                        override fun onCancelled(error: DatabaseError) {
+                                            Toast.makeText(
+                                                this@RegisterUserActivity,
+                                                error.message,
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    })
+                            } else {
+                                Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
+                            }
                         }
-                    }
+                }
             }
+
         }
 
         setSupportActionBar(toolbar)
@@ -176,6 +173,7 @@ class RegisterUserActivity : AppCompatActivity() {
 
         actionBar.setDisplayHomeAsUpEnabled(true)
     }
+
 
     private fun getFileExtension(imageUri: Uri): Any? {
         val cr: ContentResolver = contentResolver

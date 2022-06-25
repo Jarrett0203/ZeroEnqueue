@@ -14,9 +14,6 @@ import android.view.animation.LayoutAnimationController
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.resources.Compatibility.Api21Impl.inflate
-import androidx.core.content.res.ColorStateListInflaterCompat.inflate
-import androidx.core.content.res.ComplexColorCompat.inflate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -27,8 +24,6 @@ import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.VendorMyOrderAdapter
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
-import com.example.zeroenqueue.databinding.ActivityCreateNewStallBinding.inflate
-import com.example.zeroenqueue.databinding.ActivityMainCustomerBinding.inflate
 import com.example.zeroenqueue.eventBus.CountCartEvent
 import com.example.zeroenqueue.interfaces.IDeleteBtnCallback
 import com.google.firebase.database.FirebaseDatabase
@@ -38,17 +33,11 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import io.reactivex.SingleObserver
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_cart.*
 import org.greenrobot.eventbus.EventBus
 import android.view.LayoutInflater
 import com.example.zeroenqueue.common.BottomSheetOrderFragment
-import com.example.zeroenqueue.eventBus.FoodItemClick
 import com.example.zeroenqueue.eventBus.LoadOrderEvent
-import com.example.zeroenqueue.eventBus.UpdateCartItems
 import kotlinx.android.synthetic.main.fragment_order_summary_vendor.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
