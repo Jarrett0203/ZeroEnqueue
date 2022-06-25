@@ -93,7 +93,6 @@ class FoodListFragment : Fragment() {
 
     @SuppressLint("InflateParams")
     private fun initView() {
-
         filterBottomSheetDialog = BottomSheetDialog(requireContext(), R.style.DialogStyle)
         val layout_filter = layoutInflater.inflate(R.layout.layout_filter_food, null)
         chipGroupCategory = layout_filter.findViewById(R.id.layout_chip_group_category) as ChipGroup
@@ -102,6 +101,7 @@ class FoodListFragment : Fragment() {
         btnFilter = layout_filter.findViewById(R.id.btnFilter) as Button
         filterBottomSheetDialog.setContentView(layout_filter)
 
+        @Suppress("DEPRECATION")
         setHasOptionsMenu(true)
         dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
         dialog.show()
@@ -244,6 +244,7 @@ class FoodListFragment : Fragment() {
 
     //search menu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        @Suppress("DEPRECATION")
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.search_food, menu)
 

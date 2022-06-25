@@ -53,6 +53,9 @@ class VendorOrderSummaryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        @Suppress("DEPRECATION")
+        setHasOptionsMenu(true)
+
         vendorOrderSummaryViewModel = ViewModelProvider(this)[VendorOrderSummaryViewModel::class.java]
 
         _binding = FragmentVendorOrderSummaryBinding.inflate(inflater, container, false)
@@ -209,16 +212,23 @@ class VendorOrderSummaryFragment : Fragment() {
     }
 
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        @Suppress("DEPRECATION")
+        super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.vendor_order_list, menu)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        @Suppress("DEPRECATION")
+        super.onOptionsItemSelected(item)
         if (item.itemId == R.id.filter_orders) {
             val bottomSheet = BottomSheetOrderFragment.instance
             bottomSheet!!.show(requireActivity().supportFragmentManager, "OrderList")
+            return true
         }
-        return true
+        return false
     }
 
     override fun onStart() {
