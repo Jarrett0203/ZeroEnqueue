@@ -10,38 +10,24 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
-import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.classes.Order
 import com.example.zeroenqueue.common.Common
-import com.example.zeroenqueue.uiVendor.orders.OrderModel
 import java.text.SimpleDateFormat
 
 class VendorMyOrderAdapter (
     internal var context: Context,
-    internal val orderList: MutableList<OrderModel>) : RecyclerView.Adapter<VendorMyOrderAdapter.MyViewHolder>() {
+    private val orderList: MutableList<Order>) : RecyclerView.Adapter<VendorMyOrderAdapter.MyViewHolder>() {
 
-    lateinit var simpleDateFormat: SimpleDateFormat
-
-    init {
-        simpleDateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
-    }
+    private var simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
 
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        var txt_time: TextView? = null
-        var txt_order_number: TextView? = null
-        var txt_order_status: TextView? = null
-        var txt_num_item: TextView? = null
-        var txt_name: TextView? = null
-        var img_food_image: ImageView? = null
+        var txt_time =  itemView.findViewById(R.id.txt_time) as TextView
+        var txt_order_number = itemView.findViewById(R.id.txt_order_number) as TextView
+        var txt_order_status = itemView.findViewById(R.id.txt_order_status) as TextView
+        var txt_num_item = itemView.findViewById(R.id.txt_num_item) as TextView
+        var txt_name = itemView.findViewById(R.id.txt_name) as TextView
+        var img_food_image = itemView.findViewById(R.id.img_food_image) as ImageView
 
-        init {
-            img_food_image = itemView.findViewById(R.id.img_food_image) as ImageView
-            txt_time = itemView.findViewById(R.id.txt_time) as TextView
-            txt_order_status = itemView.findViewById(R.id.txt_order_status) as TextView
-            txt_order_number = itemView.findViewById(R.id.txt_order_number) as TextView
-            txt_num_item = itemView.findViewById(R.id.txt_num_item) as TextView
-            txt_name = itemView.findViewById(R.id.txt_name) as TextView
-        }
     }
 
     override fun onCreateViewHolder(
@@ -59,8 +45,8 @@ class VendorMyOrderAdapter (
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         Glide.with(context).load(orderList[position].cartItemList!![0].foodImage)
-            .into(holder.img_food_image!!)
-        holder.txt_order_number!!.setText(orderList[position].key)
+            .into(holder.img_food_image)
+        holder.txt_order_number.text = orderList[position].key
         Common.setSpanStringColor("Order date", simpleDateFormat.format(orderList[position].createDate),
             holder.txt_time, Color.parseColor("#333639"))
 
@@ -75,7 +61,7 @@ class VendorMyOrderAdapter (
             holder.txt_name, Color.parseColor("#00574B"))
     }
 
-    fun getItemAtPosition(pos: Int): OrderModel {
+    fun getItemAtPosition(pos: Int): Order {
         return orderList[pos]
     }
 

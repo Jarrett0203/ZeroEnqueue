@@ -137,6 +137,7 @@ class DiscountsFragment : Fragment() {
                                     discountsViewModel.loadDiscountList()
                                     Toast.makeText(requireContext(), "Upload Success", Toast.LENGTH_SHORT).show()
                                 }
+                            dialog.dismiss()
                         }
                     }
                 }

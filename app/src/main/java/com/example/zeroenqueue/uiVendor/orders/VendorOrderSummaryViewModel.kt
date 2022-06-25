@@ -1,27 +1,19 @@
 package com.example.zeroenqueue.uiVendor.orders
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.zeroenqueue.classes.Order
 import com.example.zeroenqueue.common.Common
-import com.example.zeroenqueue.interfaces.ILoadOrderCallbackListener
 import com.example.zeroenqueue.interfaces.IVendorOrderCallbackListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
 import java.util.*
-import kotlin.collections.ArrayList
 
-class OrdersViewModel : ViewModel(), IVendorOrderCallbackListener {
+class VendorOrderSummaryViewModel : ViewModel(), IVendorOrderCallbackListener {
 
-//    private val _text = MutableLiveData<String>().apply {
-//        value = "This is gallery Fragment"
-//    }
-//    val text: LiveData<String> = _text
-
-    private val orderModelList = MutableLiveData<List<OrderModel>>()
+    private val orderList = MutableLiveData<List<Order>>()
         val messageError = MutableLiveData<String>()
         private val orderCallbackListener: IVendorOrderCallbackListener
 
@@ -29,13 +21,13 @@ class OrdersViewModel : ViewModel(), IVendorOrderCallbackListener {
             orderCallbackListener = this
         }
 
-        fun getOrderModelList(): MutableLiveData<List<OrderModel>>{
+        fun getOrderList(): MutableLiveData<List<Order>>{
             loadOrder(0)
-            return orderModelList
+            return orderList
         }
 
         fun loadOrder(status: Int) {
-            val tempList : MutableList<OrderModel> = ArrayList()
+            val tempList : MutableList<Order> = ArrayList()
             val orderRef = FirebaseDatabase.getInstance()
                 .getReference(Common.ORDER_REF)
                 .orderByChild("orderStatus")
@@ -47,9 +39,9 @@ class OrdersViewModel : ViewModel(), IVendorOrderCallbackListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for(itemSnapShot in snapshot.children) {
-                        val orderModel = itemSnapShot.getValue(OrderModel::class.java)
-                        orderModel!!.key = itemSnapShot.key
-                        tempList.add(orderModel)
+                        val order = itemSnapShot.getValue(Order::class.java)
+                        order!!.key = itemSnapShot.key
+                        tempList.add(order)
                     }
                     orderCallbackListener.onOrderLoadSuccess(tempList)
                 }
@@ -57,13 +49,13 @@ class OrdersViewModel : ViewModel(), IVendorOrderCallbackListener {
 
         }
 
-    override fun onOrderLoadSuccess(orderModel: List<OrderModel>) {
-        if(orderModel.size >= 0) {
-            Collections.sort(orderModel) { t1, t2 ->
+    override fun onOrderLoadSuccess(order: List<Order>) {
+        if(order.size >= 0) {
+            Collections.sort(order) { t1, t2 ->
                 if(t1.createDate < t2.createDate) return@sort -1
                 if(t1.createDate == t2.createDate) 0 else 1
             }
-            orderModelList.value = orderModel
+            orderList.value = order
         }
 
     }

@@ -15,7 +15,7 @@
                 android:icon="@drawable/ic_food_stall"
                 android:title="@string/food_stall_menu" />
         <item
-                android:id="@+id/navigation_orders"
+                android:id="@+id/navigation_vendor_order_summary"
                 android:icon="@drawable/ic_order_status"
                 android:title="@string/title_orders" />
 

@@ -16,16 +16,6 @@
     </fragment>
 
     <fragment
-            android:id="@+id/navigation_orders"
-            android:name="com.example.zeroenqueue.uiVendor.orders.OrdersFragment"
-            android:label="@string/menu_orders"
-            tools:layout="@layout/fragment_orders" >
-        <action
-                android:id="@+id/orders_to_profile"
-                app:destination="@id/profileFragment" />
-    </fragment>
-
-    <fragment
             android:id="@+id/navigation_stall_menu"
             android:name="com.example.zeroenqueue.uiVendor.menu.MenuFragment"
             android:label="@string/food_stall_menu"
@@ -42,13 +32,19 @@
             android:name="com.example.zeroenqueue.uiCustomer.profile.ProfileFragment"
             android:label="@string/title_profile"
             tools:layout="@layout/fragment_profile" >
-        <action
-                android:id="@+id/profile_to_home"
-                app:destination="@id/navigation_vendor_home" />
     </fragment>
     <fragment
             android:id="@+id/navigation_vendorFoodDetail"
             android:name="com.example.zeroenqueue.uiVendor.vendorFoodDetail.VendorFoodDetailFragment"
             android:label="Edit Food Details"
             tools:layout="@layout/fragment_vendor_food_detail"/>
+    <fragment
+            android:id="@+id/navigation_vendor_order_summary"
+            android:name="com.example.zeroenqueue.uiVendor.orders.VendorOrderSummaryFragment"
+            android:label="@string/menu_order_summary"
+            tools:layout="@layout/fragment_vendor_order_summary" >
+        <action
+                android:id="@+id/vendorOrderSummary_to_profile"
+                app:destination="@id/profileFragment" />
+    </fragment>
 </navigation>

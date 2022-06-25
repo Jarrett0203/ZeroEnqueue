@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.AddOnAdapter
-import com.example.zeroenqueue.adapters.DiscountsAdapter
 import com.example.zeroenqueue.adapters.NewStallFoodListAdapter
 import com.example.zeroenqueue.adapters.SizeAdapter
 import com.example.zeroenqueue.classes.*
@@ -109,11 +108,11 @@ class CreateNewStallActivity : AppCompatActivity() {
             val bottomSheetDialog = it as BottomSheetDialog
             val parentLayout =
                 bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            parentLayout?.let { it ->
-                val behaviour = BottomSheetBehavior.from(it)
-                val layoutParams = it.layoutParams
+            parentLayout?.let { view ->
+                val behaviour = BottomSheetBehavior.from(view)
+                val layoutParams = view.layoutParams
                 layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
-                it.layoutParams = layoutParams
+                view.layoutParams = layoutParams
                 behaviour.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
@@ -314,15 +313,16 @@ class CreateNewStallActivity : AppCompatActivity() {
             )
                 Toast.makeText(this, "Invalid phone number", Toast.LENGTH_SHORT).show()
             else {
-                uploadNewStallToFirebase(stallImageUri!!)
-                uploadNewFoodMenuToFirebase(newFoodStallMenu)
+                val newStallId: String? = foodStallRef.push().key
+                uploadNewStallToFirebase(stallImageUri!!, newStallId)
+                uploadNewFoodMenuToFirebase(newFoodStallMenu, newStallId)
             }
         }
 
         setContentView(root)
     }
 
-    private fun uploadNewFoodMenuToFirebase(foodList: ArrayList<Food>) {
+    private fun uploadNewFoodMenuToFirebase(foodList: ArrayList<Food>, newStallId: String?) {
         for (food in foodList) {
             val id: String? = foodListRef.push().key
             foodListRef.child(id!!).addListenerForSingleValueEvent(object : ValueEventListener {
@@ -334,7 +334,7 @@ class CreateNewStallActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
-                        food.foodStall = newStallName
+                        food.foodStall = newStallId
                         food.id = id
                         foodListRef.child(id)
                             .setValue(food)
@@ -363,7 +363,7 @@ class CreateNewStallActivity : AppCompatActivity() {
         goToStallOverview()
     }
 
-    private fun uploadNewStallToFirebase(imageUri: Uri) {
+    private fun uploadNewStallToFirebase(imageUri: Uri, newStallId: String?) {
         val fileRef: StorageReference = storageRef.child(
             System.currentTimeMillis().toString() + "." + getFileExtension(imageUri)
         )
@@ -371,8 +371,7 @@ class CreateNewStallActivity : AppCompatActivity() {
             fileRef.downloadUrl.addOnSuccessListener {
                 progressBar.visibility = View.INVISIBLE
                 val stallImage = it.toString()
-                val id: String? = foodStallRef.push().key
-                foodStallRef.child(id!!)
+                foodStallRef.child(newStallId!!)
                     .addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             if (snapshot.exists()) {
@@ -383,14 +382,14 @@ class CreateNewStallActivity : AppCompatActivity() {
                                 ).show()
                             } else {
                                 val newFoodStall = FoodStall()
-                                newFoodStall.id = id
+                                newFoodStall.id = newStallId
                                 newFoodStall.image = stallImage
                                 newFoodStall.name = newStallName
                                 newFoodStall.phone = newStallPhone
                                 newFoodStall.address = newStallAddress
                                 newFoodStall.description = newStallDescription
-                                newFoodStall.ownerName = Common.currentUser!!.name
-                                foodStallRef.child(id)
+                                newFoodStall.ownerUid = Common.currentUser!!.uid
+                                foodStallRef.child(newStallId)
                                     .setValue(newFoodStall)
                                     .addOnCompleteListener { task ->
                                         if (task.isSuccessful) {

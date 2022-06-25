@@ -44,7 +44,7 @@ class StallsOverviewViewModel: ViewModel(), IFoodStallLoadCallback {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (itemSnapShot in snapshot.children) {
                     val foodStall = itemSnapShot.getValue(FoodStall::class.java)
-                    if (foodStall!!.ownerName == Common.currentUser!!.name)
+                    if (foodStall!!.ownerUid == Common.currentUser!!.uid)
                         tempList.add(foodStall)
                 }
                 foodStallCallbackListener.onFoodStallLoadSuccess(tempList)

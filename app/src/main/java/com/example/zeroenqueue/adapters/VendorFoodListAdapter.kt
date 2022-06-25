@@ -70,8 +70,11 @@ class VendorFoodListAdapter(
         holder.food_name!!.text = foodList[position].name
         holder.food_price!!.text =
             StringBuilder("").append(Common.formatPrice(foodList[position].price)).toString()
-        if (holder.food_rating != null)
-            holder.food_rating!!.text = foodList[position].ratingValue.toString()
+        val rating = (foodList[position].ratingValue)/(foodList[position].ratingCount)
+        if (rating.isNaN())
+            holder.food_rating!!.text = "0.0"
+        else if (holder.food_rating != null)
+            holder.food_rating!!.text = Common.formatRating(rating.toDouble())
         if (holder.food_review_count != null)
             if (foodList[position].ratingCount == 1L)
                 holder.food_review_count!!.text = StringBuilder(foodList[position].ratingCount.toString()).append(" review")
@@ -82,7 +85,7 @@ class VendorFoodListAdapter(
         holder.setListener(object : IRecyclerItemClickListener {
             override fun onItemClick(view: View, pos: Int) {
                 Common.foodSelected = foodList[pos]
-                Common.foodSelected!!.key = pos.toString()
+                Common.foodSelected!!.key = foodList[pos].id
                 EventBus.getDefault().postSticky(VendorFoodItemClick(true, foodList[pos]))
             }
         })

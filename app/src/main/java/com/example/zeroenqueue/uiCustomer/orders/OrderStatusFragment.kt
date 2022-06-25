@@ -1,4 +1,4 @@
-package com.example.zeroenqueue.uiCustomer.orderStatus
+package com.example.zeroenqueue.uiCustomer.orders
 
 import android.os.Bundle
 import android.view.LayoutInflater

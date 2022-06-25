@@ -45,9 +45,9 @@ class CartItem {
     var foodSize:String = ""
 
     override fun equals(other: Any?): Boolean {
-        if(other === this) return true;
+        if(other === this) return true
         if(other !is CartItem)
-            return false;
+            return false
         val cartItem = other as CartItem?
         return cartItem!!.foodId == this.foodId &&
                 cartItem.foodAddon == this.foodAddon &&

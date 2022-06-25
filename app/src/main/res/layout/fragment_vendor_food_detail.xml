@@ -315,6 +315,18 @@
             </com.google.android.material.card.MaterialCardView>
 
             <Button
+                    android:id="@+id/btnShowComments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="Show Comments"
+                    android:textColor="@color/black"
+                    app:cornerRadius="4dp"/>
+
+
+            <Button
                     android:id="@+id/btnConfirmFood"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

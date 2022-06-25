@@ -70,7 +70,6 @@ class NewStallFoodListAdapter(
         Glide.with(context).load(foodList[position].image)
             .into(holder.food_image!!)
         holder.food_name!!.text = foodList[position].name
-        holder.food_price!!.text =
-            StringBuilder("").append(Common.formatPrice(foodList[position].price)).toString()
+        holder.food_price!!.text = Common.formatPrice(foodList[position].price)
     }
 }

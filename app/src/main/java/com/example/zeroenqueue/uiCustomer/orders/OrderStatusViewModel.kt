@@ -1,4 +1,4 @@
-package com.example.zeroenqueue.uiCustomer.orderStatus
+package com.example.zeroenqueue.uiCustomer.orders
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

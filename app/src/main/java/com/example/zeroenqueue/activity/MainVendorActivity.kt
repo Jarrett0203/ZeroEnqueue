@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -20,11 +19,9 @@ import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityMainVendorBinding
-import com.example.zeroenqueue.eventBus.FoodItemClick
 import com.example.zeroenqueue.eventBus.VendorFoodItemClick
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.app_bar_main_vendor.*
 import kotlinx.android.synthetic.main.nav_header_main_customer.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -35,7 +32,6 @@ class MainVendorActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainVendorBinding
     private lateinit var drawerLayout: DrawerLayout
-    private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +50,7 @@ class MainVendorActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_vendor_home, R.id.navigation_orders, R.id.navigation_stall_menu
+                R.id.navigation_vendor_home, R.id.navigation_vendor_order_summary, R.id.navigation_stall_menu
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -71,18 +67,18 @@ class MainVendorActivity : AppCompatActivity() {
                 navController.navigate(R.id.vendor_home_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiVendor.menu.MenuFragment")
                 navController.navigate(R.id.stall_menu_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiVendor.orders.OrdersFragment")
-                navController.navigate(R.id.orders_to_profile)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiVendor.orders.VendorOrderSummaryFragment")
+                navController.navigate(R.id.vendorOrderSummary_to_profile)
         }
 
         val txtUser = headView.findViewById<TextView>(R.id.txt_user)
         Common.setSpanString("Hey, ", Common.currentUser!!.name, txtUser)
 
-        navView.setNavigationItemSelectedListener { item ->
+        navView.setNavigationItemSelectedListener {
             drawerLayout.closeDrawers()
-            when (item.itemId) {
+            when (it.itemId) {
                 R.id.navigation_vendor_home -> navController.navigate(R.id.navigation_vendor_home)
-                R.id.navigation_orders -> navController.navigate(R.id.navigation_orders)
+                R.id.navigation_vendor_order_summary -> navController.navigate(R.id.navigation_vendor_order_summary)
                 R.id.navigation_stall_menu -> navController.navigate(R.id.navigation_stall_menu)
                 R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
                 R.id.navigation_sign_out -> signout()
