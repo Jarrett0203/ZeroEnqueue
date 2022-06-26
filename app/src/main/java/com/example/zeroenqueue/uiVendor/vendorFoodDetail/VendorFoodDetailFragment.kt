@@ -302,7 +302,7 @@ class VendorFoodDetailFragment : Fragment() {
                             }
                         }
                 } else {
-                    food.foodStall = Common.foodStallSelected!!.name
+                    food.foodStall = Common.foodStallSelected!!.id
                     foodListRef.child(id)
                         .setValue(food)
                         .addOnCompleteListener { task ->

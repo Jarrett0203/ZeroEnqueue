@@ -23,11 +23,9 @@ class VendorMyOrderAdapter (
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         var txt_time =  itemView.findViewById(R.id.txt_time) as TextView
         var txt_order_number = itemView.findViewById(R.id.txt_order_number) as TextView
-        var txt_order_status = itemView.findViewById(R.id.txt_order_status) as TextView
         var txt_num_item = itemView.findViewById(R.id.txt_num_item) as TextView
         var txt_name = itemView.findViewById(R.id.txt_name) as TextView
         var img_food_image = itemView.findViewById(R.id.img_food_image) as ImageView
-
     }
 
     override fun onCreateViewHolder(
@@ -46,19 +44,17 @@ class VendorMyOrderAdapter (
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         Glide.with(context).load(orderList[position].cartItemList!![0].foodImage)
             .into(holder.img_food_image)
-        holder.txt_order_number.text = orderList[position].key
-        Common.setSpanStringColor("Order date", simpleDateFormat.format(orderList[position].createDate),
-            holder.txt_time, Color.parseColor("#333639"))
+        holder.txt_order_number.text = simpleDateFormat.format(orderList[position].createDate)
 
-        Common.setSpanStringColor("Order status", Common.convertStatusToText(orderList[position].orderStatus),
+        Common.setSpanStringColor("Order status: ", Common.convertStatusToText(orderList[position].orderStatus),
             holder.txt_time, Color.parseColor("#00574B"))
 
-        Common.setSpanStringColor("Num of items", if(orderList[position].cartItemList == null) "0"
-        else orderList[position].cartItemList!!.size.toString(),
-        holder.txt_num_item, Color.parseColor(("#00574B")))
-
-        Common.setSpanStringColor("Name", orderList[position].userName,
+        Common.setSpanStringColor("Customer Name: ", orderList[position].userName,
             holder.txt_name, Color.parseColor("#00574B"))
+
+        Common.setSpanStringColor("Num of items: ", orderList[position].cartItemList!!.size.toString(),
+        holder.txt_num_item, Color.parseColor("#00574B"))
+
     }
 
     fun getItemAtPosition(pos: Int): Order {

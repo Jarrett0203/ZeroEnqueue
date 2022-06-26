@@ -25,6 +25,8 @@ import com.google.android.material.card.MaterialCardView
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import dmax.dialog.SpotsDialog
+import java.util.*
+import kotlin.collections.HashMap
 
 class VendorHomeFragment : Fragment() {
 
@@ -90,7 +92,8 @@ class VendorHomeFragment : Fragment() {
             val editStallAddress = itemView.findViewById<EditText>(R.id.stallAddress)
             val editStallPhone = itemView.findViewById<EditText>(R.id.stallPhone)
             val editStallDescription = itemView.findViewById<EditText>(R.id.stallDescription)
-            val editStallImageCard = itemView.findViewById<MaterialCardView>(R.id.editStallImageCard)
+            val editStallImageCard =
+                itemView.findViewById<MaterialCardView>(R.id.editStallImageCard)
 
             editStallName.setText(stallName.text)
             editStallAddress.setText(stallAddress.text)
@@ -105,51 +108,107 @@ class VendorHomeFragment : Fragment() {
                 cardImageResultLauncher.launch(intent)
             }
 
-            builder.setNegativeButton("CANCEL") {dialogInterface, _ -> dialogInterface.dismiss()}
+            builder.setNegativeButton("CANCEL") { dialogInterface, _ -> dialogInterface.dismiss() }
             builder.setPositiveButton("OK") { dialogInterface, _ ->
-                if (stallImageUri != null) {
+                val firstNums = arrayOf('6', '8', '9')
+                val newStallName = editStallName.text.toString().trim()
+                val newStallPhone = editStallPhone.text.toString().trim()
+                val newStallAddress = editStallAddress.text.toString().trim()
+                val newStallDescription = editStallDescription.text.toString().trim()
+
+                if (newStallName.isEmpty() || newStallPhone.isEmpty() || newStallAddress.isEmpty() || newStallDescription.isEmpty())
+                    Toast.makeText(
+                        requireContext(),
+                        "Empty fields are not allowed!!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                else if (!Arrays.stream(firstNums).anyMatch { t -> t == newStallPhone[0] } || newStallPhone.length != 8)
+                    Toast.makeText(requireContext(), "Invalid phone number", Toast.LENGTH_SHORT).show()
+                else {
                     dialog.setMessage("Uploading")
                     dialog.show()
 
                     val imageName = Common.currentUser!!.uid
                     val imageFolder = storageRef.child("stallImage/$imageName")
-                    imageFolder.putFile(stallImageUri!!).addOnFailureListener {
+                    val updateData = HashMap<String, Any>()
+                    updateData["name"] = newStallName
+                    updateData["address"] = newStallAddress
+                    updateData["phone"] = newStallPhone
+                    updateData["description"] = newStallDescription
+
+                    if (stallImageUri == null) {
+                        foodStallRef.child(Common.foodStallSelected!!.key!!)
+                            .updateChildren(updateData)
+                            .addOnFailureListener { e ->
+                                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                            .addOnCompleteListener { _ ->
+                                Common.foodStallSelected!!.name = newStallName
+                                Common.foodStallSelected!!.address = newStallAddress
+                                Common.foodStallSelected!!.phone = newStallPhone
+                                Common.foodStallSelected!!.description = newStallDescription
+
+                                stallName.text = Common.foodStallSelected!!.name
+                                stallAddress.text = Common.foodStallSelected!!.address
+                                stallPhone.text = Common.foodStallSelected!!.phone
+                                stallDescription.text = Common.foodStallSelected!!.description
+
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Edit Stall Success",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         dialog.dismiss()
-                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-                    }.addOnProgressListener {
-                        val progress = 100.0 * it.bytesTransferred/ it.totalByteCount
-                        dialog.setMessage("Uploaded $progress%")
-                    }.addOnSuccessListener {
-                        dialogInterface.dismiss()
-                        imageFolder.downloadUrl.addOnSuccessListener {
-                            val updateData = HashMap<String, Any>()
-                            updateData["image"] = it.toString()
-                            updateData["name"] = editStallName.text.toString()
-                            updateData["address"] = editStallAddress.text.toString()
-                            updateData["phone"] = editStallPhone.text.toString()
-                            updateData["description"] = editStallDescription.text.toString()
-                            foodStallRef.child(Common.foodStallSelected!!.key!!).updateChildren(updateData)
-                                .addOnFailureListener { e ->
-                                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-                                }
-                                .addOnCompleteListener { _ ->
-                                    Common.foodStallSelected!!.image = it.toString()
-                                    Common.foodStallSelected!!.name = editStallName.text.toString()
-                                    Common.foodStallSelected!!.address = editStallAddress.text.toString()
-                                    Common.foodStallSelected!!.phone = editStallPhone.text.toString()
-                                    Common.foodStallSelected!!.description = editStallDescription.text.toString()
-
-                                    stallName.text = Common.foodStallSelected!!.name
-                                    stallAddress.text = Common.foodStallSelected!!.address
-                                    stallPhone.text = Common.foodStallSelected!!.phone
-                                    stallDescription.text = Common.foodStallSelected!!.description
-                                    Glide.with(activity!!).load(Common.foodStallSelected!!.image).into(stallImage)
-
-                                    Toast.makeText(requireContext(), "Upload Success", Toast.LENGTH_SHORT).show()
-                                }
+                    }
+                    else {
+                        imageFolder.putFile(stallImageUri!!).addOnFailureListener {
                             dialog.dismiss()
+                            Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                        }.addOnProgressListener {
+                            val progress = 100.0 * it.bytesTransferred / it.totalByteCount
+                            dialog.setMessage("Uploaded $progress%")
+                        }.addOnSuccessListener {
+                            imageFolder.downloadUrl.addOnSuccessListener {
+                                updateData["image"] = it.toString()
+                                foodStallRef.child(Common.foodStallSelected!!.key!!)
+                                    .updateChildren(updateData)
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(
+                                            requireContext(),
+                                            e.message,
+                                            Toast.LENGTH_SHORT
+                                        )
+                                            .show()
+                                    }
+                                    .addOnCompleteListener { _ ->
+                                        Common.foodStallSelected!!.image = it.toString()
+                                        Common.foodStallSelected!!.name = newStallName
+                                        Common.foodStallSelected!!.address = newStallAddress
+                                        Common.foodStallSelected!!.phone = newStallPhone
+                                        Common.foodStallSelected!!.description = newStallDescription
+
+                                        stallName.text = Common.foodStallSelected!!.name
+                                        stallAddress.text = Common.foodStallSelected!!.address
+                                        stallPhone.text = Common.foodStallSelected!!.phone
+                                        stallDescription.text =
+                                            Common.foodStallSelected!!.description
+                                        Glide.with(activity!!)
+                                            .load(Common.foodStallSelected!!.image)
+                                            .into(stallImage)
+
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Edit Stall Success",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                dialog.dismiss()
+                            }
                         }
                     }
+                    dialogInterface.dismiss()
                 }
             }
             if (itemView.parent != null)

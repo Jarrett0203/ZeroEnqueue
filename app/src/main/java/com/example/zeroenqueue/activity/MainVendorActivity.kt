@@ -3,10 +3,8 @@ package com.example.zeroenqueue.activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -19,7 +17,7 @@ import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityMainVendorBinding
-import com.example.zeroenqueue.eventBus.VendorFoodItemClick
+import com.example.zeroenqueue.eventBus.FoodItemClick
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.nav_header_main_customer.view.*
@@ -122,8 +120,8 @@ class MainVendorActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onVendorFoodSelected(event: VendorFoodItemClick) {
+    @Subscribe(sticky = false, threadMode = ThreadMode.MAIN)
+    fun onVendorFoodSelected(event: FoodItemClick) {
         if (event.isSuccess) {
             findNavController(R.id.nav_host_fragment_content_main_vendor).navigate(R.id.navigation_vendorFoodDetail)
         }
