@@ -101,7 +101,7 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
             val view = LayoutInflater.from(context).inflate(R.layout.layout_place_order, null)
             val collectionTime = view.findViewById<View>(R.id.time) as EditText
             val cash = view.findViewById<View>(R.id.cash) as RadioButton
-            val braintree = view.findViewById<View>(R.id.braintree) as RadioButton
+            //val braintree = view.findViewById<View>(R.id.braintree) as RadioButton
 
             collectionTime.setText(Common.currentUser!!.address)
 
@@ -137,7 +137,7 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
 
     private fun initViews() {
 
-        setHasOptionsMenu(true)
+        //setHasOptionsMenu(true)
 
         val rootComment = layoutInflater.inflate(R.layout.layout_rating_comment, null)
 

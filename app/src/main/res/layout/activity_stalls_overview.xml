@@ -75,6 +75,13 @@
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
+
+                <Button
+                        android:id="@+id/btnSignOut"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sign_out"
+                        android:layout_gravity="center"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 

@@ -121,6 +121,7 @@ object Common {
     val USER_REF = "Users"
     val FOODLIST_REF = "FoodList"
     val COMMENT_REF = "Comments"
+    val DISCOUNT_REF = "Discounts"
 
     val DATABASE_LINK: String =
         "https://zeroenqueue-default-rtdb.asia-southeast1.firebasedatabase.app/"
