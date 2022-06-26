@@ -6,14 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.Food
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.eventBus.FoodItemClick
-import com.example.zeroenqueue.eventBus.VendorFoodItemClick
 import com.example.zeroenqueue.interfaces.IRecyclerItemClickListener
 import org.greenrobot.eventbus.EventBus
 
@@ -86,7 +84,7 @@ class VendorFoodListAdapter(
             override fun onItemClick(view: View, pos: Int) {
                 Common.foodSelected = foodList[pos]
                 Common.foodSelected!!.key = foodList[pos].id
-                EventBus.getDefault().postSticky(VendorFoodItemClick(true, foodList[pos]))
+                EventBus.getDefault().post(FoodItemClick(true, foodList[pos]))
             }
         })
     }
