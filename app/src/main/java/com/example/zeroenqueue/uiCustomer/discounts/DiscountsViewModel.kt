@@ -29,17 +29,14 @@ class DiscountsViewModel : ViewModel(), IDiscountLoadCallback {
         }
 
     fun loadDiscountList() {
-        var tempList = ArrayList<Discount>()
+        val tempList = ArrayList<Discount>()
         val userRef =
-            FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.USER_REF)
+            FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.DISCOUNT_REF)
         userRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (itemSnapShot in snapshot.children) {
-                    val user = itemSnapShot.getValue(User::class.java)
-                    if (user!!.uid == Common.currentUser!!.uid) {
-                        tempList = user.discounts as ArrayList<Discount>
-                        break
-                    }
+                    val discount = itemSnapShot.getValue(Discount::class.java)
+                        tempList.add(discount!!)
                 }
                 discountCallbackListener.onDiscountLoadSuccess(tempList)
             }

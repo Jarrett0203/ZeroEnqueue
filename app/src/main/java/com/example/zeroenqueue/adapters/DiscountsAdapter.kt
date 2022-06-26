@@ -54,7 +54,7 @@ val discountList: List<Discount>
     }
 
     override fun onBindViewHolder(holder: DiscountsAdapter.DiscountsViewHolder, position: Int) {
-        val simpleDateFormat = SimpleDateFormat("dd/mm/yy")
+        val simpleDateFormat = SimpleDateFormat("dd/mm/yyyy")
         Glide.with(context).load(discountList[position].foodImage)
             .into(holder.foodImage!!)
         holder.foodName!!.text = discountList[position].foodName

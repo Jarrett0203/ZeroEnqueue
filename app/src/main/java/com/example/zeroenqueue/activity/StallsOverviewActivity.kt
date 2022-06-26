@@ -11,8 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.VendorFoodStallAdapter
+import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityStallsOverviewBinding
 import com.example.zeroenqueue.eventBus.VendorFoodStallClick
+import com.google.firebase.auth.FirebaseAuth
 import dmax.dialog.SpotsDialog
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -35,6 +37,7 @@ class StallsOverviewActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.title = "Stalls Overview"
 
+        val btnSignOut = binding.btnSignOut
         val recyclerFoodStall = binding.recyclerFoodStalls
         val createNewStall = binding.addNewStall
         val swipeRefreshLayout = binding.swipeRefresh
@@ -46,6 +49,24 @@ class StallsOverviewActivity : AppCompatActivity() {
         createNewStall.setOnClickListener {
             val intent = Intent(this@StallsOverviewActivity, CreateNewStallActivity::class.java)
             startActivity(intent)
+        }
+        btnSignOut.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Sign out")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton("CANCEL") { dialogInterface, _ -> dialogInterface.dismiss() }
+                .setPositiveButton("OK") { _, _ ->
+                    Common.currentUser = null
+                    Common.foodStallSelected = null
+                    FirebaseAuth.getInstance().signOut()
+
+                    val intent = Intent(this@StallsOverviewActivity, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                }
+            val dialog = builder.create()
+            dialog.show()
         }
         swipeRefreshLayout.setOnRefreshListener {
             stallsOverviewViewModel.loadFoodStall()
