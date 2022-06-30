@@ -114,6 +114,9 @@
         <entry key="app/src/main/res/layout/fragment_vendor_home.xml" value="0.11096014492753623" />
         <entry key="app/src/main/res/layout/layout_cart_item.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/layout_category_item.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/layout_dialog_cancelled.xml" value="0.19579533941236069" />
+        <entry key="app/src/main/res/layout/layout_dialog_completed.xml" value="0.19579533941236069" />
+        <entry key="app/src/main/res/layout/layout_dialog_preparing.xml" value="0.19579533941236069" />
         <entry key="app/src/main/res/layout/layout_order_item.xml" value="0.30885416666666665" />
         <entry key="app/src/main/res/layout/layout_order_item_customer.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/layout_order_item_vendor.xml" value="0.40260416666666665" />

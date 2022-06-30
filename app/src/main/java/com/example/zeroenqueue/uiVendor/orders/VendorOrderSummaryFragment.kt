@@ -6,9 +6,13 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.view.*
 import android.view.animation.AnimationUtils
+import android.widget.Button
+import android.widget.RadioButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -17,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.VendorMyOrderAdapter
+import com.example.zeroenqueue.classes.Order
 import com.example.zeroenqueue.common.BottomSheetOrderFragment
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
@@ -139,6 +144,7 @@ class VendorOrderSummaryFragment : Fragment() {
                     MyButton(context!!, "Edit", 30, 0, Color.parseColor("#FF3c30"),
                         object : IDeleteBtnCallback {
                             override fun onClick(pos: Int) {
+                                showEditDialog(adapter!!.getItemAtPosition(pos), pos)
                             }
                         })
                 )
@@ -169,9 +175,7 @@ class VendorOrderSummaryFragment : Fragment() {
                                             .addOnSuccessListener {
                                                 adapter!!.removeItem(pos)
                                                 adapter!!.notifyItemRemoved(pos)
-//                                        txt_order_filter.setText(StringBuilder("Orders (")
-//                                            .append(adapter!!.itemCount)
-//                                            .append(")"))
+                                                updateTextCounter()
                                                 dialogInterface.dismiss()
                                                 Toast.makeText(
                                                     context!!,
@@ -192,6 +196,125 @@ class VendorOrderSummaryFragment : Fragment() {
                         })
                 )
             }
+
+            private fun showEditDialog(order: Order, pos: Int) {
+                var layout_dialog:View?=null
+                var builder:AlertDialog.Builder?=null
+
+                var preparing:RadioButton?=null
+                var completed:RadioButton?=null
+                var delete:RadioButton?=null
+                var placed:RadioButton?=null
+                var cancelled:RadioButton?=null
+
+
+
+                if(order.orderStatus == -1) {
+                    layout_dialog = LayoutInflater.from(context!!)
+                        .inflate(R.layout.layout_dialog_cancelled, null)
+                    builder = AlertDialog.Builder(context!!)
+                        .setView(layout_dialog)
+
+                    delete = layout_dialog.findViewById<View>(R.id.delete) as RadioButton
+                    placed = layout_dialog.findViewById<View>(R.id.placed) as RadioButton
+                } else if(order.orderStatus == 0) {
+                    layout_dialog = LayoutInflater.from(context!!)
+                        .inflate(R.layout.layout_dialog_preparing, null)
+                    builder = AlertDialog.Builder(context!!, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen)
+                        .setView(layout_dialog)
+
+                    preparing = layout_dialog.findViewById<View>(R.id.preparing) as RadioButton
+                    cancelled = layout_dialog.findViewById<View>(R.id.cancelled) as RadioButton
+                } else {
+                    layout_dialog = LayoutInflater.from(context!!)
+                        .inflate(R.layout.layout_dialog_completed, null)
+                    builder = AlertDialog.Builder(context!!)
+                        .setView(layout_dialog)
+
+                    completed = layout_dialog.findViewById<View>(R.id.completed) as RadioButton
+                    cancelled = layout_dialog.findViewById<View>(R.id.cancelled) as RadioButton
+                }
+
+                val btn_ok = layout_dialog.findViewById<View>(R.id.okay) as Button
+                val btn_cancel = layout_dialog.findViewById<View>(R.id.cancel) as Button
+
+                val status = layout_dialog.findViewById<View>(R.id.status) as TextView
+
+                status.setText(StringBuilder("Order Status(")
+                    .append(Common.convertStatusToText(order.orderStatus))
+                    .append(")"))
+
+                val dialog = builder.create()
+                dialog.show()
+                btn_cancel.setOnClickListener { dialog.dismiss() }
+                btn_ok.setOnClickListener {
+                    dialog.dismiss()
+                    if(cancelled != null && cancelled.isChecked) {
+                        updateOrder(pos, order, -1)
+                    } else if(preparing != null && preparing.isChecked) {
+                        updateOrder(pos, order, 1)
+                    } else if(completed != null && completed.isChecked) {
+                        updateOrder(pos, order, 2)
+                    } else if(placed != null && placed.isChecked) {
+                        updateOrder(pos, order, 0)
+                    } else if(delete != null && delete.isChecked) {
+                        deleteOrder(pos, order)
+                    }
+                }
+
+            }
+
+            private fun deleteOrder(pos: Int, order: Order) {
+                if(!TextUtils.isEmpty(order.key)) {
+
+                    FirebaseDatabase.getInstance()
+                        .getReference(Common.ORDER_REF)
+                        .child(order.key!!)
+                        .removeValue()
+                        .addOnFailureListener { throwable -> Toast.makeText(context!!, "" + throwable.message,
+                            Toast.LENGTH_SHORT).show() }
+                        .addOnSuccessListener {
+                            adapter!!.removeItem(pos)
+                            adapter!!.notifyItemRemoved(pos)
+                            updateTextCounter()
+                            Toast.makeText(context!!, "Update order success!",
+                                Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    Toast.makeText(context!!, "Order number must not be empty!",
+                        Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            private fun updateOrder(pos: Int, order: Order, i: Int) {
+                if(!TextUtils.isEmpty(order.key)) {
+                    val update_data = HashMap<String, Any>()
+                    update_data.put("orderStatus", i)
+
+                    FirebaseDatabase.getInstance()
+                        .getReference(Common.ORDER_REF)
+                        .child(order.key!!)
+                        .updateChildren(update_data)
+                        .addOnFailureListener { throwable -> Toast.makeText(context!!, "" + throwable.message,
+                            Toast.LENGTH_SHORT).show() }
+                        .addOnSuccessListener {
+                            adapter!!.removeItem(pos)
+                            adapter!!.notifyItemRemoved(pos)
+                            updateTextCounter()
+                            Toast.makeText(context!!, "Update order success!",
+                                Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    Toast.makeText(context!!, "Order number must not be empty!",
+                        Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            private fun updateTextCounter() {
+                txt_order_filter.text = StringBuilder("Orders (")
+                    .append(adapter!!.itemCount)
+                    .append(")")
+            }
         }
 
         vendorOrderSummaryViewModel.messageError.observe(viewLifecycleOwner) {
@@ -209,8 +332,11 @@ class VendorOrderSummaryFragment : Fragment() {
             }
         }
         return root
-    }
 
+
+
+
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
