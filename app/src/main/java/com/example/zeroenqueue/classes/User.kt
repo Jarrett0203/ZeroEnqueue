@@ -11,5 +11,5 @@ class User {
     var userType: String?= null
     var cardImage: String?= null
     var nus: Boolean = false
-    var discounts: MutableList<Discount>?= ArrayList()
+    var redeemedDiscounts: ArrayList<Discount>?= ArrayList()
 }

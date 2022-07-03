@@ -13,14 +13,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class CartViewModel: ViewModel() {
-    private val compositeDisposable: CompositeDisposable
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
     private lateinit var cartDataSource: CartDataSource
     private var mutableLiveDataCartItem: MutableLiveData<List<CartItem>>?=null
 
-
-    init {
-        compositeDisposable = CompositeDisposable()
-    }
 
     fun getMutableLiveDataCartItems(): MutableLiveData<List<CartItem>> {
         if(mutableLiveDataCartItem == null)

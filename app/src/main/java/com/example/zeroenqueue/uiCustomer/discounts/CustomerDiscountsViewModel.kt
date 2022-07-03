@@ -13,7 +13,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class DiscountsViewModel : ViewModel(), IDiscountLoadCallback {
+class CustomerDiscountsViewModel : ViewModel(), IDiscountLoadCallback {
     private var discountListMutableLiveData: MutableLiveData<List<Discount>>? = null
     private lateinit var messageError: MutableLiveData<String>
     private var discountCallbackListener: IDiscountLoadCallback = this

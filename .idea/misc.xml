@@ -5,6 +5,8 @@
       <map>
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1855" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable/bottom_nav_icon_color.xml" value="0.226" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable/ic_check_box_checked.xml" value="0.2385" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable/ic_check_box_unchecked.xml" value="0.2385" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable/ic_foodstall.xml" value="0.226" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1855" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/drawable/ic_order_status.xml" value="0.226" />
@@ -15,14 +17,17 @@
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/activity_home.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/activity_login.xml" value="0.23278985507246377" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/activity_main.xml" value="0.22916666666666666" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/activity_main_customer.xml" value="0.19519927536231885" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/activity_main_vendor.xml" value="0.1" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/activity_profile.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/activity_register_user.xml" value="0.23278985507246377" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/activity_stalls_overview.xml" value="0.1947463768115942" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/activity_vendor_food_stalls.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/app_bar_main.xml" value="0.25677083333333334" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/app_bar_main_customer.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/app_bar_main_vendor.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/content_main.xml" value="0.25677083333333334" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/content_main_customer.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/content_main_vendor.xml" value="0.11018518518518519" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/content_profile.xml" value="0.24375" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_add_food_item.xml" value="0.2578125" />
@@ -30,6 +35,8 @@
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_categories.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_category_food_list.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_comment.xml" value="0.2578125" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_customer_discounts.xml" value="0.2578125" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_customer_discounts_detail.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_customer_home.xml" value="0.11510416666666666" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_customer_order_summary.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_discounts.xml" value="0.2578125" />
@@ -60,6 +67,7 @@
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_chip_filter.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_chip_with_delete.xml" value="0.192578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_comment_item.xml" value="0.25677083333333334" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_customer_discounts.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_discounts.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_edit_food_stall_details.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_filter_food.xml" value="0.25677083333333334" />

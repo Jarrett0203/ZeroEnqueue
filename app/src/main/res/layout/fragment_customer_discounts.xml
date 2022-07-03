@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:padding="8dp"
-        tools:context=".uiCustomer.discounts.DiscountsFragment">
+        tools:context=".uiCustomer.discounts.CustomerDiscountsFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefresh"
@@ -17,7 +17,7 @@
                 android:id="@+id/recyclerDiscounts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/layout_discounts" />
+                tools:listitem="@layout/layout_customer_discounts" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout

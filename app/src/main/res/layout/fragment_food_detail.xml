@@ -39,7 +39,7 @@
         android:backgroundTint="@color/white"
         android:contentDescription="@string/order"
         android:elevation="6dp"
-        android:src="@drawable/ic_cart"
+        android:src="@drawable/ic_add_cart"
         app:layout_anchor="@id/app_bar_layout"
         app:layout_anchorGravity="bottom|right|end"
         app:pressedTranslationZ="12dp"
