@@ -49,7 +49,7 @@ val discountList: List<Discount>
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscountsAdapter.DiscountsViewHolder {
         return DiscountsViewHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.layout_discounts, parent, false)
+                .inflate(R.layout.layout_customer_discounts, parent, false)
         )
     }
 

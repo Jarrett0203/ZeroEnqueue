@@ -5,30 +5,40 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
+import com.example.zeroenqueue.launchFragmentInHiltContainer
+import com.example.zeroenqueue.uiCustomer.cart.CartFragment
+import com.example.zeroenqueue.uiCustomer.cart.CartViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
+import javax.inject.Named
 
 @ExperimentalCoroutinesApi
-@RunWith(AndroidJUnit4::class)
+@HiltAndroidTest
 @SmallTest
 class CartDAOTest {
 
     @get:Rule
+    var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var database: CartDatabase
+    @Inject
+    @Named("test-db")
+    lateinit var database: CartDatabase
     private lateinit var dao: CartDAO
 
     @Before
     fun setup() {
-        database = Room.inMemoryDatabaseBuilder(
-            ApplicationProvider.getApplicationContext(),
-            CartDatabase::class.java
-        ).allowMainThreadQueries().build()
+        hiltRule.inject()
         dao = database.cartDAO()
     }
 

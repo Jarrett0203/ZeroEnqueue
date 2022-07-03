@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +20,6 @@ import com.example.zeroenqueue.classes.Order
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
 import com.example.zeroenqueue.databinding.FragmentCartBinding
-import com.example.zeroenqueue.databinding.FragmentFoodListBinding
 import com.example.zeroenqueue.db.CartDataSource
 import com.example.zeroenqueue.db.CartDatabase
 import com.example.zeroenqueue.db.LocalCartDataSource
@@ -37,11 +37,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_cart.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
 
@@ -83,6 +85,8 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
         _binding = FragmentCartBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        val navController = Navigation.findNavController(activity!!, R.id.nav_host_fragment_content_main)
+
         recycler_cart = binding.recyclerCart
         recycler_cart.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(context)
@@ -92,6 +96,7 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
         empty_cart = binding.txtEmptyCart
         total_prices = binding.txtTotalPrice
         group_place_holder = binding.groupPlaceHolder
+        val btn_use_discounts = binding.btnUseDiscounts
         btn_place_order = binding.btnPlaceOrder
 
         btn_place_order.setOnClickListener {
@@ -118,6 +123,16 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
         }
 
         initViews()
+
+        btn_use_discounts.setOnClickListener {
+            if (Common.cartItemSelected != null) {
+                Toast.makeText(requireContext(), "Please select a food item", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                //navController.navigate(R.id.navigation_useDiscounts)
+            }
+        }
+
         cartViewModel.getMutableLiveDataCartItems().observe(viewLifecycleOwner) {
             if (it == null || it.isEmpty()) {
                 recycler_cart.visibility = View.GONE

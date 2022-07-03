@@ -2,8 +2,10 @@ package com.example.zeroenqueue.classes
 
 class Discount {
     var id: String? = null
+    var name: String? = null
     var discount: Int = 0
     var expiry: Long = 0
+    var isExpired: Boolean = false
     var description: String? = null
     var foodUid: String? = null
     var foodName: String? = null

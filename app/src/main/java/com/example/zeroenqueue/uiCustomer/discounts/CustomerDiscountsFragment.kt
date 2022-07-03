@@ -20,15 +20,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.DiscountsAdapter
 import com.example.zeroenqueue.common.Common
-import com.example.zeroenqueue.databinding.FragmentDiscountsBinding
+import com.example.zeroenqueue.databinding.FragmentCustomerDiscountsBinding
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import dmax.dialog.SpotsDialog
 import kotlin.collections.HashMap
 
-class DiscountsFragment : Fragment() {
+class CustomerDiscountsFragment : Fragment() {
 
-    private var _binding: FragmentDiscountsBinding? = null
+    private var _binding: FragmentCustomerDiscountsBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -40,9 +40,9 @@ class DiscountsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        val discountsViewModel = ViewModelProvider(this)[DiscountsViewModel::class.java]
+        val customerDiscountsViewModel = ViewModelProvider(this)[CustomerDiscountsViewModel::class.java]
 
-        _binding = FragmentDiscountsBinding.inflate(inflater, container, false)
+        _binding = FragmentCustomerDiscountsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val recyclerViewDiscounts = binding.recyclerDiscounts
@@ -59,11 +59,11 @@ class DiscountsFragment : Fragment() {
             AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
 
         swipeRefreshLayout.setOnRefreshListener {
-            discountsViewModel.loadDiscountList()
+            customerDiscountsViewModel.loadDiscountList()
             swipeRefreshLayout.isRefreshing = false
         }
 
-        discountsViewModel.discountList.observe(viewLifecycleOwner) {
+        customerDiscountsViewModel.discountList.observe(viewLifecycleOwner) {
             if (!Common.currentUser!!.nus) {
                 recyclerViewDiscounts.visibility = View.GONE
                 notNUSLayout.visibility = View.VISIBLE
@@ -134,7 +134,7 @@ class DiscountsFragment : Fragment() {
                                     Common.currentUser!!.cardImage = it.toString()
                                     Common.currentUser!!.nus = true
                                     notNUSLayout.visibility = View.GONE
-                                    discountsViewModel.loadDiscountList()
+                                    customerDiscountsViewModel.loadDiscountList()
                                     Toast.makeText(requireContext(), "Upload Success", Toast.LENGTH_SHORT).show()
                                 }
                             dialog.dismiss()
