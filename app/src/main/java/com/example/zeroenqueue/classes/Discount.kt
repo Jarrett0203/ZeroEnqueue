@@ -1,5 +1,7 @@
 package com.example.zeroenqueue.classes
 
+import kotlin.String
+
 class Discount {
     var id: String? = null
     var discount: Int = 0

@@ -380,7 +380,7 @@ class CreateNewStallActivity : AppCompatActivity() {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             } else {
-                                val newFoodStall = FoodStall()
+                                val newFoodStall = com.example.zeroenqueue.classes.FoodStall()
                                 newFoodStall.id = newStallId
                                 newFoodStall.image = stallImage
                                 newFoodStall.name = newStallName

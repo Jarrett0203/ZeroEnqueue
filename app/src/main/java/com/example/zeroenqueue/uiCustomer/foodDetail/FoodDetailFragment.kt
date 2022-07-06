@@ -127,6 +127,8 @@ class FoodDetailFragment : Fragment(), TextWatcher {
             val cartItem = CartItem()
             cartItem.uid = Common.currentUser!!.uid!!
             cartItem.userPhone = Common.currentUser!!.phone!!
+
+            cartItem.foodStall = Common.foodSelected!!.foodStall!!
             cartItem.foodId = Common.foodSelected!!.id!!
             cartItem.foodName = Common.foodSelected!!.name!!
             cartItem.foodImage = Common.foodSelected!!.image!!

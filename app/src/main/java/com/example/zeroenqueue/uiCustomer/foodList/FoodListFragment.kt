@@ -128,7 +128,7 @@ class FoodListFragment : Fragment() {
 
     private fun filter(
         selectedDataFoodStall: ArrayList<FoodStall>,
-        selectedDataCategory: ArrayList<String>
+        selectedDataCategory: ArrayList<kotlin.String>
     ) {
         binding.recyclerFoodList.scrollToPosition(0)
         foodListViewModel.loadFoodList()
@@ -195,8 +195,8 @@ class FoodListFragment : Fragment() {
         return selectedDataFoodStall
     }
 
-    private fun showAllCategories(): ArrayList<String> {
-        val selectedDataCategory: ArrayList<String> = arrayListOf()
+    private fun showAllCategories(): ArrayList<kotlin.String> {
+        val selectedDataCategory: ArrayList<kotlin.String> = arrayListOf()
         val categoryRef =
             FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.CATEGORY_REF)
         categoryRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -256,7 +256,7 @@ class FoodListFragment : Fragment() {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().componentName))
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(s: String?): Boolean {
+            override fun onQueryTextSubmit(s: kotlin.String?): Boolean {
                 foodListViewModel.loadFoodList()
                 binding.recyclerFoodList.scrollToPosition(0)
                 foodListViewModel.loadFoodListSearch(s!!.lowercase())
@@ -264,7 +264,7 @@ class FoodListFragment : Fragment() {
                 return true
             }
 
-            override fun onQueryTextChange(s: String?): Boolean {
+            override fun onQueryTextChange(s: kotlin.String?): Boolean {
                 return false
             }
 

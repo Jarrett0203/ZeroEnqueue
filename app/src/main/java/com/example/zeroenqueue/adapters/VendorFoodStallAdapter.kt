@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.FoodStall
 import com.example.zeroenqueue.common.Common
-import com.example.zeroenqueue.eventBus.FoodStallClick
 import com.example.zeroenqueue.eventBus.VendorFoodStallClick
 import com.example.zeroenqueue.interfaces.IRecyclerItemClickListener
 import org.greenrobot.eventbus.EventBus

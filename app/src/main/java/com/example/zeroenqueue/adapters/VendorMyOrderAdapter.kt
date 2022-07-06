@@ -52,7 +52,11 @@ class VendorMyOrderAdapter (
         Common.setSpanStringColor("Customer Name: ", orderList[position].userName,
             holder.txt_name, Color.parseColor("#00574B"))
 
-        Common.setSpanStringColor("Num of items: ", orderList[position].cartItemList!!.size.toString(),
+        var sum = 0
+        for (item in orderList[position].cartItemList!!) {
+            sum += item.foodQuantity
+        }
+        Common.setSpanStringColor("Num of items: ", sum.toString(),
         holder.txt_num_item, Color.parseColor("#00574B"))
 
     }

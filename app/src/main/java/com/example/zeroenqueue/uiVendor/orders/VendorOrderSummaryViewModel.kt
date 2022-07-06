@@ -40,8 +40,11 @@ class VendorOrderSummaryViewModel : ViewModel(), IVendorOrderCallbackListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for(itemSnapShot in snapshot.children) {
                         val order = itemSnapShot.getValue(Order::class.java)
-                        order!!.key = itemSnapShot.key
-                        tempList.add(order)
+                        if (order!!.foodStallId == Common.foodStallSelected!!.id) {
+                            order!!.key = itemSnapShot.key
+                            tempList.add(order)
+                        }
+
                     }
                     orderCallbackListener.onOrderLoadSuccess(tempList)
                 }
