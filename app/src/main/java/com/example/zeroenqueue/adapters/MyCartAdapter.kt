@@ -35,25 +35,9 @@ class MyCartAdapter(
         var txt_addOn = itemView.findViewById(R.id.txt_addOn) as TextView
         var checkbox = itemView.findViewById(R.id.checkbox) as CheckBox
         var number_button = itemView.findViewById(R.id.number_button) as ElegantNumberButton
-        private var listener: IRecyclerItemClickListener? = null
-
-        fun setListener(listener: IRecyclerItemClickListener) {
-            this.listener = listener
-        }
-
-        init {
-            itemView.setOnClickListener(this)
-        }
-
-
-        fun getSelectedCartItem() : CartItem? {
-            if (lastCheckedPosition != -1)
-                return cartItemList[lastCheckedPosition]
-            return null
-        }
 
         override fun onClick(view: View?) {
-            listener!!.onItemClick(view!!, adapterPosition)
+
         }
     }
 
@@ -97,38 +81,30 @@ class MyCartAdapter(
             holder.txt_addOn.text = addOnString
         }
         holder.txt_food_price.text = StringBuilder("$ ")
-            .append(Common.formatPrice(cartItemList[position].foodPrice + cartItemList[position].foodExtraPrice))
-            .toString()
+            .append(
+                Common.formatPrice(
+                    (cartItemList[position].foodPrice + cartItemList[position].foodExtraPrice)
+                            * (1 - cartItemList[position].discount)
+                )
+            )
         holder.number_button.number = cartItemList[position].foodQuantity.toString()
-        holder.setListener(object: IRecyclerItemClickListener {
-            override fun onItemClick(view: View, pos: Int) {
-                holder.checkbox.setOnClickListener {
-                    if (holder.checkbox.isChecked) {
-                        if (lastCheckedCheckbox != null)
-                            lastCheckedCheckbox!!.isChecked = false
-                        Common.cartItemSelected = cartItemList[pos]
-                        lastCheckedCheckbox = holder.checkbox
-                        lastCheckedPosition = pos
-                    }
-                    else {
-                        Common.cartItemSelected = null
-                        lastCheckedCheckbox = null
-                        lastCheckedPosition = -1
-                    }
-                }
+        holder.checkbox.setOnClickListener {
+            if (holder.checkbox.isChecked) {
+                if (lastCheckedCheckbox != null)
+                    lastCheckedCheckbox!!.isChecked = false
+                Common.cartItemSelected = cartItemList[holder.adapterPosition]
+                lastCheckedCheckbox = holder.checkbox
+                lastCheckedPosition = holder.adapterPosition
+            } else {
+                Common.cartItemSelected = null
+                lastCheckedCheckbox = null
+                lastCheckedPosition = -1
             }
-
-        })
+        }
 
     }
 
-    override fun getItemCount(): Int {
-        return cartItemList.size
-    }
+    override fun getItemCount(): Int = cartItemList.size
 
-    fun getItemAtPosition(pos: Int): CartItem {
-        return cartItemList[pos]
-    }
-
-
+    fun getItemAtPosition(pos: Int): CartItem = cartItemList[pos]
 }

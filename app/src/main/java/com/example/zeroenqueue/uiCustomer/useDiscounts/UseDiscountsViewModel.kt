@@ -1,9 +1,10 @@
-package com.example.zeroenqueue.uiCustomer.discounts
+package com.example.zeroenqueue.uiCustomer.useDiscounts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.zeroenqueue.classes.Discount
+import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.interfaces.IDiscountLoadCallback
 import com.google.firebase.database.DataSnapshot
@@ -11,7 +12,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class CustomerDiscountsViewModel : ViewModel(), IDiscountLoadCallback {
+class UseDiscountsViewModel : ViewModel(), IDiscountLoadCallback {
     private var discountListMutableLiveData: MutableLiveData<List<Discount>>? = null
     private lateinit var messageError: MutableLiveData<String>
     private var discountCallbackListener: IDiscountLoadCallback = this
@@ -21,21 +22,25 @@ class CustomerDiscountsViewModel : ViewModel(), IDiscountLoadCallback {
             if (discountListMutableLiveData == null) {
                 discountListMutableLiveData = MutableLiveData()
                 messageError = MutableLiveData()
-                loadDiscountList()
+                loadDiscountsList()
             }
             return discountListMutableLiveData!!
         }
 
-    fun loadDiscountList() {
+    fun loadDiscountsList() {
         val tempList = ArrayList<Discount>()
-        val discountRef =
-            FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.DISCOUNT_REF)
-        discountRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        val userRef =
+            FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.USER_REF).child(Common.currentUser!!.uid!!)
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                for (itemSnapShot in snapshot.children) {
-                    val discount = itemSnapShot.getValue(Discount::class.java)
-                        tempList.add(discount!!)
+                val user = snapshot.getValue(User::class.java)
+                if (user!!.redeemedDiscounts!!.isNotEmpty()) {
+                    for (discount in user.redeemedDiscounts!!) {
+                        if (discount.foodUid == Common.cartItemSelected!!.foodId && !discount.isExpired && !discount.isRedeemed)
+                            tempList.add(discount)
+                    }
                 }
+
                 discountCallbackListener.onDiscountLoadSuccess(tempList)
             }
 

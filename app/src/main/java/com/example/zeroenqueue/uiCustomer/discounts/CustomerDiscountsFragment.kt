@@ -47,7 +47,7 @@ class CustomerDiscountsFragment : Fragment() {
 
         val recyclerViewDiscounts = binding.recyclerDiscounts
         val swipeRefreshLayout = binding.swipeRefresh
-        val noDiscount = binding.NoDiscounts
+        val noDiscount = binding.noDiscounts
         val notNUSLayout = binding.notNUSLayout
         val btnUploadNUSCard = binding.btnUploadNUSCard
 

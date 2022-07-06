@@ -83,6 +83,9 @@
         <action
                 android:id="@+id/cart_to_profile"
                 app:destination="@id/navigation_profile" />
+        <action
+                android:id="@+id/action_navigation_cart_to_navigation_useDiscounts"
+                app:destination="@id/navigation_useDiscounts" />
     </fragment>
     <fragment
             android:id="@+id/navigation_customerDiscounts"
@@ -101,5 +104,10 @@
             android:name="com.example.zeroenqueue.uiCustomer.discountDetail.CustomerDiscountsDetailFragment"
             android:label="Discount Details"
             tools:layout="@layout/fragment_customer_discounts_detail" />
+    <fragment
+            android:id="@+id/navigation_useDiscounts"
+            android:name="com.example.zeroenqueue.uiCustomer.useDiscounts.UseDiscountsFragment"
+            android:label="Use Discounts"
+            tools:layout="@layout/fragment_use_discounts" />
 
 </navigation>

@@ -52,6 +52,7 @@
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_order_summary_vendor.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_orders.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_profile.xml" value="0.1838768115942029" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_use_discounts.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_vendor_food_detail.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_vendor_home.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/fragment_vendor_order_summary.xml" value="0.2578125" />
@@ -84,6 +85,7 @@
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_recommended_food_items.xml" value="0.25677083333333334" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_size_item.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_upload_nus_card.xml" value="0.25677083333333334" />
+        <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/layout_use_discount_item.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/nav_header.xml" value="0.25677083333333334" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/layout/nav_header_main.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/menu/activity_main_customer_drawer.xml" value="0.2578125" />
@@ -122,9 +124,6 @@
         <entry key="app/src/main/res/layout/fragment_vendor_home.xml" value="0.11096014492753623" />
         <entry key="app/src/main/res/layout/layout_cart_item.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/layout_category_item.xml" value="0.3098958333333333" />
-        <entry key="app/src/main/res/layout/layout_dialog_cancelled.xml" value="0.19579533941236069" />
-        <entry key="app/src/main/res/layout/layout_dialog_completed.xml" value="0.19579533941236069" />
-        <entry key="app/src/main/res/layout/layout_dialog_preparing.xml" value="0.19579533941236069" />
         <entry key="app/src/main/res/layout/layout_order_item.xml" value="0.30885416666666665" />
         <entry key="app/src/main/res/layout/layout_order_item_customer.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/layout_order_item_vendor.xml" value="0.40260416666666665" />
