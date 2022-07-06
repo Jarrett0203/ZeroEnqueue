@@ -93,20 +93,22 @@ class MainCustomerActivity : AppCompatActivity() {
             val navHostFragment = supportFragmentManager.primaryNavigationFragment
             val currentFragment = navHostFragment!!.childFragmentManager.fragments[0]
             drawerLayout.closeDrawers()
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.customerHome.CustomerHomeFragment")
-                navController.navigate(R.id.customer_home_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.foodStall.FoodStallFragment")
-                navController.navigate(R.id.foodStall_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.categories.CategoriesFragment")
-                navController.navigate(R.id.categories_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.foodList.FoodListFragment")
-                navController.navigate(R.id.food_list_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.orders.OrderSummaryFragment")
-                navController.navigate(R.id.customer_order_summary_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.cart.CartFragment")
-                navController.navigate(R.id.cart_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.discounts.CustomerDiscountsFragment")
-                navController.navigate(R.id.customer_discounts_to_profile)
+            when (currentFragment.javaClass.name) {
+                "com.example.zeroenqueue.uiCustomer.customerHome.CustomerHomeFragment"
+                    -> navController.navigate(R.id.customer_home_to_profile)
+                "com.example.zeroenqueue.uiCustomer.foodStall.FoodStallFragment"
+                    -> navController.navigate(R.id.foodStall_to_profile)
+                "com.example.zeroenqueue.uiCustomer.categories.CategoriesFragment"
+                    -> navController.navigate(R.id.categories_to_profile)
+                "com.example.zeroenqueue.uiCustomer.foodList.FoodListFragment"
+                    -> navController.navigate(R.id.food_list_to_profile)
+                "com.example.zeroenqueue.uiCustomer.orders.OrderSummaryFragment"
+                    -> navController.navigate(R.id.customer_order_summary_to_profile)
+                "com.example.zeroenqueue.uiCustomer.cart.CartFragment"
+                    -> navController.navigate(R.id.cart_to_profile)
+                "com.example.zeroenqueue.uiCustomer.discounts.CustomerDiscountsFragment"
+                    -> navController.navigate(R.id.customer_discounts_to_profile)
+            }
         }
 
         val txtUser = headView.findViewById<TextView>(R.id.txt_user)

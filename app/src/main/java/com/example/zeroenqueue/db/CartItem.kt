@@ -44,6 +44,10 @@ class CartItem {
     @ColumnInfo(name = "foodSize")
     var foodSize:String = ""
 
+    @NonNull
+    @ColumnInfo(name = "discount")
+    var discount:Double = 0.0
+
     override fun equals(other: Any?): Boolean {
         if(other === this) return true
         if(other !is CartItem)

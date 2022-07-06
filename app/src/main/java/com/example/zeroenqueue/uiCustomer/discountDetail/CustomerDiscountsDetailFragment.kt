@@ -29,6 +29,9 @@ class CustomerDiscountsDetailFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private val currentUserRef = FirebaseDatabase.getInstance().getReference(Common.USER_REF)
+        .child(Common.currentUser!!.uid!!)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -73,10 +76,7 @@ class CustomerDiscountsDetailFragment : Fragment() {
                 val dialog: AlertDialog =
                     SpotsDialog.Builder().setContext(context).setCancelable(false).build()
                 dialog.show()
-                FirebaseDatabase.getInstance()
-                    .getReference(Common.USER_REF)
-                    .child(Common.currentUser!!.uid!!)
-                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                currentUserRef.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             if (snapshot.exists()) {
                                 val user = snapshot.getValue(User::class.java)
@@ -84,22 +84,30 @@ class CustomerDiscountsDetailFragment : Fragment() {
                                 var newDiscounts = ArrayList<Discount>()
                                 if (user!!.redeemedDiscounts != null)
                                     newDiscounts = user.redeemedDiscounts!!
-                                newDiscounts.add(Common.discountSelected!!)
-                                val updateData = HashMap<String, Any>()
-                                updateData["redeemedDiscounts"] = newDiscounts
-
-                                snapshot.ref
-                                    .updateChildren(updateData)
-                                    .addOnCompleteListener { task ->
-                                        if (task.isSuccessful)
-                                            Toast.makeText(
-                                                requireContext(),
-                                                "Discount redeemed successfully",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        dialog.dismiss()
-                                    }
-
+                                if (newDiscounts.contains(Common.discountSelected)) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Discount has already been redeemed!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    dialog.dismiss()
+                                }
+                                else {
+                                    newDiscounts.add(Common.discountSelected!!)
+                                    val updateData = HashMap<String, Any>()
+                                    updateData["redeemedDiscounts"] = newDiscounts
+                                    snapshot.ref
+                                        .updateChildren(updateData)
+                                        .addOnCompleteListener { task ->
+                                            if (task.isSuccessful)
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    "Discount redeemed successfully",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            dialog.dismiss()
+                                        }
+                                }
                             }
                         }
 

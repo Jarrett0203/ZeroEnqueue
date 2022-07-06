@@ -125,11 +125,13 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
         initViews()
 
         btn_use_discounts.setOnClickListener {
-            if (Common.cartItemSelected != null) {
+            if (Common.cartItemSelected == null)
                 Toast.makeText(requireContext(), "Please select a food item", Toast.LENGTH_SHORT).show()
-            }
             else {
-                //navController.navigate(R.id.navigation_useDiscounts)
+                if (Common.cartItemSelected!!.discount != 0.0)
+                    Toast.makeText(requireContext(), "Discount has already been redeemed!", Toast.LENGTH_SHORT).show()
+                else
+                    navController.navigate(R.id.navigation_useDiscounts)
             }
         }
 
