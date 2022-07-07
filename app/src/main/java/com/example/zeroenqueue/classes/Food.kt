@@ -1,5 +1,7 @@
 package com.example.zeroenqueue.classes
 
+import kotlin.String
+
 class Food {
     var key: String? = null
     var name: String? = null

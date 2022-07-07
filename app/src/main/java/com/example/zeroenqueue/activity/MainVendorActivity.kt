@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -20,6 +21,7 @@ import com.example.zeroenqueue.databinding.ActivityMainVendorBinding
 import com.example.zeroenqueue.eventBus.FoodItemClick
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.nav_header_main_customer.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -38,6 +40,8 @@ class MainVendorActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMainVendor.toolbar)
+
+        subscribeToTopic(Common.getNewOrderTopic())
 
         drawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
@@ -84,6 +88,16 @@ class MainVendorActivity : AppCompatActivity() {
             }
             true
         }
+    }
+
+    private fun subscribeToTopic(newOrderTopic: String) {
+        FirebaseMessaging.getInstance()
+            .subscribeToTopic(newOrderTopic)
+            .addOnFailureListener{ message -> Toast.makeText(this@MainVendorActivity, "" + message.message, Toast.LENGTH_SHORT).show()}
+            .addOnCompleteListener{ task ->
+                if(!task.isSuccessful)
+                    Toast.makeText(this@MainVendorActivity, "Subscribe topic failed", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun switchStall() {

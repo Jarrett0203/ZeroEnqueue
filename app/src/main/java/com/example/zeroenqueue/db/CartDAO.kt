@@ -8,16 +8,19 @@ import io.reactivex.Single
 @Dao
 interface CartDAO {
     @Query("SELECT * FROM Cart WHERE uid=:uid")
-    fun getAllCart(uid:String): Flowable<List<CartItem>>
+    fun getAllCart(uid: String): Flowable<List<CartItem>>
 
     @Query("SELECT * FROM Cart WHERE foodId=:foodId AND uid=:uid")
-    fun getItemInCart(foodId:String, uid:String): Single<CartItem>
+    fun getItemInCart(foodId: String, uid: String): Single<CartItem>
 
     @Query("SELECT SUM(foodQuantity) FROM Cart WHERE uid=:uid")
-    fun countCartItems(uid:String): Single<Int>
-
+    fun countCartItems(uid: String): Single<Int>
+    
     @Query("SELECT SUM((foodPrice + foodExtraPrice) * foodQuantity * (1 - discount)) FROM Cart WHERE uid=:uid")
     fun totalPrice(uid:String): Single<Double>
+
+    @Query("SELECT SUM((foodPrice + foodExtraPrice) * foodQuantity * (1 - discount)) FROM Cart WHERE uid=:uid AND foodStall=:foodStall")
+    fun foodStallTotalPrice(uid: String, foodStall: String): Single<Double>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrReplaceAll(vararg cartItems: CartItem):Completable
@@ -29,8 +32,11 @@ interface CartDAO {
     fun deleteCart(cartItem: CartItem):Single<Int>
 
     @Query("DELETE FROM Cart WHERE uid=:uid")
-    fun cleanCart(uid:String): Single<Int>
+    fun cleanCart(uid: String): Single<Int>
 
     @Query("SELECT * FROM Cart WHERE foodId=:foodId AND uid=:uid AND foodSize =:foodSize AND foodAddon =:foodAddon")
-    fun getItemWithAllOptionsInCart(uid:String, foodId:String, foodSize:String, foodAddon:String): Single<CartItem>
+    fun getItemWithAllOptionsInCart(uid: String, foodId: String, foodSize: String, foodAddon: String): Single<CartItem>
+
+    @Query("SELECT * FROM Cart WHERE foodStall=:foodStall AND uid=:uid")
+    fun collateFoodStallOrders(uid: String, foodStall: String): Flowable<List<CartItem>>
 }

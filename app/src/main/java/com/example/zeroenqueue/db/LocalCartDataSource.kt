@@ -37,6 +37,14 @@ class LocalCartDataSource(private val cartDAO: CartDAO): CartDataSource {
         return cartDAO.cleanCart(uid)
     }
 
+    override fun collateFoodStallOrders(uid: String, foodStall: String): Flowable<List<CartItem>> {
+        return cartDAO.collateFoodStallOrders(uid, foodStall)
+    }
+
+    override fun foodStallTotalPrice(uid: String, foodStall: String): Single<Double> {
+        return cartDAO.foodStallTotalPrice(uid, foodStall)
+    }
+
     override fun getItemWithAllOptionsInCart(
         uid: String,
         foodId: String,

@@ -14,14 +14,19 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.zeroenqueue.Notifications.IFCMService
+import com.example.zeroenqueue.Notifications.RetrofitFCMClient
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.MyCartAdapter
+import com.example.zeroenqueue.classes.FCMResponse
+import com.example.zeroenqueue.classes.FCMSendData
 import com.example.zeroenqueue.classes.Order
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
 import com.example.zeroenqueue.databinding.FragmentCartBinding
 import com.example.zeroenqueue.db.CartDataSource
 import com.example.zeroenqueue.db.CartDatabase
+import com.example.zeroenqueue.db.CartItem
 import com.example.zeroenqueue.db.LocalCartDataSource
 import com.example.zeroenqueue.eventBus.CountCartEvent
 import com.example.zeroenqueue.eventBus.HideFABCart
@@ -43,6 +48,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 
 class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
@@ -65,6 +71,8 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
     private lateinit var adapter: MyCartAdapter
     private lateinit var comments: TextView
 
+
+    lateinit var ifcmService: IFCMService
     lateinit var listener: ILoadTimeFromFirebaseCallback
 
     override fun onResume() {
@@ -155,6 +163,8 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
     private fun initViews() {
 
         //setHasOptionsMenu(true)
+
+        ifcmService = RetrofitFCMClient.getInstance().create(IFCMService::class.java)
 
         val rootComment = layoutInflater.inflate(R.layout.layout_rating_comment, null)
 
@@ -305,41 +315,58 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ cartItemList ->
-                cartDataSource!!.totalPrice(Common.currentUser!!.uid!!)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object: SingleObserver<Double> {
-                        override fun onSubscribe(d: Disposable) {
+                val hashMap = HashMap<String, ArrayList<CartItem>>()
+                for (item in cartItemList) {
+                    if (hashMap.containsKey(item.foodStall)) {
+                        val existingArrayList = hashMap[item.foodStall]
+                        existingArrayList!!.add(item)
+                        hashMap.replace(item.foodStall!!, existingArrayList)
+                    }
+                    else {
+                        val newArrayList = ArrayList<CartItem>()
+                        newArrayList.add(item)
+                        hashMap[item.foodStall!!] = newArrayList
+                    }
+                }
 
-                        }
+                hashMap.forEach { (foodStallId, cartItemList) ->
+                    cartDataSource!!.foodStallTotalPrice(Common.currentUser!!.uid!!, foodStallId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(object: SingleObserver<Double> {
+                            override fun onSubscribe(d: Disposable) {
 
-                        override fun onSuccess(t: Double) {
-                            val order = Order()
-                            order.userId = Common.currentUser!!.uid!!
-                            order.userName = Common.currentUser!!.name!!
-                            order.userPhone = Common.currentUser!!.phone!!
-                            order.collectionTime = collectionTime
-                            order.comment = comments
-                            order.cartItemList = cartItemList
-                            order.totalPayment = total_prices.text.toString().toDouble()
-                            order.finalPayment = total_prices.text.toString().toDouble()
-                            order.discount = 0
-                            order.isCod = true
-                            order.transactionId = "Cash On Delivery"
+                            }
 
-                            syncLocalTimeWithServerTime(order)
+                            override fun onSuccess(t: Double) {
+                                val order = Order()
+                                order.userId = Common.currentUser!!.uid!!
+                                order.userName = Common.currentUser!!.name!!
+                                order.userPhone = Common.currentUser!!.phone!!
+                                order.collectionTime = collectionTime
+                                order.comment = comments
+                                order.cartItemList = cartItemList
+                                order.totalPayment = t
+                                order.finalPayment = t
+                                order.discount = 0
+                                order.isCod = true
+                                order.transactionId = "Cash On Delivery"
+                                order.foodStallId = foodStallId
 
-                        }
+                                syncLocalTimeWithServerTime(order)
 
-                        override fun onError(e: Throwable) {
-                            Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()
-                        }
-                    })
+                            }
 
+                            override fun onError(e: Throwable) {
+                                if (!e.message!!.contains("Query returned empty"))
+                                    Toast.makeText(context, "[SUM CART" + e.message, Toast.LENGTH_SHORT).show()
+                            }
+                        })
+                }
             }, { throwable ->
                 Toast.makeText(context, "" + throwable.message, Toast.LENGTH_SHORT).show()
             }
-        ))
+            ))
     }
 
     private fun syncLocalTimeWithServerTime(order: Order) {
@@ -373,10 +400,31 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(object: SingleObserver<Int> {
                             override fun onSubscribe(d: Disposable) {
-                                Toast.makeText(context, "Order placed successfully", Toast.LENGTH_SHORT).show()
+
+
                             }
 
                             override fun onSuccess(t: Int) {
+                                val dataSend = HashMap<String, String>()
+                                dataSend.put(Common.NOTI_TITLE, "New Order")
+                                dataSend.put(Common.NOTI_CONTENT, "You have a new order" + Common.currentUser!!.phone)
+
+                                val sendData = FCMSendData(Common.getNewOrderTopic(), dataSend)
+
+                                compositeDisposable.add(
+                                    ifcmService.sendNotification(sendData)
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe ({
+                                             t: FCMResponse ->
+                                                if(t!!.success != 0)
+                                                    Toast.makeText(context!!, "Order placed successfully", Toast.LENGTH_SHORT).show()
+                                        }, {t: Throwable? ->
+                                            Toast.makeText(context!!, "Order was sent but notification system failed", Toast.LENGTH_SHORT).show()
+                                        })
+                                )
+
+                                Toast.makeText(context, "Order placed successfully", Toast.LENGTH_SHORT).show()
                             }
 
                             override fun onError(e: Throwable) {
