@@ -92,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_cart"
+                    android:src="@drawable/ic_add_cart"
                     app:tint="@color/white" />
 
             </LinearLayout>

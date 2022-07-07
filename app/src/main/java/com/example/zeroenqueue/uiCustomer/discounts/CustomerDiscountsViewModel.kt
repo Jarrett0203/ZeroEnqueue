@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.zeroenqueue.classes.Discount
-import com.example.zeroenqueue.classes.Food
-import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.interfaces.IDiscountLoadCallback
 import com.google.firebase.database.DataSnapshot
@@ -13,7 +11,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class DiscountsViewModel : ViewModel(), IDiscountLoadCallback {
+class CustomerDiscountsViewModel : ViewModel(), IDiscountLoadCallback {
     private var discountListMutableLiveData: MutableLiveData<List<Discount>>? = null
     private lateinit var messageError: MutableLiveData<String>
     private var discountCallbackListener: IDiscountLoadCallback = this
@@ -30,9 +28,9 @@ class DiscountsViewModel : ViewModel(), IDiscountLoadCallback {
 
     fun loadDiscountList() {
         val tempList = ArrayList<Discount>()
-        val userRef =
+        val discountRef =
             FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.DISCOUNT_REF)
-        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        discountRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (itemSnapShot in snapshot.children) {
                     val discount = itemSnapShot.getValue(Discount::class.java)

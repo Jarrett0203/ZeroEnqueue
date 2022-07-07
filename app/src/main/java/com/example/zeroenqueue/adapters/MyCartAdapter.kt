@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.zeroenqueue.R
@@ -11,33 +13,32 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.example.zeroenqueue.common.Common
-import com.example.zeroenqueue.db.CartDataSource
-import com.example.zeroenqueue.db.CartDatabase
 import com.example.zeroenqueue.db.CartItem
-import com.example.zeroenqueue.db.LocalCartDataSource
-import com.example.zeroenqueue.eventBus.UpdateCartItems
-import io.reactivex.disposables.CompositeDisposable
-import org.greenrobot.eventbus.EventBus
+import com.example.zeroenqueue.interfaces.IRecyclerItemClickListener
 import org.json.JSONArray
 
 class MyCartAdapter(
     internal var context: Context,
-    internal var cartItem: List<CartItem>
+    private var cartItemList: List<CartItem>
 ) :
     RecyclerView.Adapter<MyCartAdapter.MyViewHolder>() {
 
-    internal var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    internal var cartDataSource: CartDataSource =
-        LocalCartDataSource(CartDatabase.getInstance(context).cartDAO())
+    private var lastCheckedPosition = -1
+    private var lastCheckedCheckbox: CheckBox? = null
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         var img_cart = itemView.findViewById(R.id.img_cart) as ImageView
         var txt_food_name = itemView.findViewById(R.id.txt_food_name) as TextView
         var txt_food_price = itemView.findViewById(R.id.txt_food_price) as TextView
         var txt_size = itemView.findViewById(R.id.txt_size) as TextView
         var txt_addOn = itemView.findViewById(R.id.txt_addOn) as TextView
+        var checkbox = itemView.findViewById(R.id.checkbox) as CheckBox
         var number_button = itemView.findViewById(R.id.number_button) as ElegantNumberButton
 
+        override fun onClick(view: View?) {
+
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -48,11 +49,12 @@ class MyCartAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Glide.with(context).load(cartItem[position].foodImage).into(holder.img_cart)
-        holder.txt_food_name.text = cartItem[position].foodName!!
+        Glide.with(context).load(cartItemList[position].foodImage).into(holder.img_cart)
+        holder.txt_food_name.text = cartItemList[position].foodName!!
 
-        val foodSizeJsonString = StringBuilder("[").append(cartItem[position].foodSize).append("]").toString()
-        val foodAddOnJsonString = cartItem[position].foodAddon
+        val foodSizeJsonString =
+            StringBuilder("[").append(cartItemList[position].foodSize).append("]").toString()
+        val foodAddOnJsonString = cartItemList[position].foodAddon
 
         if (foodSizeJsonString == "[Default]")
             holder.txt_size.visibility = View.GONE
@@ -79,24 +81,30 @@ class MyCartAdapter(
             holder.txt_addOn.text = addOnString
         }
         holder.txt_food_price.text = StringBuilder("$ ")
-            .append(Common.formatPrice(cartItem[position].foodPrice + cartItem[position].foodExtraPrice))
-            .toString()
-        holder.number_button.number = cartItem[position].foodQuantity.toString()
-
-        holder.number_button.setOnValueChangeListener { _, _, newValue ->
-            cartItem[position].foodQuantity = newValue
-            EventBus.getDefault().postSticky(UpdateCartItems(cartItem[position]))
+            .append(
+                Common.formatPrice(
+                    (cartItemList[position].foodPrice + cartItemList[position].foodExtraPrice)
+                            * (1 - cartItemList[position].discount)
+                )
+            )
+        holder.number_button.number = cartItemList[position].foodQuantity.toString()
+        holder.checkbox.setOnClickListener {
+            if (holder.checkbox.isChecked) {
+                if (lastCheckedCheckbox != null)
+                    lastCheckedCheckbox!!.isChecked = false
+                Common.cartItemSelected = cartItemList[holder.adapterPosition]
+                lastCheckedCheckbox = holder.checkbox
+                lastCheckedPosition = holder.adapterPosition
+            } else {
+                Common.cartItemSelected = null
+                lastCheckedCheckbox = null
+                lastCheckedPosition = -1
+            }
         }
 
     }
 
-    override fun getItemCount(): Int {
-        return cartItem.size
-    }
+    override fun getItemCount(): Int = cartItemList.size
 
-    fun getItemAtPosition(pos: Int): CartItem {
-        return cartItem[pos]
-    }
-
-
+    fun getItemAtPosition(pos: Int): CartItem = cartItemList[pos]
 }

@@ -135,6 +135,7 @@ class FoodDetailFragment : Fragment(), TextWatcher {
             cartItem.foodPrice = Common.foodSelected!!.price
             cartItem.foodQuantity = number_button!!.number.toInt()
             cartItem.foodExtraPrice = Common.calculateExtraPrice(Common.foodSelected!!.sizeSelected, Common.foodSelected!!.addOnSelected)
+            cartItem.discount = 0.0
 
             if (Common.foodSelected!!.addOnSelected != null)
                 cartItem.foodAddon = Gson().toJson(Common.foodSelected!!.addOnSelected)

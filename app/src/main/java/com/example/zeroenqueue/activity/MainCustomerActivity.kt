@@ -3,7 +3,6 @@ package com.example.zeroenqueue.activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -67,7 +66,7 @@ class MainCustomerActivity : AppCompatActivity() {
         drawerLayout = binding.drawerLayout
         navView = binding.navView
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
+        val fab: FloatingActionButton = findViewById(R.id.fabCart)
         fab.setOnClickListener {
             navController.navigate(R.id.navigation_cart)
         }
@@ -80,7 +79,7 @@ class MainCustomerActivity : AppCompatActivity() {
             setOf(
                 R.id.navigation_customer_home, R.id.navigation_categories, R.id.navigation_customer_order_summary,
                 R.id.navigation_foodStall, R.id.navigation_profile, R.id.navigation_food_list,
-                R.id.navigation_cart, R.id.navigation_discounts
+                R.id.navigation_cart, R.id.navigation_customerDiscounts
             ), drawerLayout
         )
 
@@ -94,20 +93,22 @@ class MainCustomerActivity : AppCompatActivity() {
             val navHostFragment = supportFragmentManager.primaryNavigationFragment
             val currentFragment = navHostFragment!!.childFragmentManager.fragments[0]
             drawerLayout.closeDrawers()
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.customerHome.CustomerHomeFragment")
-                navController.navigate(R.id.customer_home_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.foodStall.FoodStallFragment")
-                navController.navigate(R.id.foodStall_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.categories.CategoriesFragment")
-                navController.navigate(R.id.categories_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.foodList.FoodListFragment")
-                navController.navigate(R.id.food_list_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.orders.OrderSummaryFragment")
-                navController.navigate(R.id.customer_order_summary_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.cart.CartFragment")
-                navController.navigate(R.id.cart_to_profile)
-            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiCustomer.discounts.DiscountsFragment")
-                navController.navigate(R.id.discounts_to_profile)
+            when (currentFragment.javaClass.name) {
+                "com.example.zeroenqueue.uiCustomer.customerHome.CustomerHomeFragment"
+                    -> navController.navigate(R.id.customer_home_to_profile)
+                "com.example.zeroenqueue.uiCustomer.foodStall.FoodStallFragment"
+                    -> navController.navigate(R.id.foodStall_to_profile)
+                "com.example.zeroenqueue.uiCustomer.categories.CategoriesFragment"
+                    -> navController.navigate(R.id.categories_to_profile)
+                "com.example.zeroenqueue.uiCustomer.foodList.FoodListFragment"
+                    -> navController.navigate(R.id.food_list_to_profile)
+                "com.example.zeroenqueue.uiCustomer.orders.OrderSummaryFragment"
+                    -> navController.navigate(R.id.customer_order_summary_to_profile)
+                "com.example.zeroenqueue.uiCustomer.cart.CartFragment"
+                    -> navController.navigate(R.id.cart_to_profile)
+                "com.example.zeroenqueue.uiCustomer.discounts.CustomerDiscountsFragment"
+                    -> navController.navigate(R.id.customer_discounts_to_profile)
+            }
         }
 
         val txtUser = headView.findViewById<TextView>(R.id.txt_user)
@@ -124,7 +125,7 @@ class MainCustomerActivity : AppCompatActivity() {
                 R.id.navigation_foodStall -> navController.navigate(R.id.navigation_foodStall)
                 R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
                 R.id.navigation_cart -> navController.navigate(R.id.navigation_cart)
-                R.id.navigation_discounts -> navController.navigate(R.id.navigation_discounts)
+                R.id.navigation_customerDiscounts -> navController.navigate(R.id.navigation_customerDiscounts)
             }
             true
         }
@@ -188,7 +189,7 @@ class MainCustomerActivity : AppCompatActivity() {
                 }
 
                 override fun onSuccess(t: Int) {
-                    fab.count = t
+                    fabCart.count = t
                 }
 
                 override fun onError(e: Throwable) {
@@ -235,9 +236,9 @@ class MainCustomerActivity : AppCompatActivity() {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onHideFABEvent(event: HideFABCart){
         if (event.isHidden){
-            fab.hide()
+            fabCart.hide()
         } else {
-            fab.show()
+            fabCart.show()
         }
     }
 
@@ -271,7 +272,7 @@ class MainCustomerActivity : AppCompatActivity() {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onDiscountSelected(event: DiscountItemClick) {
         if (event.isSuccess) {
-            //findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_discountDetails)
+            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_customer_discounts_detail)
         }
     }
 

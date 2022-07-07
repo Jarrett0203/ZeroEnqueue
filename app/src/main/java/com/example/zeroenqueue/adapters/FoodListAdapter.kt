@@ -104,6 +104,7 @@ class FoodListAdapter(
             cartItem.foodExtraPrice = 0.0
             cartItem.foodAddon = "Default"
             cartItem.foodSize = "Default"
+            cartItem.discount = 0.0
 
             cartDataSource.getItemWithAllOptionsInCart(Common.currentUser!!.uid!!,
                 cartItem.foodId,

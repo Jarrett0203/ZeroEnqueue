@@ -9,34 +9,34 @@ import com.example.zeroenqueue.classes.Food
 
 class FoodDetailViewModel : ViewModel() {
 
-    private var foodDetailMutableLiveData: MutableLiveData<Food>?=null
-    private var commentMutableLiveData: MutableLiveData<Comment>?=null
+    private var foodDetailMutableLiveData: MutableLiveData<Food>? = null
+    private var commentMutableLiveData: MutableLiveData<Comment>? = null
 
-    val foodDetail:LiveData<Food>
-        get(){
-            if(foodDetailMutableLiveData == null){
+    val foodDetail: LiveData<Food>
+        get() {
+            if (foodDetailMutableLiveData == null) {
                 foodDetailMutableLiveData = MutableLiveData()
             }
             foodDetailMutableLiveData!!.value = Common.foodSelected
             return foodDetailMutableLiveData!!
         }
 
-    val comment:LiveData<Comment>
-        get(){
-            if(commentMutableLiveData == null){
+    val comment: LiveData<Comment>
+        get() {
+            if (commentMutableLiveData == null) {
                 commentMutableLiveData = MutableLiveData()
             }
             return commentMutableLiveData!!
         }
 
     fun setComment(comment: Comment) {
-        if(commentMutableLiveData != null){
+        if (commentMutableLiveData != null) {
             commentMutableLiveData!!.value = comment
         }
     }
 
     fun setFood(food: Food) {
-        if(foodDetailMutableLiveData != null){
+        if (foodDetailMutableLiveData != null) {
             foodDetailMutableLiveData!!.value = food
         }
     }

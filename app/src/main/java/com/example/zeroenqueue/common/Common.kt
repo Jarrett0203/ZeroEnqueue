@@ -24,6 +24,11 @@ import com.google.firebase.database.collection.LLRBNode
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.util.*
+import com.example.zeroenqueue.db.CartItem
+import java.math.RoundingMode
+import java.text.DecimalFormat
+import kotlin.math.abs
+import kotlin.random.Random
 import kotlin.text.StringBuilder
 
 object Common {
@@ -67,25 +72,25 @@ object Common {
     }
 
     fun getDateOfWeek(i: Int): String {
-        when(i) {
-            1 -> return "Monday"
-            2 -> return "Tuesday"
-            3 -> return "Wednesday"
-            4 -> return "Thursday"
-            5 -> return "Friday"
-            6 -> return "Saturday"
-            7 -> return "Sunday"
-            else -> return "unknown"
+        return when(i) {
+            1 -> "Monday"
+            2 -> "Tuesday"
+            3 -> "Wednesday"
+            4 -> "Thursday"
+            5 -> "Friday"
+            6 -> "Saturday"
+            7 -> "Sunday"
+            else -> "unknown"
         }
     }
 
     fun convertStatusToText(orderStatus: Int): String {
-        when(orderStatus) {
-            0 -> return "Order placed"
-            1 -> return "Preparing"
-            2 -> return "Ready to be collected"
-            -1 -> return "Cancelled"
-            else -> return "Unknown"
+        return when(orderStatus) {
+            0 -> "Order placed"
+            1 -> "Preparing"
+            2 -> "Ready to be collected"
+            -1 -> "Cancelled"
+            else -> "Unknown"
         }
     }
 
@@ -114,7 +119,7 @@ object Common {
     fun orderId(): String {
         return StringBuilder()
             .append(System.currentTimeMillis())
-            .append(Math.abs(Random().nextInt()))
+            .append(abs(Random.nextInt()))
             .toString()
     }
 
@@ -176,24 +181,25 @@ object Common {
     var foodSelected: Food? = null
     var sizeSelected: Size? = null
     var addOnSelected: AddOn? = null
+    var cartItemSelected: CartItem? = null
     var currentUser: User? = null
 
-    val CATEGORY_REF: String = "Category"
-    val FOODSTALL_REF: String = "FoodStalls"
-    val ORDER_REF: String = "Order"
-    val POPULAR_REF: String = "MostPopular"
-    val RECOMMENDED_REF: String = "Recommended"
-    val USER_REF = "Users"
-    val FOODLIST_REF = "FoodList"
-    val COMMENT_REF = "Comments"
-    val DISCOUNT_REF = "Discounts"
     const val NOTI_TITLE = "title"
     const val NOTI_CONTENT = "content"
     const val TOKEN_REF = "Tokens"
+    const val CATEGORY_REF = "Category"
+    const val FOODSTALL_REF = "FoodStalls"
+    const val ORDER_REF = "Order"
+    const val POPULAR_REF = "MostPopular"
+    const val RECOMMENDED_REF = "Recommended"
+    const val USER_REF = "Users"
+    const val FOODLIST_REF = "FoodList"
+    const val COMMENT_REF = "Comments"
+    const val DISCOUNT_REF = "Discounts"
 
-    val DATABASE_LINK: String =
+    const val DATABASE_LINK: String =
         "https://zeroenqueue-default-rtdb.asia-southeast1.firebasedatabase.app/"
-    val FULL_WIDTH_COLUMN: Int = 1
-    val DEFAULT_COLUMN_COUNT: Int = 0
+    const val FULL_WIDTH_COLUMN: Int = 1
+    const val DEFAULT_COLUMN_COUNT: Int = 0
 
 }

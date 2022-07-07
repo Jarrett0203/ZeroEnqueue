@@ -83,15 +83,31 @@
         <action
                 android:id="@+id/cart_to_profile"
                 app:destination="@id/navigation_profile" />
+        <action
+                android:id="@+id/action_navigation_cart_to_navigation_useDiscounts"
+                app:destination="@id/navigation_useDiscounts" />
     </fragment>
     <fragment
-            android:id="@+id/navigation_discounts"
-            android:name="com.example.zeroenqueue.uiCustomer.discounts.DiscountsFragment"
+            android:id="@+id/navigation_customerDiscounts"
+            android:name="com.example.zeroenqueue.uiCustomer.discounts.CustomerDiscountsFragment"
             android:label="Discounts"
-            tools:layout="@layout/fragment_discounts" >
+            tools:layout="@layout/fragment_customer_discounts" >
         <action
-                android:id="@+id/discounts_to_profile"
+                android:id="@+id/customer_discounts_to_profile"
                 app:destination="@id/navigation_profile" />
+        <action
+                android:id="@+id/customerDiscounts_to_customerDiscountsDetailFragment"
+                app:destination="@id/navigation_customer_discounts_detail" />
     </fragment>
+    <fragment
+            android:id="@+id/navigation_customer_discounts_detail"
+            android:name="com.example.zeroenqueue.uiCustomer.discountDetail.CustomerDiscountsDetailFragment"
+            android:label="Discount Details"
+            tools:layout="@layout/fragment_customer_discounts_detail" />
+    <fragment
+            android:id="@+id/navigation_useDiscounts"
+            android:name="com.example.zeroenqueue.uiCustomer.useDiscounts.UseDiscountsFragment"
+            android:label="Use Discounts"
+            tools:layout="@layout/fragment_use_discounts" />
 
 </navigation>

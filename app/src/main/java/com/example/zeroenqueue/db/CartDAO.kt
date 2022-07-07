@@ -15,11 +15,11 @@ interface CartDAO {
 
     @Query("SELECT SUM(foodQuantity) FROM Cart WHERE uid=:uid")
     fun countCartItems(uid: String): Single<Int>
+    
+    @Query("SELECT SUM((foodPrice + foodExtraPrice) * foodQuantity * (1 - discount)) FROM Cart WHERE uid=:uid")
+    fun totalPrice(uid:String): Single<Double>
 
-    @Query("SELECT SUM((foodPrice + foodExtraPrice) * foodQuantity) FROM Cart WHERE uid=:uid")
-    fun totalPrice(uid: String): Single<Double>
-
-    @Query("SELECT SUM((foodPrice + foodExtraPrice) * foodQuantity) FROM Cart WHERE uid=:uid AND foodStall=:foodStall")
+    @Query("SELECT SUM((foodPrice + foodExtraPrice) * foodQuantity * (1 - discount)) FROM Cart WHERE uid=:uid AND foodStall=:foodStall")
     fun foodStallTotalPrice(uid: String, foodStall: String): Single<Double>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
