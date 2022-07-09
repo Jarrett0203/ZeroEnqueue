@@ -27,6 +27,7 @@ import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
 import com.example.zeroenqueue.databinding.FragmentVendorOrderSummaryBinding
 import com.example.zeroenqueue.eventBus.CountCartEvent
+import com.example.zeroenqueue.eventBus.LoadAllOrders
 import com.example.zeroenqueue.eventBus.LoadOrderEvent
 import com.example.zeroenqueue.interfaces.IDeleteBtnCallback
 import com.google.firebase.database.FirebaseDatabase
@@ -209,7 +210,7 @@ class VendorOrderSummaryFragment : Fragment() {
 
 
 
-                if(order.orderStatus == -1) {
+                if(order.orderStatus == 3) {
                     layout_dialog = LayoutInflater.from(context!!)
                         .inflate(R.layout.layout_dialog_cancelled, null)
                     builder = AlertDialog.Builder(context!!)
@@ -250,7 +251,7 @@ class VendorOrderSummaryFragment : Fragment() {
                 btn_ok.setOnClickListener {
                     dialog.dismiss()
                     if(cancelled != null && cancelled.isChecked) {
-                        updateOrder(pos, order, -1)
+                        updateOrder(pos, order, 3)
                     } else if(preparing != null && preparing.isChecked) {
                         updateOrder(pos, order, 1)
                     } else if(completed != null && completed.isChecked) {
@@ -374,6 +375,11 @@ class VendorOrderSummaryFragment : Fragment() {
     override fun onDestroy() {
         EventBus.getDefault().postSticky(CountCartEvent(true))
         super.onDestroy()
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onLoadAllOrders(event: LoadAllOrders) {
+        vendorOrderSummaryViewModel.loadAllOrders()
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)

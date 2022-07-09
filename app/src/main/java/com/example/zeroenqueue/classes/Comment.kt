@@ -1,7 +1,5 @@
 package com.example.zeroenqueue.classes
 
-import kotlin.String
-
 class Comment {
     var ratingValue:Float =0.toFloat()
     var commentDetails: String?=null

@@ -14,7 +14,7 @@ import com.google.firebase.database.ValueEventListener
 
 class FoodListViewModel : ViewModel(), IFoodLoadCallback {
     private var foodListMutableLiveData: MutableLiveData<List<Food>> ?= null
-    private lateinit var messageError:MutableLiveData<kotlin.String>
+    private lateinit var messageError:MutableLiveData<String>
     private var foodCallbackListener : IFoodLoadCallback = this
 
     val foodList:LiveData<List<Food>>
@@ -65,7 +65,7 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
         })
     }
 
-    fun loadFoodListSearch(search: kotlin.String) {
+    fun loadFoodListSearch(search: String) {
         val tempList = ArrayList<Food>()
         val foodListRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODLIST_REF)
         foodListRef.addListenerForSingleValueEvent(object: ValueEventListener {
@@ -84,7 +84,7 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
         })
     }
 
-    fun loadFoodListWithCategory(categoryList: List<kotlin.String>) {
+    fun loadFoodListWithCategory(categoryList: List<String>) {
         val tempList = ArrayList<Food>()
         val foodListRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODLIST_REF)
         foodListRef.addListenerForSingleValueEvent(object: ValueEventListener {
@@ -126,7 +126,7 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
         })
     }
 
-    fun loadFoodListWithFoodStallAndCategories(foodStallList: List<FoodStall>, categoryList: List<kotlin.String>) {
+    fun loadFoodListWithFoodStallAndCategories(foodStallList: List<FoodStall>, categoryList: List<String>) {
         val tempList = ArrayList<Food>()
         val foodListRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODLIST_REF)
         foodListRef.addListenerForSingleValueEvent(object: ValueEventListener {
@@ -157,7 +157,7 @@ class FoodListViewModel : ViewModel(), IFoodLoadCallback {
         foodListMutableLiveData!!.value = foodList
     }
 
-    override fun onFoodLoadFailed(message: kotlin.String) {
+    override fun onFoodLoadFailed(message: String) {
         messageError.value = message
     }
 

@@ -33,18 +33,7 @@ class UseDiscountsAdapter(var context: Context,
         var expiry: TextView = itemView.findViewById(R.id.expiry)
         var oldPrice: TextView = itemView.findViewById(R.id.txt_old_price)
         var newPrice: TextView = itemView.findViewById(R.id.txt_new_price)
-        private var listener: IRecyclerItemClickListener? = null
-
-        fun setListener(listener: IRecyclerItemClickListener) {
-            this.listener = listener
-        }
-
-        init {
-            itemView.setOnClickListener(this)
-        }
-
-        override fun onClick(view: View?) {
-            listener!!.onItemClick(view!!, adapterPosition)
+        override fun onClick(v: View?) {
         }
     }
 

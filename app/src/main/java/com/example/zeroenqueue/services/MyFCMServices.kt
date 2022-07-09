@@ -1,12 +1,9 @@
 package com.example.zeroenqueue.services
 
-import android.content.Context
-import android.widget.Toast
 import com.example.zeroenqueue.common.Common
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import java.util.*
-import kotlin.random.Random.Default.nextInt
 
 class MyFCMServices: FirebaseMessagingService() {
     override fun onNewToken(p0: String) {

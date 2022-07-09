@@ -13,7 +13,7 @@ import java.util.*
 
 class VendorOrderSummaryViewModel : ViewModel(), IVendorOrderCallbackListener {
 
-    private val orderList = MutableLiveData<List<Order>>()
+    private val orderList = MutableLiveData<MutableList<Order>>()
         val messageError = MutableLiveData<String>()
         private val orderCallbackListener: IVendorOrderCallbackListener
 
@@ -21,9 +21,32 @@ class VendorOrderSummaryViewModel : ViewModel(), IVendorOrderCallbackListener {
             orderCallbackListener = this
         }
 
-        fun getOrderList(): MutableLiveData<List<Order>>{
-            loadOrder(0)
+        fun getOrderList(): MutableLiveData<MutableList<Order>>{
+            loadAllOrders()
             return orderList
+        }
+
+        fun loadAllOrders() {
+            val tempList : MutableList<Order> = ArrayList()
+            val orderRef = FirebaseDatabase.getInstance()
+                .getReference(Common.ORDER_REF)
+            orderRef.addListenerForSingleValueEvent(object: ValueEventListener{
+                override fun onCancelled(error: DatabaseError) {
+                    orderCallbackListener.onOrderLoadFailed(error.message)
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for(itemSnapShot in snapshot.children) {
+                        val order = itemSnapShot.getValue(Order::class.java)
+                        if (order!!.foodStallId == Common.foodStallSelected!!.id) {
+                            order.key = itemSnapShot.key
+                            tempList.add(order)
+                        }
+
+                    }
+                    orderCallbackListener.onOrderLoadSuccess(tempList)
+                }
+            })
         }
 
         fun loadOrder(status: Int) {
@@ -41,7 +64,7 @@ class VendorOrderSummaryViewModel : ViewModel(), IVendorOrderCallbackListener {
                     for(itemSnapShot in snapshot.children) {
                         val order = itemSnapShot.getValue(Order::class.java)
                         if (order!!.foodStallId == Common.foodStallSelected!!.id) {
-                            order!!.key = itemSnapShot.key
+                            order.key = itemSnapShot.key
                             tempList.add(order)
                         }
 
@@ -52,7 +75,7 @@ class VendorOrderSummaryViewModel : ViewModel(), IVendorOrderCallbackListener {
 
         }
 
-    override fun onOrderLoadSuccess(order: List<Order>) {
+    override fun onOrderLoadSuccess(order: MutableList<Order>) {
         if(order.size >= 0) {
             Collections.sort(order) { t1, t2 ->
                 if(t1.createDate < t2.createDate) return@sort -1

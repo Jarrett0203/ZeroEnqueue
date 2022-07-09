@@ -6,7 +6,7 @@ plugins {
 kotlin {
     android()
     
-    listOf(
+    /*listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
@@ -43,7 +43,7 @@ kotlin {
             iosArm64Test.dependsOn(this)
             iosSimulatorArm64Test.dependsOn(this)
         }
-    }
+    }*/
 }
 
 android {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -8,156 +7,79 @@
         android:paddingBottom="8dp"
         android:paddingTop="8dp">
 
-    <LinearLayout
-        android:id="@+id/placed_filter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginRight="32dp"
-            android:src="@drawable/ic_baseline_speaker_notes_24"
-                app:tint="#737373" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="Placed"
-            android:textColor="#737373"
-            android:textSize="16dp" />
-
-
-
-    </LinearLayout>
-
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@android:color/darker_gray" />
-
-    <LinearLayout
+    <RadioGroup
+            android:id="@+id/radioOrderStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-        android:id="@+id/preparing_filter"
-        android:clickable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:orientation="horizontal"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:layout_marginTop="20dp"
-        android:paddingBottom="20dp" >
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:divider="@drawable/border"
+            android:showDividers="middle"
+            android:orientation="vertical">
 
-        <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginRight="32dp"
-                android:src="@drawable/ic_baseline_access_time_24"
-                app:tint="#737373" />
-
-        <TextView
-                android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/radioPlaced"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:button="@drawable/ic_placed"
+                android:buttonTint="#737373"
+                android:background="@drawable/toggle_radio"
+                android:paddingStart="32dp"
+                android:layout_marginBottom="10dp"
+                android:text="Placed"
+                android:textColor="#737373"
+                android:textSize="16sp" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/radioPreparing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@drawable/ic_preparing"
+                android:buttonTint="#737373"
+                android:background="@drawable/toggle_radio"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:paddingStart="32dp"
                 android:text="Preparing"
                 android:textColor="#737373"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
 
-
-    </LinearLayout>
-
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@android:color/darker_gray" />
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/order_completed"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:layout_marginTop="20dp"
-            android:paddingBottom="20dp" >
-
-        <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginRight="32dp"
-                android:src="@drawable/ic_baseline_done_24"
-                app:tint="#737373" />
-
-        <TextView
-                android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/radioCollect"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="Ready to be collected"
+                android:button="@drawable/ic_collect"
+                android:buttonTint="#737373"
+                android:background="@drawable/toggle_radio"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:paddingStart="32dp"
+                android:text="Ready to collect"
                 android:textColor="#737373"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
 
-
-    </LinearLayout>
-
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@android:color/darker_gray" />
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/order_cancelled"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:layout_marginTop="20dp"
-            android:paddingBottom="20dp" >
-
-        <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginRight="32dp"
-                android:src="@drawable/ic_baseline_clear_24"
-                app:tint="#737373" />
-
-        <TextView
-                android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/radioCancelled"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="order cancelled"
+                android:button="@drawable/ic_cancelled"
+                android:buttonTint="#737373"
+                android:background="@drawable/toggle_radio"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:paddingStart="32dp"
+                android:text="Cancelled"
                 android:textColor="#737373"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
+    </RadioGroup>
 
-
-    </LinearLayout>
-
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@android:color/darker_gray" />
-
-
-
-
+    <Button
+            android:id="@+id/btnFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter"
+            android:backgroundTint="@color/yellow"
+            android:textColor="@color/black"
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp" />
 </LinearLayout>

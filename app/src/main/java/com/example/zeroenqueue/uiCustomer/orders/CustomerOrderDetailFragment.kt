@@ -11,6 +11,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zeroenqueue.R
+import com.example.zeroenqueue.adapters.OrderDetailAdapter
 import com.example.zeroenqueue.databinding.FragmentCustomerOrderDetailBinding
 import com.example.zeroenqueue.databinding.FragmentFoodListBinding
 
@@ -23,7 +24,7 @@ class CustomerOrderDetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val customerOrderDetailViewModel = ViewModelProvider(this)[CustomerOrderDetailViewModel::class.java]
         _binding = FragmentCustomerOrderDetailBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -32,8 +33,13 @@ class CustomerOrderDetailFragment : Fragment() {
         recycler_order_detail.layoutManager = LinearLayoutManager(context)
         val layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
         customerOrderDetailViewModel.customerOrderDetail.observe(viewLifecycleOwner) {
-            //recycler_order_detail.adapter = OrderDetailAdapter(requireContext(), it)
-            recycler_order_detail.layoutAnimation = layoutAnimationController
+            if (it.isEmpty() || it == null) {
+                recycler_order_detail.visibility = View.GONE
+            }
+            else {
+                recycler_order_detail.adapter = OrderDetailAdapter(requireContext(), it)
+                recycler_order_detail.layoutAnimation = layoutAnimationController
+            }
         }
 
         return root

@@ -1,7 +1,6 @@
 package com.example.zeroenqueue.classes
 
 import com.example.zeroenqueue.db.CartItem
-import kotlin.String
 
 class Order {
     var key: String? = null

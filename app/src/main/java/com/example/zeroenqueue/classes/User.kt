@@ -1,7 +1,5 @@
 package com.example.zeroenqueue.classes
 
-import kotlin.String
-
 class User {
     var image: String? = null
     var uid: String?= null
