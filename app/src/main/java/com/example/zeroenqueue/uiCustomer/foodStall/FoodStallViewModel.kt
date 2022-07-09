@@ -14,12 +14,8 @@ import com.google.firebase.database.ValueEventListener
 class FoodStallViewModel : ViewModel(), IFoodStallLoadCallback {
 
     private var foodStallListMutableLiveData: MutableLiveData<List<FoodStall>>? = null
-    private var messageError: MutableLiveData<kotlin.String>? = null
-    private var foodStallCallbackListener: IFoodStallLoadCallback
-
-    init {
-        foodStallCallbackListener = this
-    }
+    private var messageError: MutableLiveData<String>? = null
+    private var foodStallCallbackListener: IFoodStallLoadCallback = this
 
     val foodStallList: LiveData<List<FoodStall>>
         get() {
@@ -31,7 +27,7 @@ class FoodStallViewModel : ViewModel(), IFoodStallLoadCallback {
             return foodStallListMutableLiveData!!
         }
 
-    val errorMessage: LiveData<kotlin.String>
+    val errorMessage: LiveData<String>
         get() {
             if (messageError == null) {
                 messageError = MutableLiveData()
@@ -64,7 +60,7 @@ class FoodStallViewModel : ViewModel(), IFoodStallLoadCallback {
         foodStallListMutableLiveData!!.value = foodStallList
     }
 
-    override fun onFoodStallLoadFailed(message: kotlin.String) {
+    override fun onFoodStallLoadFailed(message: String) {
         messageError!!.value = message
     }
 

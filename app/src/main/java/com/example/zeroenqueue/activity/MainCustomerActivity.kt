@@ -276,4 +276,11 @@ class MainCustomerActivity : AppCompatActivity() {
         }
     }
 
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onOrderSelected(event: OrderItemClick) {
+        if (event.isSuccess) {
+            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_customer_order_detail)
+        }
+    }
+
 }

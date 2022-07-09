@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 class CustomerOrderDetailViewModel : ViewModel(), ICustomerOrderDetailCallBack {
-    private lateinit var messageError:MutableLiveData<kotlin.String>
+    private lateinit var messageError:MutableLiveData<String>
     private var customerOrderDetailCallBackListener : ICustomerOrderDetailCallBack = this
 
     private var customerOrderDetailLiveData: MutableLiveData<List<CartItem>>?=null
@@ -37,7 +37,7 @@ class CustomerOrderDetailViewModel : ViewModel(), ICustomerOrderDetailCallBack {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(itemSnapShot in snapshot.children){
                     val order = itemSnapShot.getValue(Order::class.java)
-                    if (order!!.foodStallId == Common.foodStallSelected!!.id) {
+                    if (order!!.foodStallId == Common.orderSelected!!.foodStallId) {
                         tempList = order.cartItemList as ArrayList<CartItem>
                         break
                     }

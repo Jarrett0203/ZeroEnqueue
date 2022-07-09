@@ -19,17 +19,12 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.*
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.collection.LLRBNode
-import java.math.RoundingMode
-import java.text.DecimalFormat
-import java.util.*
 import com.example.zeroenqueue.db.CartItem
+import com.google.firebase.database.FirebaseDatabase
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import kotlin.math.abs
 import kotlin.random.Random
-import kotlin.text.StringBuilder
 
 object Common {
     fun formatPrice(price: Double): String {
@@ -89,7 +84,7 @@ object Common {
             0 -> "Order placed"
             1 -> "Preparing"
             2 -> "Ready to be collected"
-            -1 -> "Cancelled"
+            3 -> "Cancelled"
             else -> "Unknown"
         }
     }
@@ -129,9 +124,9 @@ object Common {
 
     fun updateToken(context: Context, token: String) {
         FirebaseDatabase.getInstance()
-            .getReference(Common.TOKEN_REF)
-            .child(Common.currentUser!!.uid!!)
-            .setValue(TokenModel(Common.currentUser!!.phone!!, token))
+            .getReference(TOKEN_REF)
+            .child(currentUser!!.uid!!)
+            .setValue(TokenModel(currentUser!!.phone!!, token))
             .addOnFailureListener {e -> Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()}
 
 
@@ -174,9 +169,9 @@ object Common {
 
     }
 
-
+    var orderSelected: Order? = null
     var discountSelected: Discount? = null
-    var foodStallSelected: com.example.zeroenqueue.classes.FoodStall? = null
+    var foodStallSelected: FoodStall? = null
     var categorySelected: Category? = null
     var foodSelected: Food? = null
     var sizeSelected: Size? = null

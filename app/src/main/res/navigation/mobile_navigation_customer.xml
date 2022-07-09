@@ -49,6 +49,9 @@
         <action
                 android:id="@+id/customer_order_summary_to_profile"
                 app:destination="@id/navigation_profile" />
+        <action
+                android:id="@+id/action_navigation_customer_order_summary_to_customerOrderDetailFragment"
+                app:destination="@id/navigation_customer_order_detail" />
     </fragment>
 
     <fragment
@@ -109,5 +112,10 @@
             android:name="com.example.zeroenqueue.uiCustomer.useDiscounts.UseDiscountsFragment"
             android:label="Use Discounts"
             tools:layout="@layout/fragment_use_discounts" />
+    <fragment
+            android:id="@+id/navigation_customer_order_detail"
+            android:name="com.example.zeroenqueue.uiCustomer.orders.CustomerOrderDetailFragment"
+            android:label="Order Details"
+            tools:layout="@layout/fragment_customer_order_detail" />
 
 </navigation>

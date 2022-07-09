@@ -32,7 +32,7 @@
 
                 <item
                     android:id="@+id/navigation_cart"
-                    android:icon="@drawable/ic_baseline_shopping_cart_24"
+                    android:icon="@drawable/ic_cart"
                     android:title="@string/menu_cart"/>
             </group>
         </menu>

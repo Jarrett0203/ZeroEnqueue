@@ -16,7 +16,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center"
-            app:drawableLeftCompat="@drawable/ic_baseline_speaker_notes_24" />
+            app:drawableLeftCompat="@drawable/ic_placed" />
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_order"
