@@ -3,16 +3,28 @@
         xmlns:tools="http://schemas.android.com/tools"
         package="com.example.zeroenqueue">
 
-    <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+            android:name=".application.MainApplication"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.ZeroEnqueue"
+            android:usesCleartextTraffic="true" tools:targetApi="28"
             tools:replace="android:theme">
+        <activity
+                android:name=".activity.MainActivity"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
                 android:name=".activity.CreateNewStallActivity"
                 android:exported="false" />
@@ -29,11 +41,6 @@
         <activity
                 android:name=".activity.LoginActivity"
                 android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
                 android:name=".activity.MainCustomerActivity"

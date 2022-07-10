@@ -41,7 +41,18 @@ android {
         unitTests.returnDefaultValues = true
     }
     namespace 'com.example.zeroenqueue'
+    dataBinding {
+        enabled = true
+    }
 }
+
+project.ext.react = [
+        entryFile   : "index.js",
+        enableHermes: false,
+]
+
+def jscFlavor = 'org.webkit:android-jsc:+'
+def enableHermes = project.ext.react.get("enableHermes", false)
 
 dependencies {
 
@@ -50,13 +61,13 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.annotation:annotation:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.5.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.firebase:firebase-auth:21.0.6'
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.6'
@@ -128,8 +139,38 @@ dependencies {
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     //retrofit
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
     implementation 'com.github.d-max:spots-dialog:1.1@aar'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    //noinspection GradleCompatible
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation "com.facebook.react:react-native:0.69.1" // React Native
+
+    if (enableHermes) {
+        def hermesPath = "../../node_modules/hermes-engine/android/"
+
+        debugImplementation files(hermesPath + "hermes-debug.aar")
+        releaseImplementation files(hermesPath + "hermes-release.aar")
+    } else {
+        implementation jscFlavor
+    }
+
+
+    debugImplementation("com.facebook.flipper:flipper:0.152.0") {
+        exclude group: 'com.facebook.fbjni'
+    }
+
+    debugImplementation("com.facebook.flipper:flipper-network-plugin:0.152.0") {
+        exclude group: 'com.facebook.flipper'
+    }
+
+    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:0.152.0") {
+        exclude group: 'com.facebook.flipper'
+    }
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+apply plugin: 'kotlin-android'
+applyNativeModulesAppBuildGradle(project)
