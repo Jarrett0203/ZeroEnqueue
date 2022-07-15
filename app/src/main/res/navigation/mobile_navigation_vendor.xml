@@ -47,4 +47,13 @@
                 android:id="@+id/vendorOrderSummary_to_profile"
                 app:destination="@id/profileFragment" />
     </fragment>
+    <fragment
+            android:id="@+id/navigation_vendor_discounts"
+            android:name="com.example.zeroenqueue.uiVendor.vendorDiscounts.VendorDiscountsFragment"
+            android:label="Discounts"
+            tools:layout="@layout/fragment_vendor_discounts" >
+        <action
+                android:id="@+id/vendorDiscounts_to_profile"
+                app:destination="@id/profileFragment" />
+    </fragment>
 </navigation>
