@@ -6,6 +6,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:padding="8dp"
+        android:id="@+id/customer_discounts_fragment"
         tools:context=".uiCustomer.discounts.CustomerDiscountsFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
