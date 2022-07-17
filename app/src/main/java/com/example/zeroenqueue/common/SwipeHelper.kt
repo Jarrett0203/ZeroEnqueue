@@ -8,20 +8,16 @@ import android.graphics.drawable.Drawable
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import androidx.compose.ui.geometry.Offset
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zeroenqueue.interfaces.IDeleteBtnCallback
-import com.google.android.gms.common.util.ArrayUtils.contains
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 abstract class SwipeHelper(context: Context,
                            private val recyclerView: RecyclerView,
-                           internal var buttonWidth: Int): ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)  {
+                           private var buttonWidth: Int): ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)  {
 
     abstract fun instantiateMyButton(viewHolder: RecyclerView.ViewHolder, buffer: MutableList<MyButton>)
 
@@ -29,15 +25,15 @@ abstract class SwipeHelper(context: Context,
     private lateinit var gestureDetector : GestureDetector
     private var swipePosition = -1
     private var swipeThreshold = 0.5f
-    private lateinit var buttonBuffer : MutableMap<Int, MutableList<MyButton>>
+    private var buttonBuffer : MutableMap<Int, MutableList<MyButton>>
     private lateinit var removerQueue : Queue<Int>
 
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
         override fun onSingleTapUp(e : MotionEvent?) : Boolean {
             for(button in buttonList!!)
-                if(button.onClick(e!!.x, e!!.y))
-                    break;
-            return true;
+                if(button.onClick(e!!.x, e.y))
+                    break
+            return true
         }
     }
 
@@ -134,8 +130,8 @@ abstract class SwipeHelper(context: Context,
             p.textAlign = Paint.Align.LEFT
             p.getTextBounds(text, 0, text.length, r)
 
-            var x = 0f
-            var y = 0f
+            val x: Float
+            val y: Float
             if(imageResId == 0) {
                 x = cWidth/2f - r.width()/2f - r.left.toFloat()
                 y = cHeight/2f + r.height()/2f - r.bottom
@@ -153,7 +149,7 @@ abstract class SwipeHelper(context: Context,
     private fun drawableToBitmap(d: Drawable?): Bitmap {
         if(d!! is BitmapDrawable) return d.toBitmap()
 
-        val bitmap = Bitmap.createBitmap(d!!.intrinsicWidth, d.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(d.intrinsicWidth, d.intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         d.setBounds(0, 0, canvas.width, canvas.height)
         d.draw(canvas)
@@ -207,7 +203,7 @@ abstract class SwipeHelper(context: Context,
     ) {
         val pos = viewHolder.adapterPosition
         var translationX = dX
-        var itemView = viewHolder.itemView
+        val itemView = viewHolder.itemView
         if(pos < 0) {
             swipePosition = pos
             return
