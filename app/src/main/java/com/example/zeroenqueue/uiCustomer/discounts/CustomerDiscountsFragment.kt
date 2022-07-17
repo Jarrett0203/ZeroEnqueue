@@ -18,7 +18,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zeroenqueue.R
-import com.example.zeroenqueue.adapters.DiscountsAdapter
+import com.example.zeroenqueue.adapters.CustomerDiscountsAdapter
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentCustomerDiscountsBinding
 import com.google.firebase.database.FirebaseDatabase
@@ -73,7 +73,7 @@ class CustomerDiscountsFragment : Fragment() {
                 noDiscount.visibility = View.VISIBLE
             }
             else {
-                recyclerViewDiscounts.adapter = DiscountsAdapter(requireContext(), it)
+                recyclerViewDiscounts.adapter = CustomerDiscountsAdapter(requireContext(), it)
                 recyclerViewDiscounts.layoutAnimation = layoutAnimationController
             }
             dialog.dismiss()

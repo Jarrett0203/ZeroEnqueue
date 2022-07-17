@@ -69,7 +69,7 @@ class MenuFragment : Fragment() {
         }
 
         fabFilter.setOnClickListener {
-            filterBottomSheetDialog.show()
+
         }
 
         btnFilter.setOnClickListener {

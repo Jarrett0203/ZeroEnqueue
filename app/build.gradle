@@ -63,6 +63,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database-ktx:20.0.5'
     implementation 'com.google.firebase:firebase-storage-ktx:20.0.1'
     implementation 'androidx.window:window:1.1.0-alpha02'
+    implementation 'io.github.ShawnLin013:number-picker:2.4.13'
     implementation project(':shared')
 
     // Local Unit Tests

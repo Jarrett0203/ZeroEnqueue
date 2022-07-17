@@ -20,6 +20,11 @@
                 android:title="@string/title_orders" />
 
         <item
+                android:id="@+id/navigation_vendor_discounts"
+                android:icon="@drawable/ic_discount"
+                android:title="@string/discounts" />
+
+        <item
                 android:id="@+id/navigation_switch_stall"
                 android:icon="@drawable/ic_switch_stall"
                 android:title="@string/switch_stall" />

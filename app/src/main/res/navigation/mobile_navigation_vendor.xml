@@ -47,4 +47,30 @@
                 android:id="@+id/vendorOrderSummary_to_profile"
                 app:destination="@id/profileFragment" />
     </fragment>
+    <fragment
+            android:id="@+id/navigation_vendor_discounts"
+            android:name="com.example.zeroenqueue.uiVendor.vendorDiscounts.VendorDiscountsFragment"
+            android:label="Discounts"
+            tools:layout="@layout/fragment_vendor_discounts" >
+        <action
+                android:id="@+id/vendorDiscounts_to_profile"
+                app:destination="@id/profileFragment" />
+        <action
+                android:id="@+id/navigation_vendor_discounts_to_addNewDiscount"
+                app:destination="@id/navigation_add_new_discount" />
+    </fragment>
+    <fragment
+            android:id="@+id/navigation_vendor_discounts_detail"
+            android:name="com.example.zeroenqueue.uiVendor.vendorDiscountsDetail.VendorDiscountsDetailFragment"
+            android:label="Edit Discount Details"
+            tools:layout="@layout/fragment_vendor_discount_details" />
+    <fragment
+            android:id="@+id/navigation_add_new_discount"
+            android:name="com.example.zeroenqueue.uiVendor.addNewDiscount.AddNewDiscountFragment"
+            android:label="Add New Discount"
+            tools:layout="@layout/fragment_add_new_discount" >
+        <action
+                android:id="@+id/addNewDiscount_to_vendor_discounts_detail"
+                app:destination="@id/navigation_vendor_discounts_detail" />
+    </fragment>
 </navigation>

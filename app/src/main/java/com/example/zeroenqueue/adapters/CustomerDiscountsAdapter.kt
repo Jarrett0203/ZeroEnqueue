@@ -12,14 +12,14 @@ import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.Discount
 import com.example.zeroenqueue.common.Common
-import com.example.zeroenqueue.eventBus.DiscountItemClick
+import com.example.zeroenqueue.eventBus.CustomerDiscountItemClick
 import com.example.zeroenqueue.interfaces.IRecyclerItemClickListener
 import org.greenrobot.eventbus.EventBus
 import java.text.SimpleDateFormat
 
-class DiscountsAdapter(var context: Context,
-val discountList: List<Discount>
-) : RecyclerView.Adapter<DiscountsAdapter.DiscountsViewHolder>() {
+class CustomerDiscountsAdapter(var context: Context,
+                               val discountList: List<Discount>
+) : RecyclerView.Adapter<CustomerDiscountsAdapter.DiscountsViewHolder>() {
     inner class DiscountsViewHolder(val view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
         var foodName: TextView? = itemView.findViewById(R.id.food_name)
@@ -46,15 +46,15 @@ val discountList: List<Discount>
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscountsAdapter.DiscountsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomerDiscountsAdapter.DiscountsViewHolder {
         return DiscountsViewHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.layout_customer_discounts, parent, false)
+                .inflate(R.layout.layout_discounts, parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: DiscountsAdapter.DiscountsViewHolder, position: Int) {
-        val simpleDateFormat = SimpleDateFormat("dd/mm/yyyy")
+    override fun onBindViewHolder(holder: CustomerDiscountsAdapter.DiscountsViewHolder, position: Int) {
+        val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
         Glide.with(context).load(discountList[position].foodImage)
             .into(holder.foodImage!!)
         holder.foodName!!.text = discountList[position].foodName
@@ -63,11 +63,11 @@ val discountList: List<Discount>
         holder.oldPrice!!.paintFlags = holder.oldPrice!!.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         holder.newPrice!!.text = StringBuilder("$ ").append(Common.formatPrice(discountList[position].newPrice))
         holder.discount!!.text = StringBuilder(discountList[position].discount.toString()).append("%")
-        holder.expiry!!.text = StringBuilder("Valid until ").append(simpleDateFormat.format(discountList[position].expiry))
+        holder.expiry!!.text = StringBuilder("Valid until ").append(simpleDateFormat.format(discountList[position].expiry).dropLast(9))
         holder.setListener(object: IRecyclerItemClickListener{
             override fun onItemClick(view: View, pos: Int) {
                 Common.discountSelected = discountList[pos]
-                EventBus.getDefault().postSticky(DiscountItemClick(true, discountList[pos]))
+                EventBus.getDefault().postSticky(CustomerDiscountItemClick(true, discountList[pos]))
             }
         })
     }

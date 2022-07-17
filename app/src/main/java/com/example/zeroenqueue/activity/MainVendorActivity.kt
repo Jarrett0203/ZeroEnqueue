@@ -18,7 +18,9 @@ import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityMainVendorBinding
+import com.example.zeroenqueue.eventBus.CustomerDiscountItemClick
 import com.example.zeroenqueue.eventBus.FoodItemClick
+import com.example.zeroenqueue.eventBus.VendorDiscountItemClick
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
@@ -52,7 +54,7 @@ class MainVendorActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_vendor_home, R.id.navigation_vendor_order_summary, R.id.navigation_stall_menu
+                R.id.navigation_vendor_home, R.id.navigation_vendor_order_summary, R.id.navigation_stall_menu, R.id.navigation_vendor_discounts
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -71,6 +73,8 @@ class MainVendorActivity : AppCompatActivity() {
                 navController.navigate(R.id.stall_menu_to_profile)
             if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiVendor.orders.VendorOrderSummaryFragment")
                 navController.navigate(R.id.vendorOrderSummary_to_profile)
+            if (currentFragment.javaClass.name == "com.example.zeroenqueue.uiVendor.vendorDiscounts.VendorDiscountsFragment")
+                navController.navigate(R.id.vendorDiscounts_to_profile)
         }
 
         val txtUser = headView.findViewById<TextView>(R.id.txt_user)
@@ -83,6 +87,7 @@ class MainVendorActivity : AppCompatActivity() {
                 R.id.navigation_vendor_order_summary -> navController.navigate(R.id.navigation_vendor_order_summary)
                 R.id.navigation_stall_menu -> navController.navigate(R.id.navigation_stall_menu)
                 R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
+                R.id.navigation_vendor_discounts -> navController.navigate(R.id.navigation_vendor_discounts)
                 R.id.navigation_sign_out -> signout()
                 R.id.navigation_switch_stall -> switchStall()
             }
@@ -138,6 +143,13 @@ class MainVendorActivity : AppCompatActivity() {
     fun onVendorFoodSelected(event: FoodItemClick) {
         if (event.isSuccess) {
             findNavController(R.id.nav_host_fragment_content_main_vendor).navigate(R.id.navigation_vendorFoodDetail)
+        }
+    }
+
+    @Subscribe(sticky = false, threadMode = ThreadMode.MAIN)
+    fun onDiscountSelected(event: VendorDiscountItemClick) {
+        if (event.isSuccess) {
+            findNavController(R.id.nav_host_fragment_content_main_vendor).navigate(R.id.navigation_vendor_discounts_detail)
         }
     }
 
