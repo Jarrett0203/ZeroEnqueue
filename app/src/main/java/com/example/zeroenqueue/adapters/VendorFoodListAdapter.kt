@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.Food
+import com.example.zeroenqueue.classes.Order
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.eventBus.FoodItemClick
 import com.example.zeroenqueue.interfaces.IRecyclerItemClickListener
@@ -17,7 +18,7 @@ import org.greenrobot.eventbus.EventBus
 
 class VendorFoodListAdapter(
     var context: Context,
-    val foodList: List<Food>
+    val foodList: MutableList<Food>
 ) : RecyclerView.Adapter<VendorFoodListAdapter.FoodListViewHolder>() {
 
     inner class FoodListViewHolder(val view: View) : RecyclerView.ViewHolder(view),
@@ -87,5 +88,13 @@ class VendorFoodListAdapter(
                 EventBus.getDefault().post(FoodItemClick(true, foodList[pos]))
             }
         })
+    }
+
+    fun getItemAtPosition(pos: Int): Food {
+        return foodList[pos]
+    }
+
+    fun removeItem(pos: Int) {
+        foodList.removeAt(pos)
     }
 }
