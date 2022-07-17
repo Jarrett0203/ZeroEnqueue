@@ -149,7 +149,7 @@ class MainVendorActivity : AppCompatActivity() {
     @Subscribe(sticky = false, threadMode = ThreadMode.MAIN)
     fun onDiscountSelected(event: VendorDiscountItemClick) {
         if (event.isSuccess) {
-            //findNavController(R.id.nav_host_fragment_content_main_vendor).navigate(R.id.navigation_vendor_discounts_detail)
+            findNavController(R.id.nav_host_fragment_content_main_vendor).navigate(R.id.navigation_vendor_discounts_detail)
         }
     }
 

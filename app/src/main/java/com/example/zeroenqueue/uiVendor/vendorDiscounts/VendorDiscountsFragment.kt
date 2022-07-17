@@ -55,7 +55,7 @@ class VendorDiscountsFragment : Fragment() {
         }
 
         addNewDiscounts.setOnClickListener {
-            //navController.navigate(R.id.navigation_vendorDiscountDetail)
+            navController.navigate(R.id.navigation_add_new_discount)
         }
 
         vendorDiscountsViewModel.discountList.observe(viewLifecycleOwner) {

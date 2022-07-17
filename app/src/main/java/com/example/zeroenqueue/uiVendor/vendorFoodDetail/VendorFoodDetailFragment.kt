@@ -18,6 +18,8 @@ import androidx.core.view.contains
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -54,6 +56,7 @@ class VendorFoodDetailFragment : Fragment() {
     private val foodListRef = FirebaseDatabase.getInstance().reference.child(Common.FOODLIST_REF)
     private val storageRef = FirebaseStorage.getInstance().reference
     private lateinit var chipGroupCategory: ChipGroup
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,6 +83,7 @@ class VendorFoodDetailFragment : Fragment() {
         val btnShowComments = binding.btnShowComments
         val btnConfirmChanges: Button = binding.btnConfirmFood
         var foodImageUri: Uri? = null
+        navController = Navigation.findNavController(activity!!, R.id.nav_host_fragment_content_main_vendor)
 
         recyclerSize.layoutManager = LinearLayoutManager(context)
         recyclerAddOns.layoutManager = LinearLayoutManager(context)
@@ -198,7 +202,6 @@ class VendorFoodDetailFragment : Fragment() {
                         System.currentTimeMillis()
                             .toString() + "." + getFileExtension(foodImageUri!!)
                     )
-                    dialog.show()
                     fileRef.putFile(foodImageUri!!).addOnSuccessListener {
                         fileRef.downloadUrl.addOnSuccessListener {
                             editFoodImageUri = it.toString()
@@ -213,12 +216,12 @@ class VendorFoodDetailFragment : Fragment() {
                             editFood.categories = confirmedCategoryName
                             editFood.size = sizeAdapter.sizeList
                             editFood.addon = addOnAdapter.addOnList
-                            uploadFoodToFirebase(editFood)
                             Toast.makeText(
                                 requireContext(),
                                 "Food image uploaded successfully",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            uploadFoodToFirebase(editFood)
                         }.addOnFailureListener {
                             Toast.makeText(
                                 requireContext(),
@@ -229,7 +232,6 @@ class VendorFoodDetailFragment : Fragment() {
                     }
                 }
             }
-            dialog.dismiss()
         }
 
         vendorFoodDetailViewModel.foodDetail.observe(viewLifecycleOwner) {
@@ -294,14 +296,18 @@ class VendorFoodDetailFragment : Fragment() {
                         .updateChildren(updateData)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
+                                dialog.show()
                                 Toast.makeText(
                                     requireContext(),
                                     "Updated " + food.name,
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                navController.navigate(R.id.navigation_stall_menu)
+                                dialog.dismiss()
                             }
                         }
                 } else {
+                    dialog.show()
                     food.foodStall = Common.foodStallSelected!!.id
                     foodListRef.child(id)
                         .setValue(food)
@@ -312,6 +318,8 @@ class VendorFoodDetailFragment : Fragment() {
                                     food.name + " added successfully",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                navController.navigate(R.id.navigation_stall_menu)
+                                dialog.dismiss()
                             }
                         }
                 }

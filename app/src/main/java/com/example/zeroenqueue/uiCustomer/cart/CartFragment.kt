@@ -42,7 +42,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_cart.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -116,7 +115,7 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
             val cash = view.findViewById<View>(R.id.cash) as RadioButton
             //val braintree = view.findViewById<View>(R.id.braintree) as RadioButton
 
-            collectionTime.setText(Common.currentUser!!.address)
+            //collectionTime.setText(Common.currentUser!!.address)
 
             builder.setView(view)
             builder.setNegativeButton("No") { dialogInterface, _ -> dialogInterface.dismiss() }
@@ -387,10 +386,20 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
         })
     }
 
+    override fun onLoadTimeSuccess(order: Order, estimatedTimeMs: Long) {
+        order.createDate = (estimatedTimeMs)
+        order.orderStatus = 0
+        submitToFirebase(order)
+    }
+
+    override fun onLoadTimeFailed(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
     private fun submitToFirebase(order: Order) {
         FirebaseDatabase.getInstance()
             .getReference(Common.ORDER_REF)
-            .child(Common.orderId())
+            .child(Common.randomTimeId())
             .setValue(order)
             .addOnFailureListener { e -> Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()}
             .addOnCompleteListener{ task ->
@@ -417,7 +426,7 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe ({
                                              t: FCMResponse ->
-                                                if(t!!.success != 0)
+                                                if(t.success != 0)
                                                     Toast.makeText(context!!, "Order placed successfully", Toast.LENGTH_SHORT).show()
                                         }, {t: Throwable? ->
                                             Toast.makeText(context!!, "Order was sent but notification system failed", Toast.LENGTH_SHORT).show()
@@ -434,16 +443,6 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
                         })
                 }
             }
-    }
-
-    override fun onLoadTimeSuccess(order: Order, estimatedTimeMs: Long) {
-        order.createDate = (estimatedTimeMs)
-        order.orderStatus = 0
-        submitToFirebase(order)
-    }
-
-    override fun onLoadTimeFailed(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
 }

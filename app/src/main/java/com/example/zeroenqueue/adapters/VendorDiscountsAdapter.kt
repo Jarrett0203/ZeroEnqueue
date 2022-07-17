@@ -54,7 +54,7 @@ override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VendorDiscoun
 }
 
 override fun onBindViewHolder(holder: VendorDiscountsAdapter.DiscountsViewHolder, position: Int) {
-    val simpleDateFormat = SimpleDateFormat("dd/mm/yyyy")
+    val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
     Glide.with(context).load(discountList[position].foodImage).into(holder.foodImage!!)
     holder.foodName!!.text = discountList[position].foodName
     holder.foodStallName!!.text = discountList[position].foodStallName
@@ -62,7 +62,7 @@ override fun onBindViewHolder(holder: VendorDiscountsAdapter.DiscountsViewHolder
     holder.oldPrice!!.paintFlags = holder.oldPrice!!.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
     holder.newPrice!!.text = StringBuilder("$ ").append(Common.formatPrice(discountList[position].newPrice))
     holder.discount!!.text = StringBuilder(discountList[position].discount.toString()).append("%")
-    holder.expiry!!.text = StringBuilder("Valid until ").append(simpleDateFormat.format(discountList[position].expiry))
+    holder.expiry!!.text = StringBuilder("Valid until ").append(simpleDateFormat.format(discountList[position].expiry).dropLast(9))
     holder.setListener(object: IRecyclerItemClickListener {
         override fun onItemClick(view: View, pos: Int) {
             Common.discountSelected = discountList[pos]

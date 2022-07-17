@@ -111,7 +111,7 @@ object Common {
         }
     }
 
-    fun orderId(): String {
+    fun randomTimeId(): String {
         return StringBuilder()
             .append(System.currentTimeMillis())
             .append(abs(Random.nextInt()))
@@ -128,10 +128,6 @@ object Common {
             .child(currentUser!!.uid!!)
             .setValue(TokenModel(currentUser!!.phone!!, token))
             .addOnFailureListener {e -> Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()}
-
-
-
-
     }
 
 
