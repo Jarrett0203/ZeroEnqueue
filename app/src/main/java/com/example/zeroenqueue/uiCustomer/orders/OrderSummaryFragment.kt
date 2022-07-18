@@ -17,11 +17,13 @@ import com.example.zeroenqueue.adapters.MyOrderAdapter
 import com.example.zeroenqueue.interfaces.ILoadOrderCallbackListener
 import com.example.zeroenqueue.classes.Order
 import com.example.zeroenqueue.common.Common
+import com.example.zeroenqueue.eventBus.MenuItemBack
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import dmax.dialog.SpotsDialog
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -41,7 +43,13 @@ class OrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
     ): View? {
         orderSummaryViewModel = ViewModelProvider(this)[OrderSummaryViewModel::class.java]
         val root = inflater.inflate(R.layout.fragment_customer_order_summary, container, false)
-        initView(root)
+        listener = this
+        dialog = SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
+        recycler_order = root.findViewById(R.id.recycler_order) as RecyclerView
+        recycler_order.setHasFixedSize(true)
+        val layoutManager = LinearLayoutManager(context)
+        recycler_order.layoutManager = layoutManager
+        recycler_order.addItemDecoration(DividerItemDecoration(requireContext(), layoutManager.orientation))
         loadOrderFromFirebase()
 
         orderSummaryViewModel!!.mutableLiveDataOrderList.observe(viewLifecycleOwner) {
@@ -79,18 +87,6 @@ class OrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
         dialog.dismiss()
     }
 
-
-    private fun initView(root: View) {
-        listener = this
-        dialog = SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
-        recycler_order = root.findViewById(R.id.recycler_order) as RecyclerView
-        recycler_order.setHasFixedSize(true)
-        val layoutManager = LinearLayoutManager(context)
-        recycler_order.layoutManager = layoutManager
-        recycler_order.addItemDecoration(DividerItemDecoration(requireContext(), layoutManager.orientation))
-    }
-
-
     override fun onLoadOrderSuccess(orderList: List<Order>) {
         dialog.dismiss()
         orderSummaryViewModel!!.setMutableLiveDataOrderList(orderList)
@@ -99,6 +95,11 @@ class OrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
     override fun onLoadOrderFailed(message: String) {
         dialog.dismiss()
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().postSticky(MenuItemBack())
+        super.onDestroy()
     }
 
 

@@ -20,6 +20,7 @@ import com.example.zeroenqueue.classes.Category
 import com.example.zeroenqueue.classes.FoodStall
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentFoodListBinding
+import com.example.zeroenqueue.eventBus.MenuItemBack
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -29,6 +30,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import dmax.dialog.SpotsDialog
+import org.greenrobot.eventbus.EventBus
 
 
 class FoodListFragment : Fragment() {
@@ -126,7 +128,7 @@ class FoodListFragment : Fragment() {
 
     }
 
-    public fun filter(
+    fun filter(
         selectedDataFoodStall: ArrayList<FoodStall>,
         selectedDataCategory: ArrayList<String>
     ) {
@@ -286,6 +288,11 @@ class FoodListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().postSticky(MenuItemBack())
+        super.onDestroy()
     }
 
     override fun onStop() {

@@ -24,9 +24,11 @@ import com.example.zeroenqueue.adapters.VendorFoodListAdapter
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
 import com.example.zeroenqueue.databinding.FragmentVendorDiscountsBinding
+import com.example.zeroenqueue.eventBus.MenuItemBack
 import com.example.zeroenqueue.interfaces.IDeleteBtnCallback
 import com.google.firebase.database.FirebaseDatabase
 import dmax.dialog.SpotsDialog
+import org.greenrobot.eventbus.EventBus
 
 class VendorDiscountsFragment : Fragment() {
 
@@ -162,6 +164,11 @@ class VendorDiscountsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().postSticky(MenuItemBack())
+        super.onDestroy()
     }
 
 }

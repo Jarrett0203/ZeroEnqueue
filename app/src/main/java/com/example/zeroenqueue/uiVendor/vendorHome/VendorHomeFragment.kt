@@ -21,10 +21,12 @@ import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.VendorFoodListAdapter
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentVendorHomeBinding
+import com.example.zeroenqueue.eventBus.MenuItemBack
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import dmax.dialog.SpotsDialog
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -246,5 +248,10 @@ class VendorHomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().postSticky(MenuItemBack())
+        super.onDestroy()
     }
 }
