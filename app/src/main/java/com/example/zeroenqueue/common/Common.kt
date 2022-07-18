@@ -126,8 +126,8 @@ object Common {
         FirebaseDatabase.getInstance()
             .getReference(TOKEN_REF)
             .child(currentUser!!.uid!!)
-            .setValue(TokenModel(currentUser!!.phone!!, token))
-            .addOnFailureListener {e -> Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()}
+            .setValue(Token(currentUser!!.phone!!, token))
+            .addOnFailureListener {e -> Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()}
     }
 
 
@@ -155,7 +155,7 @@ object Common {
 
         builder.setContentTitle(title!!).setContentText(content!!).setAutoCancel(true)
             .setSmallIcon(R.mipmap.ic_launcher_round)
-            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.ic_baseline_menu_24))
+            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.ic_food))
 
         if(pendingIntent != null)
             builder.setContentIntent(pendingIntent)
@@ -165,6 +165,8 @@ object Common {
 
     }
 
+    var authorizeToken: String? = null
+    var currentToken: String = ""
     var orderSelected: Order? = null
     var discountSelected: Discount? = null
     var foodStallSelected: FoodStall? = null

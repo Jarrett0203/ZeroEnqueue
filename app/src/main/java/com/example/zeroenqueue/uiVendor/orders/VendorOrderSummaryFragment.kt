@@ -25,7 +25,7 @@ import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.VendorMyOrderAdapter
 import com.example.zeroenqueue.classes.FCMSendData
 import com.example.zeroenqueue.classes.Order
-import com.example.zeroenqueue.classes.TokenModel
+import com.example.zeroenqueue.classes.Token
 import com.example.zeroenqueue.common.BottomSheetOrderFragment
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
@@ -344,7 +344,7 @@ class VendorOrderSummaryFragment : Fragment() {
                                 .addListenerForSingleValueEvent(object:ValueEventListener{
                                     override fun onDataChange(snapshot: DataSnapshot) {
                                         if(snapshot.exists()) {
-                                            val tokenModel = snapshot.getValue(TokenModel::class.java)
+                                            val token = snapshot.getValue(Token::class.java)
                                             val notiData = HashMap<String, String>()
                                             notiData.put(Common.NOTI_TITLE, "Your order was updated")
                                             notiData.put(Common.NOTI_CONTENT, StringBuilder("Your order ")
@@ -352,7 +352,7 @@ class VendorOrderSummaryFragment : Fragment() {
                                                 .append(" was update to ")
                                                 .append(Common.convertStatusToText(status.toString().toInt())).toString())
 
-                                            val sendData = FCMSendData(tokenModel!!.token!!, notiData)
+                                            val sendData = FCMSendData(token!!.token!!, notiData)
 
                                             compositeDisposable.add(
                                                 ifcmService.sendNotification(sendData)

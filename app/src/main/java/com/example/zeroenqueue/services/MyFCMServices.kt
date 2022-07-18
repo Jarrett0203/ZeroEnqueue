@@ -14,12 +14,10 @@ class MyFCMServices: FirebaseMessagingService() {
     override fun onMessageReceived(p0: RemoteMessage) {
         super.onMessageReceived(p0)
         val dataRecv = p0.data
-        if(dataRecv != null) {
-            Common.showNotification(this, Random().nextInt(),
-                dataRecv[Common.NOTI_TITLE],
-                dataRecv[Common.NOTI_CONTENT],
-                null)
-        }
+        Common.showNotification(this, Random().nextInt(),
+            dataRecv[Common.NOTI_TITLE],
+            dataRecv[Common.NOTI_CONTENT],
+            null)
     }
 
 

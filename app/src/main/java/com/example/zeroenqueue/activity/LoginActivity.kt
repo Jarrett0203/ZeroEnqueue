@@ -3,17 +3,17 @@ package com.example.zeroenqueue.activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import dmax.dialog.SpotsDialog
 
 class LoginActivity : AppCompatActivity() {
@@ -21,6 +21,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var dialog: AlertDialog
     private lateinit var userRef: DatabaseReference
+    private lateinit var listener: FirebaseAuth.AuthStateListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +36,15 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        firebaseAuth = Firebase.auth
+        firebaseAuth = FirebaseAuth.getInstance()
         dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
         userRef = FirebaseDatabase.getInstance().getReference(Common.USER_REF)
+
+        listener = FirebaseAuth.AuthStateListener {
+            val user = firebaseAuth.currentUser
+            if (user != null)
+                checkUserFromFirebase(user)
+        }
 
         binding.login.setOnClickListener {
             val email = binding.email.text.toString()
@@ -78,6 +85,53 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkUserFromFirebase(user: FirebaseUser) {
+        dialog.show()
+        userRef.child(user.uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@LoginActivity, error.message, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val user = snapshot.getValue(User::class.java)
+                        goToMainActivity(user)
+                    }
+                }
+            })
+    }
+
+    private fun goToMainActivity(user: User?) {
+
+        FirebaseMessaging.getInstance().token.addOnFailureListener {
+            Toast.makeText(this@LoginActivity, it.message, Toast.LENGTH_SHORT).show()
+            Common.currentUser = user!!
+            if (user.userType == "Customer") {
+                val intent = Intent(this, MainCustomerActivity::class.java)
+                startActivity(intent)
+            }
+            else {
+                val intent = Intent(this, StallsOverviewActivity::class.java)
+                startActivity(intent)
+            }
+        }
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Common.currentUser = user!!
+                    Common.updateToken(this, it.result!!)
+                    if (user.userType == "Customer") {
+                        val intent = Intent(this, MainCustomerActivity::class.java)
+                        startActivity(intent)
+                    }
+                    else {
+                        val intent = Intent(this, StallsOverviewActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+            }
+    }
+
     override fun onStart() {
         super.onStart()
         if (firebaseAuth.currentUser != null) {
@@ -103,16 +157,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun goToMainActivity(user: User?) {
-        Common.currentUser = user!!
-        if (user.userType == "Customer") {
-            val intent = Intent(this, MainCustomerActivity::class.java)
-            startActivity(intent)
-        }
-        else {
-            val intent = Intent(this, StallsOverviewActivity::class.java)
-            startActivity(intent)
-        }
+    override fun onStop() {
+        firebaseAuth.removeAuthStateListener(listener)
+        super.onStop()
     }
 }
 
