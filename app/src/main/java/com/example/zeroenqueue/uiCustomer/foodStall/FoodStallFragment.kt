@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.FoodStallAdapter
 import com.example.zeroenqueue.databinding.FragmentFoodStallBinding
+import com.example.zeroenqueue.eventBus.MenuItemBack
 import dmax.dialog.SpotsDialog
+import org.greenrobot.eventbus.EventBus
 
 class FoodStallFragment : Fragment() {
 
@@ -40,7 +42,11 @@ class FoodStallFragment : Fragment() {
         val root: View = binding.root
 
         recyclerViewFoodStall = binding.recyclerFoodStalls
-        initView()
+        dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
+        dialog.show()
+        layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
+        recyclerViewFoodStall.setHasFixedSize(true)
+        recyclerViewFoodStall.layoutManager = LinearLayoutManager(context)
 
         foodStallViewModel.errorMessage.observe(viewLifecycleOwner) {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -54,17 +60,14 @@ class FoodStallFragment : Fragment() {
         return root
     }
 
-    private fun initView() {
-        dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
-        dialog.show()
-        layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
-        recyclerViewFoodStall.setHasFixedSize(true)
-        recyclerViewFoodStall.layoutManager = LinearLayoutManager(context)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().postSticky(MenuItemBack())
+        super.onDestroy()
     }
 
 }

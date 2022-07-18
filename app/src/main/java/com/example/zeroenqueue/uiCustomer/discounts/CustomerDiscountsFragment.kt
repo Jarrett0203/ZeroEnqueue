@@ -21,9 +21,11 @@ import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.CustomerDiscountsAdapter
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentCustomerDiscountsBinding
+import com.example.zeroenqueue.eventBus.MenuItemBack
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import dmax.dialog.SpotsDialog
+import org.greenrobot.eventbus.EventBus
 import kotlin.collections.HashMap
 
 class CustomerDiscountsFragment : Fragment() {
@@ -154,5 +156,10 @@ class CustomerDiscountsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().postSticky(MenuItemBack())
+        super.onDestroy()
     }
 }

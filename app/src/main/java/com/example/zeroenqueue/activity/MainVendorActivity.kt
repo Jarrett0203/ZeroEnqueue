@@ -20,6 +20,7 @@ import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityMainVendorBinding
 import com.example.zeroenqueue.eventBus.CustomerDiscountItemClick
 import com.example.zeroenqueue.eventBus.FoodItemClick
+import com.example.zeroenqueue.eventBus.MenuItemBack
 import com.example.zeroenqueue.eventBus.VendorDiscountItemClick
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -34,6 +35,7 @@ class MainVendorActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainVendorBinding
     private lateinit var drawerLayout: DrawerLayout
+    private var menuItemClick = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +56,8 @@ class MainVendorActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_vendor_home, R.id.navigation_vendor_order_summary, R.id.navigation_stall_menu, R.id.navigation_vendor_discounts
+                R.id.navigation_vendor_home, R.id.navigation_vendor_order_summary, R.id.profileFragment,
+                R.id.navigation_stall_menu, R.id.navigation_vendor_discounts
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -83,14 +86,25 @@ class MainVendorActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener {
             drawerLayout.closeDrawers()
             when (it.itemId) {
-                R.id.navigation_vendor_home -> navController.navigate(R.id.navigation_vendor_home)
-                R.id.navigation_vendor_order_summary -> navController.navigate(R.id.navigation_vendor_order_summary)
-                R.id.navigation_stall_menu -> navController.navigate(R.id.navigation_stall_menu)
-                R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
-                R.id.navigation_vendor_discounts -> navController.navigate(R.id.navigation_vendor_discounts)
+                R.id.navigation_vendor_home ->
+                    if (menuItemClick != it.itemId)
+                        navController.navigate(R.id.navigation_vendor_home)
+                R.id.navigation_vendor_order_summary ->
+                    if (menuItemClick != it.itemId)
+                        navController.navigate(R.id.navigation_vendor_order_summary)
+                R.id.navigation_stall_menu ->
+                    if (menuItemClick != it.itemId)
+                        navController.navigate(R.id.navigation_stall_menu)
+                R.id.navigation_profile ->
+                    if (menuItemClick != it.itemId)
+                        navController.navigate(R.id.navigation_profile)
+                R.id.navigation_vendor_discounts ->
+                    if (menuItemClick != it.itemId)
+                        navController.navigate(R.id.navigation_vendor_discounts)
                 R.id.navigation_sign_out -> signout()
                 R.id.navigation_switch_stall -> switchStall()
             }
+            menuItemClick = it.itemId
             true
         }
     }
@@ -153,6 +167,12 @@ class MainVendorActivity : AppCompatActivity() {
         }
     }
 
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onMenuItemBack(event: MenuItemBack) {
+        menuItemClick = -1
+        if (supportFragmentManager.backStackEntryCount > 0)
+            supportFragmentManager.popBackStack()
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main_vendor)

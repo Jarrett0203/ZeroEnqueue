@@ -1,6 +1,5 @@
 package com.example.zeroenqueue.uiVendor.orders
 
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -34,6 +33,7 @@ import com.example.zeroenqueue.databinding.FragmentVendorOrderSummaryBinding
 import com.example.zeroenqueue.eventBus.CountCartEvent
 import com.example.zeroenqueue.eventBus.LoadAllOrders
 import com.example.zeroenqueue.eventBus.LoadOrderEvent
+import com.example.zeroenqueue.eventBus.MenuItemBack
 import com.example.zeroenqueue.interfaces.IDeleteBtnCallback
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -108,10 +108,10 @@ class VendorOrderSummaryFragment : Fragment() {
             width = displayMetrics.widthPixels
         }
 
-        var buttonWidth = 0
-        var textSize = 0
+        val buttonWidth: Int
+        val textSize: Int
 
-        val density = getResources().getDisplayMetrics().density;
+        val density = resources.displayMetrics.density
         if (density >= 4.0) {
             buttonWidth = 200
             textSize = 30
@@ -130,7 +130,7 @@ class VendorOrderSummaryFragment : Fragment() {
         } else {
             buttonWidth = 100
             textSize = 15
-        };
+        }
 
 
         val swipe = object : SwipeHelper(requireContext(), recycler_order, buttonWidth) {
@@ -463,6 +463,7 @@ class VendorOrderSummaryFragment : Fragment() {
 
     override fun onDestroy() {
         EventBus.getDefault().postSticky(CountCartEvent(true))
+        EventBus.getDefault().postSticky(MenuItemBack())
         super.onDestroy()
     }
 

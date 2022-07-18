@@ -17,7 +17,9 @@ import com.example.zeroenqueue.adapters.CategoryAdapter
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentCategoriesBinding
 import com.example.zeroenqueue.common.SpacesItemDecoration
+import com.example.zeroenqueue.eventBus.MenuItemBack
 import dmax.dialog.SpotsDialog
+import org.greenrobot.eventbus.EventBus
 
 class CategoriesFragment : Fragment() {
 
@@ -84,5 +86,10 @@ class CategoriesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().postSticky(MenuItemBack())
+        super.onDestroy()
     }
 }

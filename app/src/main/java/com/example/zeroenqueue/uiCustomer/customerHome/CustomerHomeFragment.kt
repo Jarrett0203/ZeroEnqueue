@@ -15,6 +15,8 @@ import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.PopularCategoryAdapter
 import com.example.zeroenqueue.adapters.RecommendedAdapter
 import com.example.zeroenqueue.databinding.FragmentCustomerHomeBinding
+import com.example.zeroenqueue.eventBus.MenuItemBack
+import org.greenrobot.eventbus.EventBus
 
 
 class CustomerHomeFragment : Fragment() {
@@ -40,7 +42,10 @@ class CustomerHomeFragment : Fragment() {
 
         recyclerView = binding.recyclerPopular
         viewPager = binding.viewpager
-        initView()
+        layoutAnimationController =
+            AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
         customerHomeViewModel.popularList.observe(viewLifecycleOwner) {
             recyclerView.adapter = PopularCategoryAdapter(requireContext(), it)
@@ -68,10 +73,8 @@ class CustomerHomeFragment : Fragment() {
         super.onPause()
     }
 
-    private fun initView() {
-        layoutAnimationController =
-            AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+    override fun onDestroy() {
+        EventBus.getDefault().postSticky(MenuItemBack())
+        super.onDestroy()
     }
 }

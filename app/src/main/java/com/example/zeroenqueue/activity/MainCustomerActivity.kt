@@ -53,6 +53,8 @@ class MainCustomerActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var dialog: AlertDialog
 
+    private var menuItemClick = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -91,8 +93,6 @@ class MainCustomerActivity : AppCompatActivity() {
                 Glide.with(this).load(Common.currentUser!!.image).into(profileImage!!)
         }
 
-
-
         profileImage!!.setOnClickListener {
             val navHostFragment = supportFragmentManager.primaryNavigationFragment
             val currentFragment = navHostFragment!!.childFragmentManager.fragments[0]
@@ -123,15 +123,32 @@ class MainCustomerActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
             when (it.itemId) {
                 R.id.navigation_sign_out -> signout()
-                R.id.navigation_customer_home -> navController.navigate(R.id.navigation_customer_home)
-                R.id.navigation_food_list -> navController.navigate(R.id.navigation_food_list)
-                R.id.navigation_categories -> navController.navigate(R.id.navigation_categories)
-                R.id.navigation_customer_order_summary -> navController.navigate(R.id.navigation_customer_order_summary)
-                R.id.navigation_foodStall -> navController.navigate(R.id.navigation_foodStall)
-                R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
-                R.id.navigation_cart -> navController.navigate(R.id.navigation_cart)
-                R.id.navigation_customerDiscounts -> navController.navigate(R.id.navigation_customerDiscounts)
+                R.id.navigation_customer_home ->
+                    if (menuItemClick != it.itemId)
+                        navController.navigate(R.id.navigation_customer_home)
+                R.id.navigation_food_list ->
+                    if (menuItemClick != it.itemId)
+                        navController.navigate(R.id.navigation_food_list)
+                R.id.navigation_categories ->
+                    if (menuItemClick != it.itemId)
+                        navController.navigate(R.id.navigation_categories)
+                R.id.navigation_customer_order_summary ->
+                    if (menuItemClick != it.itemId)
+                        navController.navigate(R.id.navigation_customer_order_summary)
+                R.id.navigation_foodStall ->
+                    if (menuItemClick != it.itemId)
+                        navController.navigate(R.id.navigation_foodStall)
+                R.id.navigation_profile ->
+                    if (menuItemClick != it.itemId)
+                        navController.navigate(R.id.navigation_profile)
+                R.id.navigation_cart ->
+                    if (menuItemClick != it.itemId)
+                        navController.navigate(R.id.navigation_cart)
+                R.id.navigation_customerDiscounts ->
+                    if (menuItemClick != it.itemId)
+                        navController.navigate(R.id.navigation_customerDiscounts)
             }
+            menuItemClick = it.itemId
             true
         }
 
@@ -288,6 +305,13 @@ class MainCustomerActivity : AppCompatActivity() {
         if (event.isSuccess) {
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_customer_order_detail)
         }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onMenuItemBack(event: MenuItemBack) {
+        menuItemClick = -1
+        if (supportFragmentManager.backStackEntryCount > 0)
+            supportFragmentManager.popBackStack()
     }
 
 }

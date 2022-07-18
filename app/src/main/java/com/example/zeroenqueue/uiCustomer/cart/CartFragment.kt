@@ -30,6 +30,7 @@ import com.example.zeroenqueue.db.CartItem
 import com.example.zeroenqueue.db.LocalCartDataSource
 import com.example.zeroenqueue.eventBus.CountCartEvent
 import com.example.zeroenqueue.eventBus.HideFABCart
+import com.example.zeroenqueue.eventBus.MenuItemBack
 import com.example.zeroenqueue.eventBus.UpdateCartItems
 import com.example.zeroenqueue.interfaces.IDeleteBtnCallback
 import com.example.zeroenqueue.interfaces.ILoadTimeFromFirebaseCallback
@@ -69,15 +70,8 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
     private lateinit var recycler_cart:RecyclerView
     private lateinit var adapter: MyCartAdapter
     private lateinit var comments: TextView
-
-
     lateinit var ifcmService: IFCMService
     lateinit var listener: ILoadTimeFromFirebaseCallback
-
-    override fun onResume() {
-        super.onResume()
-        calculateTotalPrice()
-    }
 
     override fun onCreateView (
         inflater: LayoutInflater,
@@ -233,22 +227,6 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
                 }
 
             })
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-        if(!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        cartViewModel.onStop()
-        compositeDisposable.clear()
-        EventBus.getDefault().postSticky(HideFABCart(false))
-        if(EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this)
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
@@ -443,6 +421,31 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
                         })
                 }
             }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if(!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        cartViewModel.onStop()
+        compositeDisposable.clear()
+        EventBus.getDefault().postSticky(HideFABCart(false))
+        if(EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        calculateTotalPrice()
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().postSticky(MenuItemBack())
+        super.onDestroy()
     }
 
 }
