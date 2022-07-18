@@ -2,9 +2,7 @@ package com.example.zeroenqueue.activity
 
 
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.google.firebase.database.*
 import java.util.*
 
 object RegisterUser {
@@ -13,9 +11,9 @@ object RegisterUser {
         newEmail: String,
         newPassword: String,
         newName: String,
-        newPhone: String,
-        firstNums: Array<Char>,
+        newPhone: String
     ) : Boolean {
+        val firstNums = arrayOf('6', '8', '9')
         if (newName.isEmpty() || newEmail.isEmpty() || newPassword.isEmpty() || newPhone.isEmpty()) {
             return false
         } else if (!Arrays.stream(firstNums).anyMatch { t -> t == newPhone[0] } || newPhone.length != 8)

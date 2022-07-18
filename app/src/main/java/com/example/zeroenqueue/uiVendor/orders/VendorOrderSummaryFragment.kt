@@ -1,5 +1,6 @@
 package com.example.zeroenqueue.uiVendor.orders
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -19,9 +20,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.zeroenqueue.Notifications.IFCMService
+import com.example.zeroenqueue.Notifications.RetrofitFCMClient
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.VendorMyOrderAdapter
+import com.example.zeroenqueue.classes.FCMSendData
 import com.example.zeroenqueue.classes.Order
+import com.example.zeroenqueue.classes.TokenModel
 import com.example.zeroenqueue.common.BottomSheetOrderFragment
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
@@ -30,14 +35,22 @@ import com.example.zeroenqueue.eventBus.CountCartEvent
 import com.example.zeroenqueue.eventBus.LoadAllOrders
 import com.example.zeroenqueue.eventBus.LoadOrderEvent
 import com.example.zeroenqueue.interfaces.IDeleteBtnCallback
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import dmax.dialog.SpotsDialog
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_vendor_order_summary.*
+import kotlinx.android.synthetic.main.layout_dialog_cancelled.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -52,6 +65,8 @@ class VendorOrderSummaryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var vendorOrderSummaryViewModel: VendorOrderSummaryViewModel
+    private val compositeDisposable = CompositeDisposable()
+    lateinit var ifcmService: IFCMService
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +74,7 @@ class VendorOrderSummaryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        ifcmService = RetrofitFCMClient.getInstance().create(IFCMService::class.java)
         @Suppress("DEPRECATION")
         setHasOptionsMenu(true)
 
@@ -92,21 +108,38 @@ class VendorOrderSummaryFragment : Fragment() {
             width = displayMetrics.widthPixels
         }
 
-        val swipe = object : SwipeHelper(requireContext(), recycler_order, 200) {
+        var buttonWidth = 0
+        var textSize = 0
+
+        val density = getResources().getDisplayMetrics().density;
+        if (density >= 4.0) {
+            buttonWidth = 200
+            textSize = 30
+        } else if (density >= 3.0) {
+            buttonWidth = 180
+            textSize = 27
+        } else if (density >= 2.0) {
+            buttonWidth = 160
+            textSize = 24
+        } else if (density >= 1.5) {
+            buttonWidth = 140
+            textSize = 21
+        } else if (density >= 1.0) {
+            buttonWidth = 120
+            textSize = 18
+        } else {
+            buttonWidth = 100
+            textSize = 15
+        };
+
+
+        val swipe = object : SwipeHelper(requireContext(), recycler_order, buttonWidth) {
             override fun instantiateMyButton(
                 viewHolder: RecyclerView.ViewHolder,
                 buffer: MutableList<MyButton>
             ) {
                 buffer.add(
-                    MyButton(context!!, "Add On", 30, 0, Color.parseColor("#FF3c30"),
-                        object : IDeleteBtnCallback {
-                            override fun onClick(pos: Int) {
-                            }
-                        })
-                )
-
-                buffer.add(
-                    MyButton(context!!, "Call", 30, 0, Color.parseColor("#560027"),
+                    MyButton(context!!, "Call", textSize, 0, Color.parseColor("#560027"),
                         object : IDeleteBtnCallback {
                             override fun onClick(pos: Int) {
                                 Dexter.withActivity(activity)
@@ -142,7 +175,7 @@ class VendorOrderSummaryFragment : Fragment() {
                 )
 
                 buffer.add(
-                    MyButton(context!!, "Edit", 30, 0, Color.parseColor("#FF3c30"),
+                    MyButton(context!!, "Edit", textSize, 0, Color.parseColor("#FF3c30"),
                         object : IDeleteBtnCallback {
                             override fun onClick(pos: Int) {
                                 showEditDialog(adapter!!.getItemAtPosition(pos), pos)
@@ -151,7 +184,7 @@ class VendorOrderSummaryFragment : Fragment() {
                 )
 
                 buffer.add(
-                    MyButton(context!!, "Delete", 30, 0, Color.parseColor("#FF3c30"),
+                    MyButton(context!!, "Delete", textSize, 0, Color.parseColor("#FF3c30"),
                         object : IDeleteBtnCallback {
                             override fun onClick(pos: Int) {
                                 val orderModel = adapter!!.getItemAtPosition(pos)
@@ -301,6 +334,58 @@ class VendorOrderSummaryFragment : Fragment() {
                         .addOnFailureListener { throwable -> Toast.makeText(context!!, "" + throwable.message,
                             Toast.LENGTH_SHORT).show() }
                         .addOnSuccessListener {
+
+                            val dialog = SpotsDialog.Builder().setContext(context!!).setCancelable(false).build()
+                            dialog.show()
+
+                            FirebaseDatabase.getInstance()
+                                .getReference(Common.TOKEN_REF)
+                                .child(order.userId!!)
+                                .addListenerForSingleValueEvent(object:ValueEventListener{
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        if(snapshot.exists()) {
+                                            val tokenModel = snapshot.getValue(TokenModel::class.java)
+                                            val notiData = HashMap<String, String>()
+                                            notiData.put(Common.NOTI_TITLE, "Your order was updated")
+                                            notiData.put(Common.NOTI_CONTENT, StringBuilder("Your order ")
+                                                .append(order.key)
+                                                .append(" was update to ")
+                                                .append(Common.convertStatusToText(status.toString().toInt())).toString())
+
+                                            val sendData = FCMSendData(tokenModel!!.token!!, notiData)
+
+                                            compositeDisposable.add(
+                                                ifcmService.sendNotification(sendData)
+                                                    .subscribeOn(Schedulers.io())
+                                                    .observeOn(AndroidSchedulers.mainThread())
+                                                    .subscribe(
+                                                        { fcmResponse ->
+                                                            if (fcmResponse.success == 1) {
+                                                                Toast.makeText(context, "Update order successful", Toast.LENGTH_SHORT).show()
+                                                            } else {
+                                                                Toast.makeText(
+                                                                    context,
+                                                                    "Notification failed",
+                                                                    Toast.LENGTH_SHORT
+                                                                ).show()
+                                                            }
+                                                        }, { t ->
+                                                            dialog.dismiss()
+                                                            Toast.makeText(context, ""+t.message, Toast.LENGTH_SHORT).show()
+                                                        })
+                                            )
+                                        } else {
+                                            dialog.dismiss()
+                                            Toast.makeText(context, "Token not found", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+
+                                    override fun onCancelled(error: DatabaseError) {
+                                        dialog.dismiss()
+                                        Toast.makeText(context, "" + error.message, Toast.LENGTH_SHORT).show()
+                                    }
+
+                                })
                             adapter!!.removeItem(pos)
                             adapter!!.notifyItemRemoved(pos)
                             updateTextCounter()
@@ -371,6 +456,8 @@ class VendorOrderSummaryFragment : Fragment() {
             EventBus.getDefault().removeStickyEvent(LoadOrderEvent::class.java)
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this)
+
+        compositeDisposable.clear()
         super.onStop()
     }
 

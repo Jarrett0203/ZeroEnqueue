@@ -86,8 +86,12 @@ class MainCustomerActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        if (Common.currentUser!!.image != null)
-            Glide.with(this).load(Common.currentUser!!.image).into(profileImage!!)
+        if(Common.currentUser != null) {
+            if (Common.currentUser!!.image != null)
+                Glide.with(this).load(Common.currentUser!!.image).into(profileImage!!)
+        }
+
+
 
         profileImage!!.setOnClickListener {
             val navHostFragment = supportFragmentManager.primaryNavigationFragment
@@ -112,7 +116,8 @@ class MainCustomerActivity : AppCompatActivity() {
         }
 
         val txtUser = headView.findViewById<TextView>(R.id.txt_user)
-        Common.setSpanString("Hey, ", Common.currentUser!!.name, txtUser)
+        if(Common.currentUser != null)
+            Common.setSpanString("Hey, ", Common.currentUser!!.name, txtUser)
 
         navView.setNavigationItemSelectedListener {
             drawerLayout.closeDrawers()
@@ -129,6 +134,7 @@ class MainCustomerActivity : AppCompatActivity() {
             }
             true
         }
+
         countCartItem()
     }
 
@@ -181,27 +187,28 @@ class MainCustomerActivity : AppCompatActivity() {
     }
 
     private fun countCartItem() {
-        cartDataSource.countCartItems(Common.currentUser!!.uid!!)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : SingleObserver<Int> {
-                override fun onSubscribe(d: Disposable) {
-                }
+        if(Common.currentUser != null)
+            cartDataSource.countCartItems(Common.currentUser!!.uid!!)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<Int> {
+                    override fun onSubscribe(d: Disposable) {
+                    }
 
-                override fun onSuccess(t: Int) {
-                    fabCart.count = t
-                }
+                    override fun onSuccess(t: Int) {
+                        fabCart.count = t
+                    }
 
-                override fun onError(e: Throwable) {
-                    if (!e.message!!.contains("empty"))
-                        Toast.makeText(
-                            this@MainCustomerActivity,
-                            "[COUNT CART]" + e.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                }
+                    override fun onError(e: Throwable) {
+                        if (!e.message!!.contains("empty"))
+                            Toast.makeText(
+                                this@MainCustomerActivity,
+                                "[COUNT CART]" + e.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                    }
 
-            })
+                })
 
     }
 

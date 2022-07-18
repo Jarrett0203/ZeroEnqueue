@@ -115,20 +115,79 @@
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/menu/vendor_order_list.xml" value="0.2578125" />
         <entry key="..\:/Users/Jarrett/AndroidStudioProjects/ZeroEnqueue/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1855" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.189" />
+        <entry key="app/src/main/res/drawable/bottom_nav_icon_color.xml" value="0.1525" />
+        <entry key="app/src/main/res/drawable/ic_add_cart.xml" value="0.1525" />
+        <entry key="app/src/main/res/drawable/ic_baseline_exit_to_app_24.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_filter_alt_24.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_cancelled.xml" value="0.1525" />
+        <entry key="app/src/main/res/drawable/ic_cart.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_check_box_unchecked.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.189" />
         <entry key="app/src/main/res/drawable/side_nav_bar.xml" value="0.189" />
+        <entry key="app/src/main/res/layout-hdpi/acitvity_register_user.xml" value="0.3304831124412142" />
+        <entry key="app/src/main/res/layout-hdpi/activity_login.xml" value="0.5" />
+        <entry key="app/src/main/res/layout-hdpi/activity_register_user.xml" value="0.96625" />
+        <entry key="app/src/main/res/layout-hdpi/layout_cart_item.xml" value="0.3209428830462375" />
+        <entry key="app/src/main/res/layout-hdpi/layout_customer_discounts.xml" value="0.3304831124412142" />
+        <entry key="app/src/main/res/layout-hdpi/layout_popular_categories_item.xml" value="0.24388032638259294" />
+        <entry key="app/src/main/res/layout-ldpi/activity_login.xml" value="1.018939393939394" />
+        <entry key="app/src/main/res/layout-ldpi/activity_register_user.xml" value="0.625" />
+        <entry key="app/src/main/res/layout-ldpi/layout_cart_item.xml" value="0.68" />
+        <entry key="app/src/main/res/layout-ldpi/layout_customer_discounts.xml" value="1.5606060606060606" />
+        <entry key="app/src/main/res/layout-ldpi/layout_popular_categories.xml" value="0.3304831124412142" />
+        <entry key="app/src/main/res/layout-ldpi/layout_popular_categories_item.xml" value="2.2178030303030303" />
+        <entry key="app/src/main/res/layout-mdpi/acitvity_register_user.xml" value="0.24388032638259294" />
+        <entry key="app/src/main/res/layout-mdpi/activity_login.xml" value="1.0" />
+        <entry key="app/src/main/res/layout-mdpi/activity_register_user.xml" value="0.5042016806722689" />
+        <entry key="app/src/main/res/layout-mdpi/fragment_cart.xml" value="0.2973708068902992" />
+        <entry key="app/src/main/res/layout-mdpi/layout_cart_item.xml" value="0.3209428830462375" />
+        <entry key="app/src/main/res/layout-mdpi/layout_customer_discounts.xml" value="0.3304831124412142" />
+        <entry key="app/src/main/res/layout-mdpi/layout_popular_categories_item.xml" value="0.24388032638259294" />
+        <entry key="app/src/main/res/layout-v26/activity_login.xml" value="0.24365942028985507" />
+        <entry key="app/src/main/res/layout-xhdpi/activity_login.xml" value="0.60390625" />
+        <entry key="app/src/main/res/layout-xhdpi/activity_register_user.xml" value="0.31088082901554404" />
+        <entry key="app/src/main/res/layout-xhdpi/layout_cart_item.xml" value="0.36155913978494625" />
+        <entry key="app/src/main/res/layout-xhdpi/layout_customer_discounts.xml" value="0.3304831124412142" />
+        <entry key="app/src/main/res/layout-xhdpi/layout_popular_categories_item.xml" value="0.24388032638259294" />
+        <entry key="app/src/main/res/layout-xxhdpi/activity_login.xml" value="0.24365942028985507" />
+        <entry key="app/src/main/res/layout-xxhdpi/activity_register_user.xml" value="0.24388032638259294" />
+        <entry key="app/src/main/res/layout-xxhdpi/layout_cart_item.xml" value="0.24388032638259294" />
+        <entry key="app/src/main/res/layout-xxhdpi/layout_customer_discounts.xml" value="0.3304831124412142" />
+        <entry key="app/src/main/res/layout-xxhdpi/layout_popular_categories_item.xml" value="0.3180846515604959" />
+        <entry key="app/src/main/res/layout-xxhdpi/layout_popular_cateogries_item.xml" value="0.3180846515604959" />
+        <entry key="app/src/main/res/layout-xxxhdpi/activity_login.xml" value="0.14824024483550116" />
+        <entry key="app/src/main/res/layout-xxxhdpi/activity_register_user.xml" value="0.301953125" />
+        <entry key="app/src/main/res/layout-xxxhdpi/activty_regsiter_user.xml" value="0.3304831124412142" />
+        <entry key="app/src/main/res/layout-xxxhdpi/layout_cart_item.xml" value="0.24388032638259294" />
+        <entry key="app/src/main/res/layout-xxxhdpi/layout_customer_discounts.xml" value="0.2814207650273224" />
+        <entry key="app/src/main/res/layout-xxxhdpi/layout_popular_categories_item.xml" value="0.3180846515604959" />
         <entry key="app/src/main/res/layout/activity_create_new_stall.xml" value="0.21822916666666667" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="1.0" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/activity_main_customer.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/activity_main_vendor.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/activity_register_user.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/activity_register_user2.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/layout/activity_stalls_overview.xml" value="0.2611060743427017" />
         <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/app_bar_main_customer.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/app_bar_main_vendor.xml" value="0.3229166666666667" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/content_main_customer.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/content_main_vendor.xml" value="0.3229166666666667" />
         <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_categories.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_category_food_list.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.2611060743427017" />
+        <entry key="app/src/main/res/layout/fragment_customer_discounts.xml" value="0.37726449275362317" />
+        <entry key="app/src/main/res/layout/fragment_customer_discounts_detail.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/layout/fragment_customer_home.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/fragment_customer_order_detail.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/fragment_customer_order_summary.xml" value="0.34375" />
         <entry key="app/src/main/res/layout/fragment_food_detail.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_food_list.xml" value="0.1828774062816616" />
+        <entry key="app/src/main/res/layout/fragment_food_stall.xml" value="0.33133817870884996" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_menu.xml" value="0.11096014492753623" />
         <entry key="app/src/main/res/layout/fragment_order_filter.xml" value="0.3574432373046875" />
@@ -137,16 +196,50 @@
         <entry key="app/src/main/res/layout/fragment_order_summary_customer.xml" value="0.11096014492753623" />
         <entry key="app/src/main/res/layout/fragment_order_summary_vendor.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_orders.xml" value="0.11096014492753623" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/fragment_use_discounts.xml" value="0.24388032638259294" />
+        <entry key="app/src/main/res/layout/fragment_vendor_food_detail.xml" value="0.17135416666666667" />
         <entry key="app/src/main/res/layout/fragment_vendor_home.xml" value="0.11096014492753623" />
+        <entry key="app/src/main/res/layout/fragment_vendor_order_summary.xml" value="0.3229166666666667" />
+        <entry key="app/src/main/res/layout/layout_add_addon.xml" value="0.3229166666666667" />
+        <entry key="app/src/main/res/layout/layout_add_size.xml" value="0.2611060743427017" />
+        <entry key="app/src/main/res/layout/layout_addon_item.xml" value="0.2611060743427017" />
         <entry key="app/src/main/res/layout/layout_cart_item.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/layout_category_item.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/layout_chip.xml" value="0.2611060743427017" />
+        <entry key="app/src/main/res/layout/layout_chip_filter.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/layout/layout_chip_with_delete.xml" value="0.2611060743427017" />
+        <entry key="app/src/main/res/layout/layout_comment_item.xml" value="0.2611060743427017" />
+        <entry key="app/src/main/res/layout/layout_customer_discounts.xml" value="0.33133817870884996" />
+        <entry key="app/src/main/res/layout/layout_dialog_cancelled.xml" value="0.19579533941236069" />
+        <entry key="app/src/main/res/layout/layout_dialog_completed.xml" value="0.19579533941236069" />
+        <entry key="app/src/main/res/layout/layout_dialog_preparing.xml" value="0.19579533941236069" />
+        <entry key="app/src/main/res/layout/layout_edit_food_stall_details.xml" value="0.2611060743427017" />
+        <entry key="app/src/main/res/layout/layout_filter_food.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/layout/layout_food_item.xml" value="0.2611060743427017" />
+        <entry key="app/src/main/res/layout/layout_food_item_vendor.xml" value="0.3229166666666667" />
+        <entry key="app/src/main/res/layout/layout_food_stall.xml" value="0.25022665457842247" />
+        <entry key="app/src/main/res/layout/layout_orderDetails_customer.xml" value="0.2980072463768116" />
+        <entry key="app/src/main/res/layout/layout_order_detail_item.xml" value="0.2171875" />
         <entry key="app/src/main/res/layout/layout_order_item.xml" value="0.30885416666666665" />
         <entry key="app/src/main/res/layout/layout_order_item_customer.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/layout_order_item_vendor.xml" value="0.40260416666666665" />
         <entry key="app/src/main/res/layout/layout_place_order.xml" value="0.11096014492753623" />
+        <entry key="app/src/main/res/layout/layout_popular_categories_item.xml" value="0.24388032638259294" />
+        <entry key="app/src/main/res/layout/layout_rating_comment.xml" value="0.2611060743427017" />
+        <entry key="app/src/main/res/layout/layout_recommended_food_items.xml" value="0.24388032638259294" />
+        <entry key="app/src/main/res/layout/layout_size_item.xml" value="0.25022665457842247" />
+        <entry key="app/src/main/res/layout/layout_upload_nus_card.xml" value="0.37726449275362317" />
+        <entry key="app/src/main/res/layout/layout_use_discount_item.xml" value="0.2611060743427017" />
         <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/nav_header_main_customer.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/layout/nav_header_main_vendor.xml" value="0.3229166666666667" />
+        <entry key="app/src/main/res/menu/activity_main_customer_drawer.xml" value="0.17135416666666667" />
         <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/menu/activity_main_vendor_drawer.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/menu/cart_menu.xml" value="0.17135416666666667" />
         <entry key="app/src/main/res/menu/main.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/menu/search_food.xml" value="0.3271422541156606" />
         <entry key="app/src/main/res/menu/vendor_order_list.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.189" />
       </map>

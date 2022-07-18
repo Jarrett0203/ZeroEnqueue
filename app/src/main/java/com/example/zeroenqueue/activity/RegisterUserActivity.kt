@@ -58,28 +58,27 @@ class RegisterUserActivity : AppCompatActivity() {
                 if (result.resultCode == Activity.RESULT_OK) {
                     val data: Intent? = result.data
                     cardImageUri = data!!.data
-                    cardImage.setImageURI(cardImageUri)
-                    cardImagePrompt.text = "Change image..."
+                    cardImage!!.setImageURI(cardImageUri)
+                    cardImagePrompt!!.text = "Change image..."
                 }
             }
 
-        cardView.setOnClickListener{
+        cardView!!.setOnClickListener{
             val galleryIntent = Intent()
             galleryIntent.action = Intent.ACTION_GET_CONTENT
             galleryIntent.type = "image/*"
             cardImageResultLauncher.launch(galleryIntent)
         }
 
-        binding.registerUser.setOnClickListener {
-            chipCustomer = binding.chipCustomer
-            chipVendor = binding.chipVendor
-            val newEmail = binding.email.text.toString().trim()
-            val newPassword = binding.password.text.toString().trim()
-            val newName = binding.fullName.text.toString().trim()
-            val newPhone = binding.phone.text.toString().trim()
-            val firstNums = arrayOf('6', '8', '9')
+        binding.registerUser!!.setOnClickListener {
+            chipCustomer = binding.chipCustomer!!
+            chipVendor = binding.chipVendor!!
+            val newEmail = binding.email!!.text.toString().trim()
+            val newPassword = binding.password!!.text.toString().trim()
+            val newPhone = binding.phone!!.text.toString().trim()
+            val newName = binding.fullName!!.text.toString().trim()
 
-            if(RegisterUser.validateRegistrationInput(newEmail, newPassword, newName, newPhone, firstNums)) {
+            if(RegisterUser.validateRegistrationInput(newEmail, newPassword, newName, newPhone)) {
                 if (!chipCustomer.isChecked && !chipVendor.isChecked)
                     Toast.makeText(this, "Please select a user type.", Toast.LENGTH_SHORT).show()
                 else {

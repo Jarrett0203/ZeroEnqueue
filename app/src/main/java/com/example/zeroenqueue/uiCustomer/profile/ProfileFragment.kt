@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.activity.MainCustomerActivity
 import com.example.zeroenqueue.activity.StallsOverviewActivity
+import com.example.zeroenqueue.activity.updateUserDetails
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentProfileBinding
@@ -34,7 +35,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_register_user.*
-import java.util.*
 
 
 class ProfileFragment : Fragment() {
@@ -44,7 +44,7 @@ class ProfileFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private lateinit var dialog: AlertDialog
+    lateinit var dialog: AlertDialog
     private lateinit var editName: TextInputEditText
     private lateinit var editPhone: TextInputEditText
     private lateinit var editEmail: TextInputEditText
@@ -84,8 +84,6 @@ class ProfileFragment : Fragment() {
             customerChip.isChecked = true
         } else {
             vendorChip.isChecked = true
-            val balance = binding.balance
-            balance.visibility = View.INVISIBLE
         }
 
         updateBtn.setOnClickListener {
@@ -230,20 +228,13 @@ class ProfileFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun updateDetails() {
+    fun updateDetails() {
         val newName = editName.text.toString().trim()
         val newPhone = editPhone.text.toString().trim()
         val newEmail = editEmail.text.toString().trim()
         val newPassword = editPassword.text.toString().trim()
-        val firstNums = arrayOf('6', '8', '9')
 
-        if (newName.isEmpty() || newPhone.isEmpty() || newEmail.isEmpty() || newPassword.isEmpty())
-            Toast.makeText(requireContext(), "Empty fields are not allowed!!", Toast.LENGTH_SHORT).show()
-        else if (!Arrays.stream(firstNums).anyMatch { t -> t == newPhone[0] } || newPhone.length != 8)
-            Toast.makeText(requireContext(), "Invalid phone number", Toast.LENGTH_SHORT).show()
-        else if (newPassword.length < 6)
-            Toast.makeText(requireContext(), "Password requires at least 6 characters", Toast.LENGTH_SHORT).show()
-        else {
+        if(updateUserDetails.validateUpdateDetailsInput(newEmail, newPassword, newName, newPhone)) {
             dialog.show()
             FirebaseDatabase.getInstance()
                 .getReference(Common.USER_REF)
