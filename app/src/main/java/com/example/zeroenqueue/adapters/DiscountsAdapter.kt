@@ -63,7 +63,7 @@ val discountList: List<Discount>
         holder.oldPrice!!.paintFlags = holder.oldPrice!!.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         holder.newPrice!!.text = StringBuilder("$ ").append(Common.formatPrice(discountList[position].newPrice))
         holder.discount!!.text = StringBuilder(discountList[position].discount.toString()).append("%")
-        holder.expiry!!.text = StringBuilder("Valid until ").append(simpleDateFormat.format(discountList[position].expiry))
+        holder.expiry!!.text = StringBuilder("Valid till ").append(simpleDateFormat.format(discountList[position].expiry))
         holder.setListener(object: IRecyclerItemClickListener{
             override fun onItemClick(view: View, pos: Int) {
                 Common.discountSelected = discountList[pos]

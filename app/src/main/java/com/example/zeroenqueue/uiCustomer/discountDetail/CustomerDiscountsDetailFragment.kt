@@ -62,7 +62,7 @@ class CustomerDiscountsDetailFragment : Fragment() {
             oldPrice.paintFlags = oldPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             newPrice.text = StringBuilder("$").append(Common.formatPrice(it.newPrice))
             discountDescription.text = it.description
-            expiry.text = StringBuilder("Valid until ").append(simpleDateFormat.format(it.expiry))
+            expiry.text = StringBuilder("Valid till ").append(simpleDateFormat.format(it.expiry))
         }
 
         btnRedeem.setOnClickListener {

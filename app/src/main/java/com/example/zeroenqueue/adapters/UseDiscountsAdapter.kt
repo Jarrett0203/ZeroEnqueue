@@ -53,7 +53,7 @@ class UseDiscountsAdapter(var context: Context,
         holder.oldPrice.text = StringBuilder("$ ").append(Common.formatPrice(discountList[position].oldPrice))
         holder.oldPrice.paintFlags = holder.oldPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         holder.newPrice.text = StringBuilder("$ ").append(Common.formatPrice(discountList[position].newPrice))
-        holder.expiry.text = StringBuilder("Valid until ").append(simpleDateFormat.format(discountList[position].expiry))
+        holder.expiry.text = StringBuilder("Valid till ").append(simpleDateFormat.format(discountList[position].expiry))
         holder.checkbox.setOnClickListener {
             if (holder.checkbox.isChecked) {
                 if (lastCheckedCheckbox != null)

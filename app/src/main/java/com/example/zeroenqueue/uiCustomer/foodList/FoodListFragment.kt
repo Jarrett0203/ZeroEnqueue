@@ -126,7 +126,7 @@ class FoodListFragment : Fragment() {
 
     }
 
-    private fun filter(
+    public fun filter(
         selectedDataFoodStall: ArrayList<FoodStall>,
         selectedDataCategory: ArrayList<String>
     ) {

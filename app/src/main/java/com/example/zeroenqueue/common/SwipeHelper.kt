@@ -8,16 +8,12 @@ import android.graphics.drawable.Drawable
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import androidx.compose.ui.geometry.Offset
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zeroenqueue.interfaces.IDeleteBtnCallback
-import com.google.android.gms.common.util.ArrayUtils.contains
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 abstract class SwipeHelper(context: Context,
                            private val recyclerView: RecyclerView,
@@ -36,7 +32,7 @@ abstract class SwipeHelper(context: Context,
         override fun onSingleTapUp(e : MotionEvent?) : Boolean {
             for(button in buttonList!!)
                 if(button.onClick(e!!.x, e!!.y))
-                    break;
+                    break
             return true;
         }
     }
@@ -128,9 +124,12 @@ abstract class SwipeHelper(context: Context,
             p.color = Color.WHITE
             p.textSize = textSize.toFloat()
 
+
+
+
             val r = Rect()
             val cHeight = rectf.height()
-            val cWidth = rectf.width()
+            var cWidth = rectf.width()
             p.textAlign = Paint.Align.LEFT
             p.getTextBounds(text, 0, text.length, r)
 
@@ -155,7 +154,9 @@ abstract class SwipeHelper(context: Context,
 
         val bitmap = Bitmap.createBitmap(d!!.intrinsicWidth, d.intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        d.setBounds(0, 0, canvas.width, canvas.height)
+
+
+        d.setBounds(0, 0, canvas.width , canvas.height)
         d.draw(canvas)
         return bitmap
     }
@@ -207,7 +208,7 @@ abstract class SwipeHelper(context: Context,
     ) {
         val pos = viewHolder.adapterPosition
         var translationX = dX
-        var itemView = viewHolder.itemView
+        val itemView = viewHolder.itemView
         if(pos < 0) {
             swipePosition = pos
             return
