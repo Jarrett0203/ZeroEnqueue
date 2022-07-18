@@ -32,6 +32,7 @@ import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
 import com.example.zeroenqueue.databinding.FragmentVendorOrderSummaryBinding
 import com.example.zeroenqueue.eventBus.CountCartEvent
+import com.example.zeroenqueue.eventBus.LoadAllOrders
 import com.example.zeroenqueue.eventBus.LoadOrderEvent
 import com.example.zeroenqueue.interfaces.IDeleteBtnCallback
 import com.google.firebase.database.DataSnapshot
@@ -201,7 +202,7 @@ class VendorOrderSummaryFragment : Fragment() {
                                             .addOnFailureListener {
                                                 Toast.makeText(
                                                     context!!,
-                                                    "" + it.message,
+                                                    it.message,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -231,8 +232,8 @@ class VendorOrderSummaryFragment : Fragment() {
             }
 
             private fun showEditDialog(order: Order, pos: Int) {
-                var layout_dialog:View?=null
-                var builder:AlertDialog.Builder?=null
+                val layout_dialog: View?
+                val builder: AlertDialog.Builder?
 
                 var preparing:RadioButton?=null
                 var completed:RadioButton?=null
@@ -240,32 +241,34 @@ class VendorOrderSummaryFragment : Fragment() {
                 var placed:RadioButton?=null
                 var cancelled:RadioButton?=null
 
+                when (order.orderStatus) {
+                    3 -> {
+                        layout_dialog = LayoutInflater.from(context!!)
+                            .inflate(R.layout.layout_dialog_cancelled, null)
+                        builder = AlertDialog.Builder(context!!)
+                            .setView(layout_dialog)
 
+                        delete = layout_dialog.findViewById<View>(R.id.delete) as RadioButton
+                        placed = layout_dialog.findViewById<View>(R.id.placed) as RadioButton
+                    }
+                    0 -> {
+                        layout_dialog = LayoutInflater.from(context!!)
+                            .inflate(R.layout.layout_dialog_preparing, null)
+                        builder = AlertDialog.Builder(context!!, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen)
+                            .setView(layout_dialog)
 
-                if(order.orderStatus == -1) {
-                    layout_dialog = LayoutInflater.from(context!!)
-                        .inflate(R.layout.layout_dialog_cancelled, null)
-                    builder = AlertDialog.Builder(context!!)
-                        .setView(layout_dialog)
+                        preparing = layout_dialog.findViewById<View>(R.id.preparing) as RadioButton
+                        cancelled = layout_dialog.findViewById<View>(R.id.cancelled) as RadioButton
+                    }
+                    else -> {
+                        layout_dialog = LayoutInflater.from(context!!)
+                            .inflate(R.layout.layout_dialog_completed, null)
+                        builder = AlertDialog.Builder(context!!)
+                            .setView(layout_dialog)
 
-                    delete = layout_dialog.findViewById<View>(R.id.delete) as RadioButton
-                    placed = layout_dialog.findViewById<View>(R.id.placed) as RadioButton
-                } else if(order.orderStatus == 0) {
-                    layout_dialog = LayoutInflater.from(context!!)
-                        .inflate(R.layout.layout_dialog_preparing, null)
-                    builder = AlertDialog.Builder(context!!, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen)
-                        .setView(layout_dialog)
-
-                    preparing = layout_dialog.findViewById<View>(R.id.preparing) as RadioButton
-                    cancelled = layout_dialog.findViewById<View>(R.id.cancelled) as RadioButton
-                } else {
-                    layout_dialog = LayoutInflater.from(context!!)
-                        .inflate(R.layout.layout_dialog_completed, null)
-                    builder = AlertDialog.Builder(context!!)
-                        .setView(layout_dialog)
-
-                    completed = layout_dialog.findViewById<View>(R.id.completed) as RadioButton
-                    cancelled = layout_dialog.findViewById<View>(R.id.cancelled) as RadioButton
+                        completed = layout_dialog.findViewById<View>(R.id.completed) as RadioButton
+                        cancelled = layout_dialog.findViewById<View>(R.id.cancelled) as RadioButton
+                    }
                 }
 
                 val btn_ok = layout_dialog.findViewById<View>(R.id.okay) as Button
@@ -273,9 +276,9 @@ class VendorOrderSummaryFragment : Fragment() {
 
                 val status = layout_dialog.findViewById<View>(R.id.status) as TextView
 
-                status.setText(StringBuilder("Order Status(")
+                status.text = StringBuilder("Order Status(")
                     .append(Common.convertStatusToText(order.orderStatus))
-                    .append(")"))
+                    .append(")")
 
                 val dialog = builder.create()
                 dialog.show()
@@ -283,7 +286,7 @@ class VendorOrderSummaryFragment : Fragment() {
                 btn_ok.setOnClickListener {
                     dialog.dismiss()
                     if(cancelled != null && cancelled.isChecked) {
-                        updateOrder(pos, order, -1)
+                        updateOrder(pos, order, 3)
                     } else if(preparing != null && preparing.isChecked) {
                         updateOrder(pos, order, 1)
                     } else if(completed != null && completed.isChecked) {
@@ -322,7 +325,7 @@ class VendorOrderSummaryFragment : Fragment() {
             private fun updateOrder(pos: Int, order: Order, i: Int) {
                 if(!TextUtils.isEmpty(order.key)) {
                     val update_data = HashMap<String, Any>()
-                    update_data.put("orderStatus", i)
+                    update_data["orderStatus"] = i
 
                     FirebaseDatabase.getInstance()
                         .getReference(Common.ORDER_REF)
@@ -386,7 +389,8 @@ class VendorOrderSummaryFragment : Fragment() {
                             adapter!!.removeItem(pos)
                             adapter!!.notifyItemRemoved(pos)
                             updateTextCounter()
-
+                            Toast.makeText(context!!, "Update order success!",
+                                Toast.LENGTH_SHORT).show()
                         }
                 } else {
                     Toast.makeText(context!!, "Order number must not be empty!",
@@ -460,6 +464,11 @@ class VendorOrderSummaryFragment : Fragment() {
     override fun onDestroy() {
         EventBus.getDefault().postSticky(CountCartEvent(true))
         super.onDestroy()
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onLoadAllOrders(event: LoadAllOrders) {
+        vendorOrderSummaryViewModel.loadAllOrders()
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)

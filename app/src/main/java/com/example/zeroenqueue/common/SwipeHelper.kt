@@ -17,7 +17,7 @@ import java.util.*
 
 abstract class SwipeHelper(context: Context,
                            private val recyclerView: RecyclerView,
-                           internal var buttonWidth: Int): ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)  {
+                           private var buttonWidth: Int): ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)  {
 
     abstract fun instantiateMyButton(viewHolder: RecyclerView.ViewHolder, buffer: MutableList<MyButton>)
 
@@ -25,15 +25,15 @@ abstract class SwipeHelper(context: Context,
     private lateinit var gestureDetector : GestureDetector
     private var swipePosition = -1
     private var swipeThreshold = 0.5f
-    private lateinit var buttonBuffer : MutableMap<Int, MutableList<MyButton>>
+    private var buttonBuffer : MutableMap<Int, MutableList<MyButton>>
     private lateinit var removerQueue : Queue<Int>
 
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
         override fun onSingleTapUp(e : MotionEvent?) : Boolean {
             for(button in buttonList!!)
-                if(button.onClick(e!!.x, e!!.y))
+                if(button.onClick(e!!.x, e.y))
                     break
-            return true;
+            return true
         }
     }
 
@@ -124,17 +124,14 @@ abstract class SwipeHelper(context: Context,
             p.color = Color.WHITE
             p.textSize = textSize.toFloat()
 
-
-
-
             val r = Rect()
             val cHeight = rectf.height()
-            var cWidth = rectf.width()
+            val cWidth = rectf.width()
             p.textAlign = Paint.Align.LEFT
             p.getTextBounds(text, 0, text.length, r)
 
-            var x = 0f
-            var y = 0f
+            val x: Float
+            val y: Float
             if(imageResId == 0) {
                 x = cWidth/2f - r.width()/2f - r.left.toFloat()
                 y = cHeight/2f + r.height()/2f - r.bottom
@@ -152,11 +149,9 @@ abstract class SwipeHelper(context: Context,
     private fun drawableToBitmap(d: Drawable?): Bitmap {
         if(d!! is BitmapDrawable) return d.toBitmap()
 
-        val bitmap = Bitmap.createBitmap(d!!.intrinsicWidth, d.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(d.intrinsicWidth, d.intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-
-
-        d.setBounds(0, 0, canvas.width , canvas.height)
+        d.setBounds(0, 0, canvas.width, canvas.height)
         d.draw(canvas)
         return bitmap
     }

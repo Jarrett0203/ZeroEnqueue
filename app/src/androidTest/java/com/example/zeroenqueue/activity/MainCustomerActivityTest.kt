@@ -1,21 +1,13 @@
 package com.example.zeroenqueue.activity
 
-
-
-import android.view.Gravity
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.DrawerActions
-import androidx.test.espresso.contrib.DrawerMatchers.isClosed
+import androidx.test.espresso.contrib.DrawerActions.open
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
@@ -25,8 +17,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.mock
-
 
 @MediumTest
 @HiltAndroidTest
@@ -39,8 +29,15 @@ class MainCustomerActivityTest {
     fun setup() {
         hiltRule.inject()
         Common.currentUser = User()
-        Common.currentUser!!.uid = "test"
+        Common.currentUser!!.uid = "z2SYlNY4yJbd2NVnZcIKrMHbNH63"
         Common.currentUser!!.name = "test"
+        Common.currentUser!!.userType = "Customer"
+    }
+
+    @Test
+    fun test_isActivityInView() {
+        val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
+        onView(withId(R.id.customer_home_fragment)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -51,23 +48,59 @@ class MainCustomerActivityTest {
     }
 
     @Test
-    fun navigateToFoodStallPage() {
-        val navController = mock(NavController::class.java)
+    fun clickProfile_navigateToProfileFragment() {
         val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
-
-        onView(withId(R.id.nav_customer)).perform(DrawerActions.open());
-        onView(withId(R.id.navigation_foodStall)).perform(click())
-        onView(withId(R.id.cartFragment)).check(matches(isDisplayed()))
-//        onView(withId(R.id.nav_customer))
-//            .check(matches(isClosed(Gravity.LEFT))) // Left Drawer should be closed.
-//            .perform(DrawerActions.open());
-//        openActionBarOverflowOrOptionsMenu(getInstrumentation().targetContext)
-//
-//        onView(withText("Food Stalls"))
-//            .perform(click())
-
-        onView(withId(R.id.cartFragment)).check(matches(isDisplayed()))
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.profile_image)).perform(click())
+        onView(withId(R.id.profile_fragment)).check(matches(isDisplayed()))
     }
 
+    @Test
+    fun clickFoodList_navigateToFoodListFragment() {
+        val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_food_list)).perform(click())
+        onView(withId(R.id.food_list_fragment)).check(matches(isDisplayed()))
+    }
 
+    @Test
+    fun clickFoodStall_navigateToFoodStallFragment() {
+        val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_foodStall)).perform(click())
+        onView(withId(R.id.food_stall_fragment)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun clickCategories_navigateToCategoriesFragment() {
+        val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_categories)).perform(click())
+        onView(withId(R.id.categories_fragment)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun clickOrderSummary_navigateToCustomerOrderSummaryFragment() {
+        val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_customer_order_summary)).perform(click())
+        onView(withId(R.id.categories_customer_order_summary)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun clickDiscounts_navigateToDiscountsFragment() {
+        val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_customerDiscounts)).perform(click())
+        onView(withId(R.id.customer_discounts_fragment)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun clickSignOut() {
+        val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_sign_out)).perform(click())
+        onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click())
+        onView(withId(R.id.loginActivity)).check(matches(isDisplayed()))
+    }
 }

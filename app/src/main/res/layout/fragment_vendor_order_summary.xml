@@ -5,6 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:id="@+id/vendor_order_summary_fragment"
         tools:context=".uiVendor.orders.VendorOrderSummaryFragment">
 
     <TextView
@@ -21,6 +22,7 @@
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_order"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:listitem="@layout/layout_order_item_vendor"/>
 
 </LinearLayout>

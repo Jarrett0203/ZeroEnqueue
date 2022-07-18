@@ -226,14 +226,13 @@ class VendorHomeFragment : Fragment() {
 
         dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
         dialog.show()
-        recyclerViewPopularFood.setHasFixedSize(true)
         recyclerViewPopularFood.layoutManager = LinearLayoutManager(context)
         val layoutAnimationController =
             AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
 
         vendorHomeViewModel.foodList.observe(viewLifecycleOwner) {
             dialog.dismiss()
-            recyclerViewPopularFood.adapter = VendorFoodListAdapter(requireContext(), it)
+            recyclerViewPopularFood.adapter = VendorFoodListAdapter(requireContext(), it.toMutableList())
             recyclerViewPopularFood.layoutAnimation = layoutAnimationController
         }
 
