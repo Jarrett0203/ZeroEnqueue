@@ -174,17 +174,17 @@ object Common {
 
     }
 
-    fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+    fun sendNotification(context: Context, notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
         try {
             val response = RetrofitInstance.api.postNotification(notification)
+            if (response.isSuccessful)
+                Toast.makeText(context, "Order was sent successfully", Toast.LENGTH_SHORT).show()
         }
         catch(e: Exception) {
             Log.e(TAG, e.toString())
         }
     }
 
-    var authorizeToken: String? = null
-    var currentToken: String = ""
     var orderSelected: Order? = null
     var discountSelected: Discount? = null
     var foodStallSelected: FoodStall? = null
