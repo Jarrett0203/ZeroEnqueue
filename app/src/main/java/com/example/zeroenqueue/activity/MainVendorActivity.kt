@@ -112,7 +112,7 @@ class MainVendorActivity : AppCompatActivity() {
     private fun subscribeToTopic(newOrderTopic: String) {
         FirebaseMessaging.getInstance()
             .subscribeToTopic(newOrderTopic)
-            .addOnFailureListener{ message -> Toast.makeText(this@MainVendorActivity, "" + message.message, Toast.LENGTH_SHORT).show()}
+            .addOnFailureListener{ Toast.makeText(this@MainVendorActivity, it.message, Toast.LENGTH_SHORT).show()}
             .addOnCompleteListener{ task ->
                 if(!task.isSuccessful)
                     Toast.makeText(this@MainVendorActivity, "Subscribe topic failed", Toast.LENGTH_SHORT).show()
@@ -124,11 +124,12 @@ class MainVendorActivity : AppCompatActivity() {
         builder.setTitle("Switch Stall")
             .setMessage("Are you sure you want to switch stalls?")
             .setNegativeButton("CANCEL") { dialogInterface, _ -> dialogInterface.dismiss() }
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton("OK") { dialogInterface, _ ->
                 Common.foodStallSelected = null
                 val intent = Intent(this@MainVendorActivity, StallsOverviewActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
+                dialogInterface.dismiss()
             }
         val dialog = builder.create()
         dialog.show()

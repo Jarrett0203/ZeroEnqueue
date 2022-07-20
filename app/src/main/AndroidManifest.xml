@@ -3,7 +3,9 @@
         xmlns:tools="http://schemas.android.com/tools"
         package="com.example.zeroenqueue">
 
-    <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
     <application
             android:allowBackup="true"
@@ -41,10 +43,12 @@
                 android:label="@string/title_activity_home"
                 android:windowSoftInputMode="adjustPan" />
 
-        <service android:name=".services.MyFCMServices"
-                android:exported="true">
+        <service android:name=".services.FirebaseService"
+            android:permission="com.google.android.c2dm.permission.SEND"
+                android:exported="false">
             <intent-filter>
-                <action android:name="com.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
             </intent-filter>
         </service>
     </application>

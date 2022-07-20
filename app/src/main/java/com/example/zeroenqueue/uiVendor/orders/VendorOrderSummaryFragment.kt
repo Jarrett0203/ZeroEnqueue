@@ -19,13 +19,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.zeroenqueue.Notifications.IFCMService
-import com.example.zeroenqueue.Notifications.RetrofitFCMClient
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.VendorMyOrderAdapter
-import com.example.zeroenqueue.classes.FCMSendData
-import com.example.zeroenqueue.classes.Order
-import com.example.zeroenqueue.classes.Token
+import com.example.zeroenqueue.classes.*
 import com.example.zeroenqueue.common.BottomSheetOrderFragment
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
@@ -46,11 +42,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import dmax.dialog.SpotsDialog
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_vendor_order_summary.*
-import kotlinx.android.synthetic.main.layout_dialog_cancelled.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -66,7 +59,6 @@ class VendorOrderSummaryFragment : Fragment() {
 
     private lateinit var vendorOrderSummaryViewModel: VendorOrderSummaryViewModel
     private val compositeDisposable = CompositeDisposable()
-    lateinit var ifcmService: IFCMService
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,7 +66,6 @@ class VendorOrderSummaryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        ifcmService = RetrofitFCMClient.getInstance().create(IFCMService::class.java)
         @Suppress("DEPRECATION")
         setHasOptionsMenu(true)
 
@@ -273,7 +264,6 @@ class VendorOrderSummaryFragment : Fragment() {
 
                 val btn_ok = layout_dialog.findViewById<View>(R.id.okay) as Button
                 val btn_cancel = layout_dialog.findViewById<View>(R.id.cancel) as Button
-
                 val status = layout_dialog.findViewById<View>(R.id.status) as TextView
 
                 status.text = StringBuilder("Order Status(")
@@ -331,49 +321,45 @@ class VendorOrderSummaryFragment : Fragment() {
                         .getReference(Common.ORDER_REF)
                         .child(order.key!!)
                         .updateChildren(update_data)
-                        .addOnFailureListener { throwable -> Toast.makeText(context!!, "" + throwable.message,
+                        .addOnFailureListener { throwable -> Toast.makeText(context!!, throwable.message,
                             Toast.LENGTH_SHORT).show() }
                         .addOnSuccessListener {
-
                             val dialog = SpotsDialog.Builder().setContext(context!!).setCancelable(false).build()
                             dialog.show()
-
                             FirebaseDatabase.getInstance()
                                 .getReference(Common.TOKEN_REF)
                                 .child(order.userId!!)
-                                .addListenerForSingleValueEvent(object:ValueEventListener{
+                                .addListenerForSingleValueEvent(object:ValueEventListener {
                                     override fun onDataChange(snapshot: DataSnapshot) {
                                         if(snapshot.exists()) {
                                             val token = snapshot.getValue(Token::class.java)
-                                            val notiData = HashMap<String, String>()
-                                            notiData.put(Common.NOTI_TITLE, "Your order was updated")
-                                            notiData.put(Common.NOTI_CONTENT, StringBuilder("Your order ")
-                                                .append(order.key)
-                                                .append(" was update to ")
-                                                .append(Common.convertStatusToText(status.toString().toInt())).toString())
+                                            FirebaseDatabase.getInstance()
+                                                .getReference(Common.FOODSTALL_REF)
+                                                .child(order.foodStallId!!)
+                                                .addListenerForSingleValueEvent(object : ValueEventListener {
+                                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                                        val foodStall = snapshot.getValue(FoodStall::class.java)
 
-                                            val sendData = FCMSendData(token!!.token!!, notiData)
+                                                        val title = StringBuilder("Order from ")
+                                                            .append(foodStall!!.name!!)
+                                                            .append(" was updated").toString()
 
-                                            compositeDisposable.add(
-                                                ifcmService.sendNotification(sendData)
-                                                    .subscribeOn(Schedulers.io())
-                                                    .observeOn(AndroidSchedulers.mainThread())
-                                                    .subscribe(
-                                                        { fcmResponse ->
-                                                            if (fcmResponse.success == 1) {
-                                                                Toast.makeText(context, "Update order successful", Toast.LENGTH_SHORT).show()
-                                                            } else {
-                                                                Toast.makeText(
-                                                                    context,
-                                                                    "Notification failed",
-                                                                    Toast.LENGTH_SHORT
-                                                                ).show()
+                                                        val content = StringBuilder("Your order from ")
+                                                            .append(foodStall.name)
+                                                            .append(" was updated to ")
+                                                            .append(Common.convertStatusToText(i)).toString()
+
+                                                        PushNotification(NotificationData(title, content), token!!.token!!)
+                                                            .also {
+                                                                Common.sendNotification(requireContext(), it)
+                                                                dialog.dismiss()
                                                             }
-                                                        }, { t ->
-                                                            dialog.dismiss()
-                                                            Toast.makeText(context, ""+t.message, Toast.LENGTH_SHORT).show()
-                                                        })
-                                            )
+                                                    }
+                                                    override fun onCancelled(error: DatabaseError) {
+                                                        dialog.dismiss()
+                                                        Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
+                                                    }
+                                                })
                                         } else {
                                             dialog.dismiss()
                                             Toast.makeText(context, "Token not found", Toast.LENGTH_SHORT).show()
@@ -382,7 +368,7 @@ class VendorOrderSummaryFragment : Fragment() {
 
                                     override fun onCancelled(error: DatabaseError) {
                                         dialog.dismiss()
-                                        Toast.makeText(context, "" + error.message, Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
                                     }
 
                                 })

@@ -21,7 +21,7 @@ class VendorMyOrderAdapter (
     private var simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
 
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        var txt_time =  itemView.findViewById(R.id.txt_time) as TextView
+        var txt_time =  itemView.findViewById(R.id.txt_vendor_order_status) as TextView
         var txt_order_number = itemView.findViewById(R.id.txt_order_number) as TextView
         var txt_num_item = itemView.findViewById(R.id.txt_num_item) as TextView
         var txt_name = itemView.findViewById(R.id.txt_name) as TextView

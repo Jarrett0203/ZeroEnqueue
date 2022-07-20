@@ -14,13 +14,9 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.zeroenqueue.Notifications.IFCMService
-import com.example.zeroenqueue.Notifications.RetrofitFCMClient
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.MyCartAdapter
-import com.example.zeroenqueue.classes.FCMResponse
-import com.example.zeroenqueue.classes.FCMSendData
-import com.example.zeroenqueue.classes.Order
+import com.example.zeroenqueue.classes.*
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
 import com.example.zeroenqueue.databinding.FragmentCartBinding
@@ -38,6 +34,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import dmax.dialog.SpotsDialog
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -51,7 +48,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 
-class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
+class CartFragment : Fragment(), ILoadTimeFromFirebaseCallback {
 
     private var _binding: FragmentCartBinding? = null
 
@@ -61,19 +58,18 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
 
     private lateinit var cartViewModel: CartViewModel
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private var cartDataSource:CartDataSource?=null
-    private var recyclerViewState: Parcelable?=null
+    private var cartDataSource: CartDataSource? = null
+    private var recyclerViewState: Parcelable? = null
     private lateinit var btn_place_order: Button
     private lateinit var empty_cart: TextView
     private lateinit var total_prices: TextView
     private lateinit var group_place_holder: CardView
-    private lateinit var recycler_cart:RecyclerView
+    private lateinit var recycler_cart: RecyclerView
     private lateinit var adapter: MyCartAdapter
     private lateinit var comments: TextView
-    lateinit var ifcmService: IFCMService
     lateinit var listener: ILoadTimeFromFirebaseCallback
 
-    override fun onCreateView (
+    override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -86,7 +82,8 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
         _binding = FragmentCartBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val navController = Navigation.findNavController(activity!!, R.id.nav_host_fragment_content_main)
+        val navController =
+            Navigation.findNavController(activity!!, R.id.nav_host_fragment_content_main)
 
         recycler_cart = binding.recyclerCart
         recycler_cart.setHasFixedSize(true)
@@ -99,6 +96,77 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
         group_place_holder = binding.groupPlaceHolder
         val btn_use_discounts = binding.btnUseDiscounts
         btn_place_order = binding.btnPlaceOrder
+        cartDataSource = LocalCartDataSource(CartDatabase.getInstance(requireContext()).cartDAO())
+        listener = this
+
+        val rootComment = layoutInflater.inflate(R.layout.layout_rating_comment, null)
+        comments = rootComment.findViewById(R.id.edit_comment) as TextView
+
+        //setHasOptionsMenu(true)
+
+        val swipe = object : SwipeHelper(requireContext(), recycler_cart, 200) {
+            override fun instantiateMyButton(
+                viewHolder: RecyclerView.ViewHolder,
+                buffer: MutableList<MyButton>
+            ) {
+                buffer.add(MyButton(requireContext(),
+                    "Delete",
+                    30,
+                    0,
+                    Color.parseColor("#FF3c30"),
+                    object : IDeleteBtnCallback {
+                        override fun onClick(pos: Int) {
+                            val itemDelete = adapter.getItemAtPosition(pos)
+                            cartDataSource!!.deleteCart(itemDelete)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(object : SingleObserver<Int> {
+                                    override fun onSubscribe(d: Disposable) {
+
+                                    }
+
+                                    override fun onSuccess(t: Int) {
+                                        adapter.notifyItemRemoved(pos)
+                                        calculateTotalPrice()
+                                        EventBus.getDefault().postSticky(CountCartEvent(true))
+                                        Toast.makeText(
+                                            context,
+                                            "Delete item success",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+
+                                    override fun onError(e: Throwable) {
+                                        Toast.makeText(
+                                            context,
+                                            e.message,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+
+                                })
+                        }
+                    }
+
+                ))
+            }
+        }
+
+        btn_use_discounts.setOnClickListener {
+            if (Common.cartItemSelected == null)
+                Toast.makeText(requireContext(), "Please select a food item", Toast.LENGTH_SHORT)
+                    .show()
+            else {
+                if (Common.cartItemSelected!!.discount != 0.0)
+                    Toast.makeText(
+                        requireContext(),
+                        "Discount has already been redeemed!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                else
+                    navController.navigate(R.id.navigation_useDiscounts)
+            }
+        }
 
         btn_place_order.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
@@ -123,19 +191,6 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
 
         }
 
-        initViews()
-
-        btn_use_discounts.setOnClickListener {
-            if (Common.cartItemSelected == null)
-                Toast.makeText(requireContext(), "Please select a food item", Toast.LENGTH_SHORT).show()
-            else {
-                if (Common.cartItemSelected!!.discount != 0.0)
-                    Toast.makeText(requireContext(), "Discount has already been redeemed!", Toast.LENGTH_SHORT).show()
-                else
-                    navController.navigate(R.id.navigation_useDiscounts)
-            }
-        }
-
         cartViewModel.getMutableLiveDataCartItems().observe(viewLifecycleOwner) {
             if (it == null || it.isEmpty()) {
                 recycler_cart.visibility = View.GONE
@@ -153,65 +208,11 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
         return root
     }
 
-    private fun initViews() {
-
-        //setHasOptionsMenu(true)
-
-        ifcmService = RetrofitFCMClient.getInstance().create(IFCMService::class.java)
-
-        val rootComment = layoutInflater.inflate(R.layout.layout_rating_comment, null)
-
-        cartDataSource = LocalCartDataSource(CartDatabase.getInstance(requireContext()).cartDAO())
-
-        listener = this
-        comments = rootComment.findViewById(R.id.edit_comment) as TextView
-
-        val swipe = object : SwipeHelper(requireContext(), recycler_cart, 200) {
-            override fun instantiateMyButton(
-                viewHolder: RecyclerView.ViewHolder,
-                buffer: MutableList<MyButton>
-            ) {
-                buffer.add(MyButton(requireContext(),
-                    "Delete",
-                    30,
-                    0,
-                    Color.parseColor("#FF3c30"),
-                    object: IDeleteBtnCallback {
-                        override fun onClick(pos: Int) {
-                            val itemDelete = adapter.getItemAtPosition(pos)
-                            cartDataSource!!.deleteCart(itemDelete)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(object:SingleObserver<Int> {
-                                    override fun onSubscribe(d: Disposable) {
-
-                                    }
-
-                                    override fun onSuccess(t: Int) {
-                                        adapter.notifyItemRemoved(pos)
-                                        calculateTotalPrice()
-                                        EventBus.getDefault().postSticky(CountCartEvent(true))
-                                        Toast.makeText(context, "Delete item success", Toast.LENGTH_SHORT).show()
-                                    }
-
-                                    override fun onError(e: Throwable) {
-                                        Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()
-                                    }
-
-                                })
-                        }
-                    }
-
-                ))
-            }
-        }
-    }
-
     private fun calculateTotalPrice() {
         cartDataSource!!.totalPrice(Common.currentUser!!.uid!!)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object: SingleObserver<Double> {
+            .subscribe(object : SingleObserver<Double> {
                 override fun onSuccess(t: Double) {
                     total_prices.text = Common.formatPrice(t)
                     recycler_cart.layoutManager!!.onRestoreInstanceState(recyclerViewState)
@@ -229,64 +230,6 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
             })
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onUpdateCartItems(event: UpdateCartItems) {
-        recyclerViewState = recycler_cart.layoutManager!!.onSaveInstanceState()
-        cartDataSource!!.updateCart(event.cartItem)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object: SingleObserver<Int> {
-                override fun onSuccess(t: Int) {
-                    calculateTotalPrice()
-                    recycler_cart.layoutManager!!.onRestoreInstanceState(recyclerViewState)
-                }
-
-                override fun onSubscribe(d: Disposable) {
-                }
-
-                override fun onError(e: Throwable) {
-                    Toast.makeText(context, "[UPDATE CART]" + e.message, Toast.LENGTH_SHORT).show()
-                }
-            })
-
-    }
-
-
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.cart_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.action_settings).isVisible = false
-        super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.action_clear_cart) {
-            cartDataSource!!.cleanCart((Common.currentUser!!.uid!!))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object: SingleObserver<Int> {
-                    override fun onSubscribe(d: Disposable) {
-
-                    }
-
-                    override fun onSuccess(t: Int) {
-                        Toast.makeText(context, "Clear cart success", Toast.LENGTH_SHORT).show()
-                        EventBus.getDefault().postSticky(CountCartEvent(true))
-                    }
-
-                    override fun onError(e: Throwable) {
-                        Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()
-                    }
-                })
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun paymentCash(collectionTime: String, comments: String?) {
         compositeDisposable.add(cartDataSource!!.getAllCart(Common.currentUser!!.uid!!)
             .subscribeOn(Schedulers.io())
@@ -298,8 +241,7 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
                         val existingArrayList = hashMap[item.foodStall]
                         existingArrayList!!.add(item)
                         hashMap.replace(item.foodStall!!, existingArrayList)
-                    }
-                    else {
+                    } else {
                         val newArrayList = ArrayList<CartItem>()
                         newArrayList.add(item)
                         hashMap[item.foodStall!!] = newArrayList
@@ -307,10 +249,13 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
                 }
 
                 hashMap.forEach { (foodStallId, cartItemList) ->
-                    cartDataSource!!.foodStallTotalPrice(Common.currentUser!!.uid!!, foodStallId)
+                    cartDataSource!!.foodStallTotalPrice(
+                        Common.currentUser!!.uid!!,
+                        foodStallId
+                    )
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(object: SingleObserver<Double> {
+                        .subscribe(object : SingleObserver<Double> {
                             override fun onSubscribe(d: Disposable) {
 
                             }
@@ -336,19 +281,23 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
 
                             override fun onError(e: Throwable) {
                                 if (!e.message!!.contains("Query returned empty"))
-                                    Toast.makeText(context, "[SUM CART" + e.message, Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        context,
+                                        "[SUM CART" + e.message,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                             }
                         })
                 }
             }, { throwable ->
-                Toast.makeText(context, "" + throwable.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, throwable.message, Toast.LENGTH_SHORT).show()
             }
             ))
     }
 
     private fun syncLocalTimeWithServerTime(order: Order) {
         val offsetRef = FirebaseDatabase.getInstance().getReference(".info/serverTimeOffset")
-        offsetRef.addListenerForSingleValueEvent(object: ValueEventListener {
+        offsetRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 listener.onLoadTimeFailed(p0.message)
             }
@@ -379,43 +328,74 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
             .getReference(Common.ORDER_REF)
             .child(Common.randomTimeId())
             .setValue(order)
-            .addOnFailureListener { e -> Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()}
-            .addOnCompleteListener{ task ->
-                if(task.isSuccessful) {
+            .addOnFailureListener { e ->
+                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+            }
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
                     cartDataSource!!.cleanCart(Common.currentUser!!.uid!!)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(object: SingleObserver<Int> {
+                        .subscribe(object : SingleObserver<Int> {
                             override fun onSubscribe(d: Disposable) {
-
-
                             }
 
                             override fun onSuccess(t: Int) {
-                                val dataSend = HashMap<String, String>()
-                                dataSend.put(Common.NOTI_TITLE, "New Order")
-                                dataSend.put(Common.NOTI_CONTENT, "You have a new order" + Common.currentUser!!.phone)
+                                val title = "New Order"
+                                val content = "You have a new order from " + Common.currentUser!!.phone
+                                var ownerUid: String
+                                var tokenId: String
 
-                                val sendData = FCMSendData(Common.getNewOrderTopic(), dataSend)
+                                //get owneruid from foodstallid
+                                val dialog = SpotsDialog.Builder().setContext(context!!).setCancelable(false).build()
+                                dialog.show()
+                                FirebaseDatabase.getInstance(Common.DATABASE_LINK)
+                                    .getReference(Common.FOODSTALL_REF)
+                                    .child(order.foodStallId!!)
+                                    .addValueEventListener(object : ValueEventListener {
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            if (snapshot.exists()) {
+                                                val foodStall = snapshot.getValue(FoodStall::class.java)
+                                                ownerUid = foodStall!!.ownerUid!!
+                                                //get token from owneruid
+                                                if (ownerUid.isNotEmpty())
+                                                    FirebaseDatabase.getInstance(Common.DATABASE_LINK)
+                                                        .getReference(Common.TOKEN_REF)
+                                                        .child(ownerUid)
+                                                        .addValueEventListener(object :
+                                                            ValueEventListener {
+                                                            override fun onDataChange(snapshot: DataSnapshot) {
+                                                                if (snapshot.exists()) {
+                                                                    val token = snapshot.getValue(Token::class.java)
+                                                                    tokenId = token!!.token!!
+                                                                    //push notification to vendor
+                                                                    if (tokenId.isNotEmpty())
+                                                                        PushNotification(NotificationData(title, content), tokenId)
+                                                                            .also {
+                                                                                Common.sendNotification(requireContext(), it)
+                                                                                Toast.makeText(requireContext(), "Order was sent successfully", Toast.LENGTH_SHORT).show()
+                                                                                dialog.dismiss()
+                                                                            }
+                                                                }
+                                                            }
 
-                                compositeDisposable.add(
-                                    ifcmService.sendNotification(sendData)
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe ({
-                                             t: FCMResponse ->
-                                                if(t.success != 0)
-                                                    Toast.makeText(context!!, "Order placed successfully", Toast.LENGTH_SHORT).show()
-                                        }, {t: Throwable? ->
-                                            Toast.makeText(context!!, "Order was sent but notification system failed", Toast.LENGTH_SHORT).show()
-                                        })
-                                )
+                                                            override fun onCancelled(error: DatabaseError) {
+                                                                Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
+                                                            }
 
-                                Toast.makeText(context, "Order placed successfully", Toast.LENGTH_SHORT).show()
+                                                        })
+                                            }
+                                        }
+
+                                        override fun onCancelled(error: DatabaseError) {
+                                            Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
+                                        }
+
+                                    })
                             }
 
                             override fun onError(e: Throwable) {
-                                Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
                             }
 
                         })
@@ -423,9 +403,66 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
             }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.cart_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.findItem(R.id.action_settings).isVisible = false
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_clear_cart) {
+            cartDataSource!!.cleanCart((Common.currentUser!!.uid!!))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<Int> {
+                    override fun onSubscribe(d: Disposable) {
+
+                    }
+
+                    override fun onSuccess(t: Int) {
+                        Toast.makeText(context, "Clear cart success", Toast.LENGTH_SHORT).show()
+                        EventBus.getDefault().postSticky(CountCartEvent(true))
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()
+                    }
+                })
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onUpdateCartItems(event: UpdateCartItems) {
+        recyclerViewState = recycler_cart.layoutManager!!.onSaveInstanceState()
+        cartDataSource!!.updateCart(event.cartItem)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : SingleObserver<Int> {
+                override fun onSuccess(t: Int) {
+                    calculateTotalPrice()
+                    recycler_cart.layoutManager!!.onRestoreInstanceState(recyclerViewState)
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onError(e: Throwable) {
+                    Toast.makeText(context, "[UPDATE CART]" + e.message, Toast.LENGTH_SHORT).show()
+                }
+            })
+
+    }
+
     override fun onStart() {
         super.onStart()
-        if(!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this)
     }
 
@@ -434,7 +471,7 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
         cartViewModel.onStop()
         compositeDisposable.clear()
         EventBus.getDefault().postSticky(HideFABCart(false))
-        if(EventBus.getDefault().isRegistered(this))
+        if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this)
     }
 
