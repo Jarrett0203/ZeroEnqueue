@@ -2,25 +2,33 @@ package com.example.zeroenqueue.common
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.NotificationManager.IMPORTANCE_HIGH
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Typeface
+import android.media.RingtoneManager
 import android.os.Build
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.example.zeroenqueue.Notifications.RetrofitInstance
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.*
 import com.example.zeroenqueue.db.CartItem
 import com.google.firebase.database.FirebaseDatabase
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import kotlin.math.abs
@@ -119,7 +127,7 @@ object Common {
     }
 
     fun getNewOrderTopic(): String {
-        return StringBuilder("/topics/new_order").toString()
+        return "/topics/new_order"
     }
 
     fun updateToken(context: Context, token: String) {
@@ -131,7 +139,7 @@ object Common {
     }
 
 
-    fun showNotification(context: Context, id:Int, title: String?, content: String?, intent: Intent?) {
+    fun showNotification(context: Context, id:Int, title: String, content: String, intent: Intent?) {
         var pendingIntent : PendingIntent ?= null
         if(intent != null)
             pendingIntent = PendingIntent.getActivity(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -140,22 +148,23 @@ object Common {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(NOTIFICATION_CHANNEL_ID,
-                "ZeroEnqueue", NotificationManager.IMPORTANCE_DEFAULT)
-
-            notificationChannel.description = "ZeroEnqueue"
-            notificationChannel.enableLights(true)
-            notificationChannel.enableVibration(true)
-            notificationChannel.lightColor = (Color.RED)
-            notificationChannel.vibrationPattern = longArrayOf(0, 1000, 500, 1000)
-
+                "ZeroEnqueue", IMPORTANCE_HIGH).apply {
+                    description = "ZeroEnqueue"
+                    enableLights(true)
+                    enableVibration(true)
+                    lightColor = (Color.RED)
+                    vibrationPattern = longArrayOf(0, 1000, 500, 1000)
+                }
             notificationManager.createNotificationChannel(notificationChannel)
         }
 
         val builder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
 
-        builder.setContentTitle(title!!).setContentText(content!!).setAutoCancel(true)
+        val notificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        builder.setContentTitle(title).setContentText(content).setAutoCancel(true)
             .setSmallIcon(R.mipmap.ic_launcher_round)
             .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.ic_food))
+            .setSound(notificationSoundUri)
 
         if(pendingIntent != null)
             builder.setContentIntent(pendingIntent)
@@ -163,6 +172,15 @@ object Common {
         val notification = builder.build()
         notificationManager.notify(id, notification)
 
+    }
+
+    fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = RetrofitInstance.api.postNotification(notification)
+        }
+        catch(e: Exception) {
+            Log.e(TAG, e.toString())
+        }
     }
 
     var authorizeToken: String? = null
@@ -189,6 +207,7 @@ object Common {
     const val FOODLIST_REF = "FoodList"
     const val COMMENT_REF = "Comments"
     const val DISCOUNT_REF = "Discounts"
+    val TAG = "Notifications"
 
     const val DATABASE_LINK: String =
         "https://zeroenqueue-default-rtdb.asia-southeast1.firebasedatabase.app/"

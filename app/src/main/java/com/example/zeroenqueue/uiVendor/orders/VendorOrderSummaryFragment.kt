@@ -273,7 +273,6 @@ class VendorOrderSummaryFragment : Fragment() {
 
                 val btn_ok = layout_dialog.findViewById<View>(R.id.okay) as Button
                 val btn_cancel = layout_dialog.findViewById<View>(R.id.cancel) as Button
-
                 val status = layout_dialog.findViewById<View>(R.id.status) as TextView
 
                 status.text = StringBuilder("Order Status(")
@@ -331,7 +330,7 @@ class VendorOrderSummaryFragment : Fragment() {
                         .getReference(Common.ORDER_REF)
                         .child(order.key!!)
                         .updateChildren(update_data)
-                        .addOnFailureListener { throwable -> Toast.makeText(context!!, "" + throwable.message,
+                        .addOnFailureListener { throwable -> Toast.makeText(context!!, throwable.message,
                             Toast.LENGTH_SHORT).show() }
                         .addOnSuccessListener {
 
@@ -346,11 +345,11 @@ class VendorOrderSummaryFragment : Fragment() {
                                         if(snapshot.exists()) {
                                             val token = snapshot.getValue(Token::class.java)
                                             val notiData = HashMap<String, String>()
-                                            notiData.put(Common.NOTI_TITLE, "Your order was updated")
-                                            notiData.put(Common.NOTI_CONTENT, StringBuilder("Your order ")
+                                            notiData[Common.NOTI_TITLE] = "Your order was updated"
+                                            notiData[Common.NOTI_CONTENT] = StringBuilder("Your order ")
                                                 .append(order.key)
-                                                .append(" was update to ")
-                                                .append(Common.convertStatusToText(status.toString().toInt())).toString())
+                                                .append(" was updated to ")
+                                                .append(Common.convertStatusToText(i)).toString()
 
                                             val sendData = FCMSendData(token!!.token!!, notiData)
 
@@ -360,6 +359,7 @@ class VendorOrderSummaryFragment : Fragment() {
                                                     .observeOn(AndroidSchedulers.mainThread())
                                                     .subscribe(
                                                         { fcmResponse ->
+                                                            dialog.dismiss()
                                                             if (fcmResponse.success == 1) {
                                                                 Toast.makeText(context, "Update order successful", Toast.LENGTH_SHORT).show()
                                                             } else {
@@ -371,7 +371,7 @@ class VendorOrderSummaryFragment : Fragment() {
                                                             }
                                                         }, { t ->
                                                             dialog.dismiss()
-                                                            Toast.makeText(context, ""+t.message, Toast.LENGTH_SHORT).show()
+                                                            Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
                                                         })
                                             )
                                         } else {
@@ -382,7 +382,7 @@ class VendorOrderSummaryFragment : Fragment() {
 
                                     override fun onCancelled(error: DatabaseError) {
                                         dialog.dismiss()
-                                        Toast.makeText(context, "" + error.message, Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
                                     }
 
                                 })

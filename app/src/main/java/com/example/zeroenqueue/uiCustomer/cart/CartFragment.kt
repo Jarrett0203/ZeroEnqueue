@@ -18,9 +18,7 @@ import com.example.zeroenqueue.Notifications.IFCMService
 import com.example.zeroenqueue.Notifications.RetrofitFCMClient
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.MyCartAdapter
-import com.example.zeroenqueue.classes.FCMResponse
-import com.example.zeroenqueue.classes.FCMSendData
-import com.example.zeroenqueue.classes.Order
+import com.example.zeroenqueue.classes.*
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.common.SwipeHelper
 import com.example.zeroenqueue.databinding.FragmentCartBinding
@@ -99,72 +97,14 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
         group_place_holder = binding.groupPlaceHolder
         val btn_use_discounts = binding.btnUseDiscounts
         btn_place_order = binding.btnPlaceOrder
-
-        btn_place_order.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("One more step!")
-
-            val view = LayoutInflater.from(context).inflate(R.layout.layout_place_order, null)
-            val collectionTime = view.findViewById<View>(R.id.time) as EditText
-            val cash = view.findViewById<View>(R.id.cash) as RadioButton
-            //val braintree = view.findViewById<View>(R.id.braintree) as RadioButton
-
-            //collectionTime.setText(Common.currentUser!!.address)
-
-            builder.setView(view)
-            builder.setNegativeButton("No") { dialogInterface, _ -> dialogInterface.dismiss() }
-                .setPositiveButton("YES") { _, _ ->
-                    if (cash.isChecked)
-                        paymentCash(collectionTime.text.toString(), comments.text.toString())
-                }
-
-            val dialog = builder.create()
-            dialog.show()
-
-        }
-
-        initViews()
-
-        btn_use_discounts.setOnClickListener {
-            if (Common.cartItemSelected == null)
-                Toast.makeText(requireContext(), "Please select a food item", Toast.LENGTH_SHORT).show()
-            else {
-                if (Common.cartItemSelected!!.discount != 0.0)
-                    Toast.makeText(requireContext(), "Discount has already been redeemed!", Toast.LENGTH_SHORT).show()
-                else
-                    navController.navigate(R.id.navigation_useDiscounts)
-            }
-        }
-
-        cartViewModel.getMutableLiveDataCartItems().observe(viewLifecycleOwner) {
-            if (it == null || it.isEmpty()) {
-                recycler_cart.visibility = View.GONE
-                group_place_holder.visibility = View.GONE
-                empty_cart.visibility = View.VISIBLE
-            } else {
-                recycler_cart.visibility = View.VISIBLE
-                group_place_holder.visibility = View.VISIBLE
-                empty_cart.visibility = View.GONE
-
-                adapter = MyCartAdapter(requireContext(), it)
-                recycler_cart.adapter = adapter
-            }
-        }
-        return root
-    }
-
-    private fun initViews() {
-
-        //setHasOptionsMenu(true)
-
         ifcmService = RetrofitFCMClient.getInstance().create(IFCMService::class.java)
+        cartDataSource = LocalCartDataSource(CartDatabase.getInstance(requireContext()).cartDAO())
+        listener = this
 
         val rootComment = layoutInflater.inflate(R.layout.layout_rating_comment, null)
-
-        cartDataSource = LocalCartDataSource(CartDatabase.getInstance(requireContext()).cartDAO())
-
-        listener = this
         comments = rootComment.findViewById(R.id.edit_comment) as TextView
+
+        //setHasOptionsMenu(true)
 
         val swipe = object : SwipeHelper(requireContext(), recycler_cart, 200) {
             override fun instantiateMyButton(
@@ -205,6 +145,56 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
                 ))
             }
         }
+
+        btn_use_discounts.setOnClickListener {
+            if (Common.cartItemSelected == null)
+                Toast.makeText(requireContext(), "Please select a food item", Toast.LENGTH_SHORT).show()
+            else {
+                if (Common.cartItemSelected!!.discount != 0.0)
+                    Toast.makeText(requireContext(), "Discount has already been redeemed!", Toast.LENGTH_SHORT).show()
+                else
+                    navController.navigate(R.id.navigation_useDiscounts)
+            }
+        }
+
+        btn_place_order.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("One more step!")
+
+            val view = LayoutInflater.from(context).inflate(R.layout.layout_place_order, null)
+            val collectionTime = view.findViewById<View>(R.id.time) as EditText
+            val cash = view.findViewById<View>(R.id.cash) as RadioButton
+            //val braintree = view.findViewById<View>(R.id.braintree) as RadioButton
+
+            //collectionTime.setText(Common.currentUser!!.address)
+
+            builder.setView(view)
+            builder.setNegativeButton("No") { dialogInterface, _ -> dialogInterface.dismiss() }
+                .setPositiveButton("YES") { _, _ ->
+                    if (cash.isChecked)
+                        paymentCash(collectionTime.text.toString(), comments.text.toString())
+                }
+
+            val dialog = builder.create()
+            dialog.show()
+
+        }
+
+        cartViewModel.getMutableLiveDataCartItems().observe(viewLifecycleOwner) {
+            if (it == null || it.isEmpty()) {
+                recycler_cart.visibility = View.GONE
+                group_place_holder.visibility = View.GONE
+                empty_cart.visibility = View.VISIBLE
+            } else {
+                recycler_cart.visibility = View.VISIBLE
+                group_place_holder.visibility = View.VISIBLE
+                empty_cart.visibility = View.GONE
+
+                adapter = MyCartAdapter(requireContext(), it)
+                recycler_cart.adapter = adapter
+            }
+        }
+        return root
     }
 
     private fun calculateTotalPrice() {
@@ -227,64 +217,6 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
                 }
 
             })
-    }
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onUpdateCartItems(event: UpdateCartItems) {
-        recyclerViewState = recycler_cart.layoutManager!!.onSaveInstanceState()
-        cartDataSource!!.updateCart(event.cartItem)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object: SingleObserver<Int> {
-                override fun onSuccess(t: Int) {
-                    calculateTotalPrice()
-                    recycler_cart.layoutManager!!.onRestoreInstanceState(recyclerViewState)
-                }
-
-                override fun onSubscribe(d: Disposable) {
-                }
-
-                override fun onError(e: Throwable) {
-                    Toast.makeText(context, "[UPDATE CART]" + e.message, Toast.LENGTH_SHORT).show()
-                }
-            })
-
-    }
-
-
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.cart_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.action_settings).isVisible = false
-        super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.action_clear_cart) {
-            cartDataSource!!.cleanCart((Common.currentUser!!.uid!!))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object: SingleObserver<Int> {
-                    override fun onSubscribe(d: Disposable) {
-
-                    }
-
-                    override fun onSuccess(t: Int) {
-                        Toast.makeText(context, "Clear cart success", Toast.LENGTH_SHORT).show()
-                        EventBus.getDefault().postSticky(CountCartEvent(true))
-                    }
-
-                    override fun onError(e: Throwable) {
-                        Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()
-                    }
-                })
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     private fun paymentCash(collectionTime: String, comments: String?) {
@@ -379,7 +311,7 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
             .getReference(Common.ORDER_REF)
             .child(Common.randomTimeId())
             .setValue(order)
-            .addOnFailureListener { e -> Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()}
+            .addOnFailureListener { e -> Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()}
             .addOnCompleteListener{ task ->
                 if(task.isSuccessful) {
                     cartDataSource!!.cleanCart(Common.currentUser!!.uid!!)
@@ -387,40 +319,86 @@ class CartFragment: Fragment(), ILoadTimeFromFirebaseCallback {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(object: SingleObserver<Int> {
                             override fun onSubscribe(d: Disposable) {
-
-
                             }
 
                             override fun onSuccess(t: Int) {
-                                val dataSend = HashMap<String, String>()
-                                dataSend.put(Common.NOTI_TITLE, "New Order")
-                                dataSend.put(Common.NOTI_CONTENT, "You have a new order" + Common.currentUser!!.phone)
+                                val title = "New Order"
+                                val message = "You have a new order from " + Common.currentUser!!.phone
 
-                                val sendData = FCMSendData(Common.getNewOrderTopic(), dataSend)
+                                //get owneruid from foodstallid
 
-                                compositeDisposable.add(
-                                    ifcmService.sendNotification(sendData)
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe ({
-                                             t: FCMResponse ->
-                                                if(t.success != 0)
-                                                    Toast.makeText(context!!, "Order placed successfully", Toast.LENGTH_SHORT).show()
-                                        }, {t: Throwable? ->
-                                            Toast.makeText(context!!, "Order was sent but notification system failed", Toast.LENGTH_SHORT).show()
-                                        })
-                                )
+                                //get token from owneruid
 
-                                Toast.makeText(context, "Order placed successfully", Toast.LENGTH_SHORT).show()
+                                PushNotification(NotificationData(title, message), Common.getNewOrderTopic())
+                                    .also {
+                                        Common.sendNotification(it)
+                                    }
                             }
 
                             override fun onError(e: Throwable) {
-                                Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
                             }
 
                         })
                 }
             }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.cart_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.findItem(R.id.action_settings).isVisible = false
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.action_clear_cart) {
+            cartDataSource!!.cleanCart((Common.currentUser!!.uid!!))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object: SingleObserver<Int> {
+                    override fun onSubscribe(d: Disposable) {
+
+                    }
+
+                    override fun onSuccess(t: Int) {
+                        Toast.makeText(context, "Clear cart success", Toast.LENGTH_SHORT).show()
+                        EventBus.getDefault().postSticky(CountCartEvent(true))
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Toast.makeText(context, "" + e.message, Toast.LENGTH_SHORT).show()
+                    }
+                })
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onUpdateCartItems(event: UpdateCartItems) {
+        recyclerViewState = recycler_cart.layoutManager!!.onSaveInstanceState()
+        cartDataSource!!.updateCart(event.cartItem)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object: SingleObserver<Int> {
+                override fun onSuccess(t: Int) {
+                    calculateTotalPrice()
+                    recycler_cart.layoutManager!!.onRestoreInstanceState(recyclerViewState)
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onError(e: Throwable) {
+                    Toast.makeText(context, "[UPDATE CART]" + e.message, Toast.LENGTH_SHORT).show()
+                }
+            })
+
     }
 
     override fun onStart() {
