@@ -1,5 +1,6 @@
 package com.example.zeroenqueue.activity
 
+import androidx.appcompat.view.menu.MenuAdapter
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
@@ -7,12 +8,14 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions
 import androidx.test.espresso.contrib.DrawerActions.open
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
 import com.example.zeroenqueue.R
+import com.example.zeroenqueue.adapters.VendorFoodListAdapter
 import com.example.zeroenqueue.classes.FoodStall
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
@@ -92,6 +95,27 @@ class MainVendorActivityTest {
         onView(withId(R.id.navigation_sign_out)).perform(click())
         onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click())
         onView(withId(R.id.loginActivity)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun foodItem_navigateToEditFoodDetailFragment() {
+        val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_stall_menu)).perform(click())
+        onView(withId(R.id.menu_fragment)).check(matches(isDisplayed()))
+        onView(withId(R.id.recycler_menu_list)).perform(RecyclerViewActions
+            .actionOnItemAtPosition<VendorFoodListAdapter.FoodListViewHolder>(0, click()))
+        onView(withId(R.id.vendor_food_detail_fragment)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun addNewFoodItem_navigateToEditFoodDetailFragment() {
+        val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_stall_menu)).perform(click())
+        onView(withId(R.id.menu_fragment)).check(matches(isDisplayed()))
+        onView(withId(R.id.addNewFood)).perform(click())
+        onView(withId(R.id.vendor_food_detail_fragment)).check(matches(isDisplayed()))
     }
 
 }

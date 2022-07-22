@@ -103,24 +103,31 @@ class VendorOrderSummaryFragment : Fragment() {
         val textSize: Int
 
         val density = resources.displayMetrics.density
-        if (density >= 4.0) {
-            buttonWidth = 200
-            textSize = 30
-        } else if (density >= 3.0) {
-            buttonWidth = 180
-            textSize = 27
-        } else if (density >= 2.0) {
-            buttonWidth = 160
-            textSize = 24
-        } else if (density >= 1.5) {
-            buttonWidth = 140
-            textSize = 21
-        } else if (density >= 1.0) {
-            buttonWidth = 120
-            textSize = 18
-        } else {
-            buttonWidth = 100
-            textSize = 15
+        when {
+            density >= 4.0 -> {
+                buttonWidth = 200
+                textSize = 30
+            }
+            density >= 3.0 -> {
+                buttonWidth = 180
+                textSize = 27
+            }
+            density >= 2.0 -> {
+                buttonWidth = 160
+                textSize = 24
+            }
+            density >= 1.5 -> {
+                buttonWidth = 140
+                textSize = 21
+            }
+            density >= 1.0 -> {
+                buttonWidth = 120
+                textSize = 18
+            }
+            else -> {
+                buttonWidth = 100
+                textSize = 15
+            }
         }
 
 

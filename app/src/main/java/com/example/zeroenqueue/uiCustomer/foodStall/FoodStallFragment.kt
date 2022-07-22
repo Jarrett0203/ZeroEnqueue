@@ -36,13 +36,13 @@ class FoodStallFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val foodStallViewModel =
-            ViewModelProvider(this).get(FoodStallViewModel::class.java)
+            ViewModelProvider(this)[FoodStallViewModel::class.java]
 
         _binding = FragmentFoodStallBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         recyclerViewFoodStall = binding.recyclerFoodStalls
-        dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
+        dialog = SpotsDialog.Builder().setContext(context).setCancelable(true).build()
         dialog.show()
         layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
         recyclerViewFoodStall.setHasFixedSize(true)
