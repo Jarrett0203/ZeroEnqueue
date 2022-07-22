@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
+import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.Discount
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
@@ -51,9 +53,10 @@ class CustomerDiscountsDetailFragment : Fragment() {
         val discountDescription = binding.discountDescription
         val expiry = binding.discountExpiry
         val btnRedeem = binding.btnRedeem
+        val navController = Navigation.findNavController(activity!!, R.id.nav_host_fragment_content_main)
 
         customerDiscountsDetailViewModel.discountDetail.observe(viewLifecycleOwner) {
-            val simpleDateFormat = SimpleDateFormat("dd/mm/yyyy")
+            val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
             discount.text = StringBuilder(it.discount.toString()).append("%")
             context?.let { context -> Glide.with(context).load(it.foodImage).into(foodImage) }
             foodName.text = it.foodName
@@ -62,7 +65,7 @@ class CustomerDiscountsDetailFragment : Fragment() {
             oldPrice.paintFlags = oldPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             newPrice.text = StringBuilder("$").append(Common.formatPrice(it.newPrice))
             discountDescription.text = it.description
-            expiry.text = StringBuilder("Valid till ").append(simpleDateFormat.format(it.expiry))
+            expiry.text = StringBuilder("Valid till ").append(simpleDateFormat.format(it.expiry).dropLast(9))
         }
 
         btnRedeem.setOnClickListener {
@@ -105,6 +108,7 @@ class CustomerDiscountsDetailFragment : Fragment() {
                                                     "Discount redeemed successfully",
                                                     Toast.LENGTH_SHORT
                                                 ).show()
+                                            navController.navigate(R.id.navigation_customerDiscounts)
                                             dialog.dismiss()
                                         }
                                 }

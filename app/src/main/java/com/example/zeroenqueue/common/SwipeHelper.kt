@@ -103,11 +103,7 @@ abstract class SwipeHelper(context: Context,
                          private val listener:IDeleteBtnCallback) {
         private var pos:Int= 0
         private var clickRegion : RectF?= null
-        private var resources : Resources
-
-        init {
-            resources = context.resources
-        }
+        private var resources : Resources = context.resources
 
         fun onClick(x: Float, y: Float) : Boolean {
             if (clickRegion != null && clickRegion!!.contains(x, y)) {

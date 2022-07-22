@@ -5,10 +5,14 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions.open
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
 import com.example.zeroenqueue.R
+import com.example.zeroenqueue.ToastMatcher
+import com.example.zeroenqueue.adapters.FoodStallAdapter
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -17,6 +21,17 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import com.example.zeroenqueue.adapters.CategoryAdapter
+import com.example.zeroenqueue.adapters.VendorFoodStallAdapter
+import junit.framework.Assert.assertFalse
+import junit.framework.Assert.assertTrue
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.not
+
 
 @MediumTest
 @HiltAndroidTest
@@ -103,4 +118,32 @@ class MainCustomerActivityTest {
         onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click())
         onView(withId(R.id.loginActivity)).check(matches(isDisplayed()))
     }
+
+    @Test
+    fun clickFoodStallItem_navigateToFoodListFragment() {
+        val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_foodStall)).perform(click())
+        onView(withId(R.id.food_stall_fragment)).check(matches(isDisplayed()))
+        onView(withId(R.id.recycler_food_stalls)).perform(RecyclerViewActions.
+        actionOnItemAtPosition<FoodStallAdapter.FoodStallViewHolder>(0, click()))
+        onView(withId(R.id.food_list_fragment)).check(matches(isDisplayed()))
+        //val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        //assertTrue(device.hasObject(By.text("The Tea Party selected")))
+    }
+
+    @Test
+    fun clickCategory_navigateToFoodListFragment() {
+        val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_categories)).perform(click())
+        onView(withId(R.id.categories_fragment)).check(matches(isDisplayed()))
+        onView(withId(R.id.recycler_categories)).perform(RecyclerViewActions.
+        actionOnItemAtPosition<CategoryAdapter.CategoryViewHolder>(0, click()))
+        onView(withId(R.id.food_list_fragment)).check(matches(isDisplayed()))
+        //onView(withText("CHICKEN selected")).inRoot(ToastMatcher()).check(matches(isDisplayed()))
+        //val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        //assertTrue(device.hasObject(By.text("CHICKEN selected")))
+    }
+
 }
