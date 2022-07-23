@@ -12,6 +12,10 @@ import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.Order
 import com.example.zeroenqueue.common.Common
+import com.example.zeroenqueue.eventBus.OrderItemClick
+import com.example.zeroenqueue.eventBus.VendorOrderItemClick
+import com.example.zeroenqueue.interfaces.IRecyclerItemClickListener
+import org.greenrobot.eventbus.EventBus
 import java.text.SimpleDateFormat
 
 class VendorMyOrderAdapter (
@@ -20,12 +24,25 @@ class VendorMyOrderAdapter (
 
     private var simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
 
-    class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         var txt_time =  itemView.findViewById(R.id.txt_vendor_order_status) as TextView
         var txt_order_number = itemView.findViewById(R.id.txt_order_number) as TextView
         var txt_num_item = itemView.findViewById(R.id.txt_num_item) as TextView
         var txt_name = itemView.findViewById(R.id.txt_name) as TextView
         var img_food_image = itemView.findViewById(R.id.img_food_image) as ImageView
+        private var listener: IRecyclerItemClickListener? = null
+
+        fun setListener(listener: IRecyclerItemClickListener) {
+            this.listener = listener
+        }
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(view: View?) {
+            listener!!.onItemClick(view!!, adapterPosition)
+        }
     }
 
     override fun onCreateViewHolder(
@@ -58,6 +75,13 @@ class VendorMyOrderAdapter (
         }
         Common.setSpanStringColor("Num of items: ", sum.toString(),
         holder.txt_num_item, Color.parseColor("#00574B"))
+
+        holder.setListener(object : IRecyclerItemClickListener {
+            override fun onItemClick(view: View, pos: Int) {
+                Common.orderSelected = orderList[pos]
+                EventBus.getDefault().post(VendorOrderItemClick(true, orderList[pos]))
+            }
+        })
 
     }
 

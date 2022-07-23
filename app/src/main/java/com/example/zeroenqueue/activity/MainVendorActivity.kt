@@ -18,10 +18,7 @@ import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.ActivityMainVendorBinding
-import com.example.zeroenqueue.eventBus.CustomerDiscountItemClick
-import com.example.zeroenqueue.eventBus.FoodItemClick
-import com.example.zeroenqueue.eventBus.MenuItemBack
-import com.example.zeroenqueue.eventBus.VendorDiscountItemClick
+import com.example.zeroenqueue.eventBus.*
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
@@ -165,6 +162,13 @@ class MainVendorActivity : AppCompatActivity() {
     fun onDiscountSelected(event: VendorDiscountItemClick) {
         if (event.isSuccess) {
             findNavController(R.id.nav_host_fragment_content_main_vendor).navigate(R.id.navigation_vendor_discounts_detail)
+        }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onOrderSelected(event: VendorOrderItemClick) {
+        if (event.isSuccess) {
+            findNavController(R.id.nav_host_fragment_content_main_vendor).navigate(R.id.navigation_vendor_order_detail)
         }
     }
 

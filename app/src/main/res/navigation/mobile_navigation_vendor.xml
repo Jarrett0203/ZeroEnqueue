@@ -46,6 +46,9 @@
         <action
                 android:id="@+id/vendorOrderSummary_to_profile"
                 app:destination="@id/profileFragment" />
+        <action
+                android:id="@+id/action_navigation_vendor_order_summary_to_navigation_vendor_order_detail"
+                app:destination="@id/navigation_vendor_order_detail" />
     </fragment>
     <fragment
             android:id="@+id/navigation_vendor_discounts"
@@ -73,4 +76,9 @@
                 android:id="@+id/addNewDiscount_to_vendor_discounts_detail"
                 app:destination="@id/navigation_vendor_discounts_detail" />
     </fragment>
+    <fragment
+            android:id="@+id/navigation_vendor_order_detail"
+            android:name="com.example.zeroenqueue.uiVendor.orders.VendorOrderDetailFragment"
+            android:label="Order Details"
+            tools:layout="@layout/fragment_vendor_order_detail" />
 </navigation>

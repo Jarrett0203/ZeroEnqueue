@@ -43,7 +43,7 @@
 
     <fragment
             android:id="@+id/navigation_customer_order_summary"
-            android:name="com.example.zeroenqueue.uiCustomer.orders.OrderSummaryFragment"
+            android:name="com.example.zeroenqueue.uiCustomer.orders.CustomerOrderSummaryFragment"
             android:label="@string/menu_order_summary"
             tools:layout="@layout/fragment_customer_order_summary">
         <action
