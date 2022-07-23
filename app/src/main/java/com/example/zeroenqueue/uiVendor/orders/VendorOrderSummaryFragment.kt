@@ -106,27 +106,27 @@ class VendorOrderSummaryFragment : Fragment() {
         when {
             density >= 4.0 -> {
                 buttonWidth = 200
-                textSize = 30
+                textSize = 33
             }
             density >= 3.0 -> {
                 buttonWidth = 180
-                textSize = 27
+                textSize = 30
             }
             density >= 2.0 -> {
                 buttonWidth = 160
-                textSize = 24
+                textSize = 27
             }
             density >= 1.5 -> {
                 buttonWidth = 140
-                textSize = 21
+                textSize = 24
             }
             density >= 1.0 -> {
                 buttonWidth = 120
-                textSize = 18
+                textSize = 21
             }
             else -> {
                 buttonWidth = 100
-                textSize = 15
+                textSize = 18
             }
         }
 
@@ -252,7 +252,7 @@ class VendorOrderSummaryFragment : Fragment() {
                     0 -> {
                         layout_dialog = LayoutInflater.from(context!!)
                             .inflate(R.layout.layout_dialog_preparing, null)
-                        builder = AlertDialog.Builder(context!!, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen)
+                        builder = AlertDialog.Builder(context!!)
                             .setView(layout_dialog)
 
                         preparing = layout_dialog.findViewById<View>(R.id.preparing) as RadioButton
@@ -299,12 +299,11 @@ class VendorOrderSummaryFragment : Fragment() {
 
             private fun deleteOrder(pos: Int, order: Order) {
                 if(!TextUtils.isEmpty(order.key)) {
-
                     FirebaseDatabase.getInstance()
                         .getReference(Common.ORDER_REF)
                         .child(order.key!!)
                         .removeValue()
-                        .addOnFailureListener { throwable -> Toast.makeText(context!!, "" + throwable.message,
+                        .addOnFailureListener { throwable -> Toast.makeText(context!!, throwable.message,
                             Toast.LENGTH_SHORT).show() }
                         .addOnSuccessListener {
                             adapter!!.removeItem(pos)
@@ -379,9 +378,10 @@ class VendorOrderSummaryFragment : Fragment() {
                                     }
 
                                 })
-                            adapter!!.removeItem(pos)
-                            adapter!!.notifyItemRemoved(pos)
-                            updateTextCounter()
+                            if (Common.orderStatusSelected != -1)
+                                vendorOrderSummaryViewModel.loadOrder(Common.orderStatusSelected)
+                            else
+                                vendorOrderSummaryViewModel.loadAllOrders()
                             Toast.makeText(context!!, "Update order success!",
                                 Toast.LENGTH_SHORT).show()
                         }
@@ -413,10 +413,6 @@ class VendorOrderSummaryFragment : Fragment() {
             }
         }
         return root
-
-
-
-
     }
 
     @Deprecated("Deprecated in Java")
@@ -449,7 +445,6 @@ class VendorOrderSummaryFragment : Fragment() {
             EventBus.getDefault().removeStickyEvent(LoadOrderEvent::class.java)
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this)
-
         compositeDisposable.clear()
         super.onStop()
     }

@@ -40,6 +40,10 @@ class BottomSheetOrderFragment: BottomSheetDialogFragment() {
 
         for (i in 0 until radioOrderStatus.childCount) {
             val radio = radioOrderStatus.getChildAt(i) as RadioButton
+            if (Common.orderStatusSelected == i) {
+                radio.isChecked = true
+                radio.isSelected = true
+            }
             radio.setOnClickListener {
                 if (!radio.isSelected) {
                     radio.isChecked = true
@@ -53,11 +57,26 @@ class BottomSheetOrderFragment: BottomSheetDialogFragment() {
 
         btnFilter.setOnClickListener {
             when (radioOrderStatus.checkedRadioButtonId) {
-                -1 -> EventBus.getDefault().postSticky(LoadAllOrders())
-                0 -> EventBus.getDefault().postSticky(LoadOrderEvent(0))
-                1 -> EventBus.getDefault().postSticky(LoadOrderEvent(1))
-                2 -> EventBus.getDefault().postSticky(LoadOrderEvent(2))
-                3 -> EventBus.getDefault().postSticky(LoadOrderEvent(3))
+                -1 -> {
+                    Common.orderStatusSelected = -1
+                    EventBus.getDefault().postSticky(LoadAllOrders())
+                }
+                0 -> {
+                    Common.orderStatusSelected = 0
+                    EventBus.getDefault().postSticky(LoadOrderEvent(0))
+                }
+                1 -> {
+                    Common.orderStatusSelected = 1
+                    EventBus.getDefault().postSticky(LoadOrderEvent(1))
+                }
+                2 -> {
+                    Common.orderStatusSelected = 2
+                    EventBus.getDefault().postSticky(LoadOrderEvent(2))
+                }
+                3 -> {
+                    Common.orderStatusSelected = 3
+                    EventBus.getDefault().postSticky(LoadOrderEvent(3))
+                }
                 else -> Toast.makeText(context, "Error filtering orders", Toast.LENGTH_SHORT).show()
             }
             dismiss()
