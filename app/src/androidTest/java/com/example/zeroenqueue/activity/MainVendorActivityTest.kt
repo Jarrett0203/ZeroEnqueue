@@ -1,10 +1,7 @@
 package com.example.zeroenqueue.activity
 
-import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions.open
@@ -27,7 +24,6 @@ import com.example.zeroenqueue.common.Common
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.hamcrest.Matcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
