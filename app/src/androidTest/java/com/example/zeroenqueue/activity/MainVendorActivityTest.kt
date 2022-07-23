@@ -1,20 +1,25 @@
 package com.example.zeroenqueue.activity
 
-import androidx.appcompat.view.menu.MenuAdapter
+import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.DrawerActions
 import androidx.test.espresso.contrib.DrawerActions.open
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiScrollable
+import androidx.test.uiautomator.UiSelector
+import com.example.zeroenqueue.CommonActions.clickItemWithId
 import com.example.zeroenqueue.R
+import com.example.zeroenqueue.adapters.AddNewDiscountAdapter
+import com.example.zeroenqueue.adapters.VendorDiscountsAdapter
 import com.example.zeroenqueue.adapters.VendorFoodListAdapter
 import com.example.zeroenqueue.classes.FoodStall
 import com.example.zeroenqueue.classes.User
@@ -22,9 +27,11 @@ import com.example.zeroenqueue.common.Common
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.hamcrest.Matcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+
 
 @MediumTest
 @HiltAndroidTest
@@ -80,6 +87,14 @@ class MainVendorActivityTest {
     }
 
     @Test
+    fun clickDiscounts_navigateToVendorDiscountsSummaryFragment() {
+        val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_vendor_discounts)).perform(click())
+        onView(withId(R.id.vendor_discounts_fragment)).check(matches(isDisplayed()))
+    }
+
+    @Test
     fun clickSwitchStall_navigateToStallOverviewFragment() {
         val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
         onView(withId(R.id.drawer_layout)).perform(open())
@@ -117,5 +132,58 @@ class MainVendorActivityTest {
         onView(withId(R.id.addNewFood)).perform(click())
         onView(withId(R.id.vendor_food_detail_fragment)).check(matches(isDisplayed()))
     }
+
+    @Test
+    fun discountItem_navigateToVendorDiscountDetailsFragment() {
+        val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_vendor_discounts)).perform(click())
+        onView(withId(R.id.vendor_discounts_fragment)).check(matches(isDisplayed()))
+        onView(withId(R.id.recyclerDiscounts)).perform(RecyclerViewActions
+            .actionOnItemAtPosition<VendorDiscountsAdapter.DiscountsViewHolder>(0, click()))
+        onView(withId(R.id.vendor_discount_details_fragment)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun discountFragment_navigateToAddNewDiscountFragment() {
+        val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_vendor_discounts)).perform(click())
+        onView(withId(R.id.vendor_discounts_fragment)).check(matches(isDisplayed()))
+        onView(withId(R.id.addNewDiscounts)).perform(click())
+        onView(withId(R.id.add_new_discount_fragment)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun addNewDiscountFragment_navigateToVendorDiscountDetailsFragment() {
+        val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_vendor_discounts)).perform(click())
+        onView(withId(R.id.vendor_discounts_fragment)).check(matches(isDisplayed()))
+        onView(withId(R.id.addNewDiscounts)).perform(click())
+        onView(withId(R.id.add_new_discount_fragment)).check(matches(isDisplayed()))
+        onView(withId(R.id.recycler_food_list)).perform(RecyclerViewActions
+            .actionOnItemAtPosition<AddNewDiscountAdapter.MyViewHolder>(0, clickItemWithId(R.id.checkbox)))
+        onView(withId(R.id.btn_add_new_discount)).perform(click())
+        onView(withId(R.id.vendor_discount_details_fragment)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun vendorDiscountDetailsFragment_navigateToDiscountsFragment() {
+        val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_vendor_discounts)).perform(click())
+        onView(withId(R.id.vendor_discounts_fragment)).check(matches(isDisplayed()))
+        onView(withId(R.id.recyclerDiscounts)).perform(RecyclerViewActions
+            .actionOnItemAtPosition<VendorDiscountsAdapter.DiscountsViewHolder>(0, click()))
+        onView(withId(R.id.vendor_discount_details_fragment)).check(matches(isDisplayed()))
+        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        val appViews = UiScrollable(UiSelector().scrollable(true))
+        appViews.scrollForward()
+        onView(withId(R.id.btnConfirmChanges)).perform(click())
+        onView(withId(R.id.vendor_discounts_fragment)).check(matches(isDisplayed()))
+    }
+
+
 
 }

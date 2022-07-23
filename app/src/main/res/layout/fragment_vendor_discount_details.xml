@@ -4,6 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/vendor_discount_details_fragment"
         tools:context=".uiVendor.vendorDiscountsDetail.VendorDiscountsDetailFragment"
         android:background="@color/white">
 
@@ -61,7 +62,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:weightSum="2"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
 
                     <LinearLayout
                             android:id="@+id/food_details"

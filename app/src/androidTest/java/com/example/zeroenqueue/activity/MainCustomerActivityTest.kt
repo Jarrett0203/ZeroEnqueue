@@ -6,6 +6,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions.open
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -25,8 +26,11 @@ import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
+import com.example.zeroenqueue.CommonActions.atPosition
 import com.example.zeroenqueue.adapters.CategoryAdapter
+import com.example.zeroenqueue.adapters.FoodListAdapter
 import com.example.zeroenqueue.adapters.VendorFoodStallAdapter
+import com.example.zeroenqueue.classes.Food
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.`is`
@@ -128,8 +132,10 @@ class MainCustomerActivityTest {
         onView(withId(R.id.recycler_food_stalls)).perform(RecyclerViewActions.
         actionOnItemAtPosition<FoodStallAdapter.FoodStallViewHolder>(0, click()))
         onView(withId(R.id.food_list_fragment)).check(matches(isDisplayed()))
-        //val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        //assertTrue(device.hasObject(By.text("The Tea Party selected")))
+        onView(withId(R.id.recycler_food_list))
+            .check(matches(atPosition(0, hasDescendant(withText("Fish and Chips")))))
+        onView(withId(R.id.recycler_food_list))
+            .check(matches(atPosition(1, hasDescendant(withText("Carbonara")))))
     }
 
     @Test
@@ -141,9 +147,17 @@ class MainCustomerActivityTest {
         onView(withId(R.id.recycler_categories)).perform(RecyclerViewActions.
         actionOnItemAtPosition<CategoryAdapter.CategoryViewHolder>(0, click()))
         onView(withId(R.id.food_list_fragment)).check(matches(isDisplayed()))
-        //onView(withText("CHICKEN selected")).inRoot(ToastMatcher()).check(matches(isDisplayed()))
-        //val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        //assertTrue(device.hasObject(By.text("CHICKEN selected")))
+        onView(withId(R.id.recycler_food_list))
+            .check(matches(atPosition(0, hasDescendant(withText("ROASTED QUARTER CHICKEN")))))
+        onView(withId(R.id.recycler_food_list))
+            .perform(scrollToPosition<FoodListAdapter.FoodListViewHolder>(1))
+            .check(matches(atPosition(1, hasDescendant(withText("CURRY CHICKEN")))))
+        onView(withId(R.id.recycler_food_list))
+            .perform(scrollToPosition<FoodListAdapter.FoodListViewHolder>(2))
+            .check(matches(atPosition(2, hasDescendant(withText("RENDANG CHICKEN")))))
+        onView(withId(R.id.recycler_food_list))
+            .perform(scrollToPosition<FoodListAdapter.FoodListViewHolder>(3))
+            .check(matches(atPosition(3, hasDescendant(withText("HERBAL STEAMED CHICKEN")))))
     }
 
 }

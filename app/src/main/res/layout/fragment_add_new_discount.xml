@@ -6,6 +6,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:padding="8dp"
         android:background="@color/white"
+        android:id="@+id/add_new_discount_fragment"
         tools:context=".uiVendor.addNewDiscount.AddNewDiscountFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
