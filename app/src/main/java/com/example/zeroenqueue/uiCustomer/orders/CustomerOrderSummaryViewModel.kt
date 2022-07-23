@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.zeroenqueue.classes.Order
 
-class OrderSummaryViewModel : ViewModel() {
+class CustomerOrderSummaryViewModel : ViewModel() {
     val mutableLiveDataOrderList:MutableLiveData<List<Order>> = MutableLiveData()
 
     fun setMutableLiveDataOrderList(orderList: List<Order>) {

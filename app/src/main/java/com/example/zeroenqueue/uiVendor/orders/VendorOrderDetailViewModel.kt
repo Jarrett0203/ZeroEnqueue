@@ -1,4 +1,4 @@
-package com.example.zeroenqueue.uiCustomer.orders
+package com.example.zeroenqueue.uiVendor.orders
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,19 +12,19 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class CustomerOrderDetailViewModel : ViewModel(), IOrderDetailCallBack {
-    private lateinit var messageError:MutableLiveData<String>
-    private var customerOrderDetailCallBackListener : IOrderDetailCallBack = this
+class VendorOrderDetailViewModel : ViewModel(), IOrderDetailCallBack {
+    private lateinit var messageError: MutableLiveData<String>
+    private var vendorOrderDetailCallBackListener : IOrderDetailCallBack = this
 
-    private var customerOrderDetailLiveData: MutableLiveData<List<CartItem>>?=null
+    private var vendorOrderDetailLiveData: MutableLiveData<List<CartItem>>?=null
 
-    val customerOrderDetail:LiveData<List<CartItem>>
+    val vendorOrderDetail: LiveData<List<CartItem>>
         get(){
-            if(customerOrderDetailLiveData == null){
-                customerOrderDetailLiveData = MutableLiveData()
+            if(vendorOrderDetailLiveData == null){
+                vendorOrderDetailLiveData = MutableLiveData()
                 loadCartItemList()
             }
-            return customerOrderDetailLiveData!!
+            return vendorOrderDetailLiveData!!
         }
 
     private fun loadCartItemList() {
@@ -39,17 +39,17 @@ class CustomerOrderDetailViewModel : ViewModel(), IOrderDetailCallBack {
                         break
                     }
                 }
-                customerOrderDetailCallBackListener.onCustomerOrderDetailLoadSuccess(tempList)
+                vendorOrderDetailCallBackListener.onCustomerOrderDetailLoadSuccess(tempList)
             }
 
             override fun onCancelled(error: DatabaseError) {
-                customerOrderDetailCallBackListener.onCustomerOrderDetailLoadFailed(error.message)
+                vendorOrderDetailCallBackListener.onCustomerOrderDetailLoadFailed(error.message)
             }
         })
     }
 
     override fun onCustomerOrderDetailLoadSuccess(cartItemList: List<CartItem>) {
-        customerOrderDetailLiveData!!.value = cartItemList
+        vendorOrderDetailLiveData!!.value = cartItemList
     }
 
     override fun onCustomerOrderDetailLoadFailed(message: String) {

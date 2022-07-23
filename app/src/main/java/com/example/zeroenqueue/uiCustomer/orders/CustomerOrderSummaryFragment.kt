@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +16,7 @@ import com.example.zeroenqueue.adapters.MyOrderAdapter
 import com.example.zeroenqueue.interfaces.ILoadOrderCallbackListener
 import com.example.zeroenqueue.classes.Order
 import com.example.zeroenqueue.common.Common
+import com.example.zeroenqueue.databinding.FragmentCustomerOrderSummaryBinding
 import com.example.zeroenqueue.eventBus.MenuItemBack
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -27,69 +27,74 @@ import org.greenrobot.eventbus.EventBus
 import java.util.*
 import kotlin.collections.ArrayList
 
-class OrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
-    private var orderSummaryViewModel: OrderSummaryViewModel?=null
+class CustomerOrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
+    private var _binding: FragmentCustomerOrderSummaryBinding? = null
 
-    internal lateinit var dialog: AlertDialog
-
-    private lateinit var recycler_order:RecyclerView
-
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+    private var customerOrderSummaryViewModel: CustomerOrderSummaryViewModel?=null
+    private lateinit var dialog: AlertDialog
     internal lateinit var listener:ILoadOrderCallbackListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        orderSummaryViewModel = ViewModelProvider(this)[OrderSummaryViewModel::class.java]
-        val root = inflater.inflate(R.layout.fragment_customer_order_summary, container, false)
+    ): View {
+        customerOrderSummaryViewModel = ViewModelProvider(this)[CustomerOrderSummaryViewModel::class.java]
+        _binding = FragmentCustomerOrderSummaryBinding.inflate(inflater, container, false)
+        val root = binding.root
         listener = this
+
         dialog = SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
-        recycler_order = root.findViewById(R.id.recycler_order) as RecyclerView
+        val noOrders = binding.txtNoOrders
+        val recycler_order = binding.recyclerOrder
         recycler_order.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(context)
         recycler_order.layoutManager = layoutManager
         recycler_order.addItemDecoration(DividerItemDecoration(requireContext(), layoutManager.orientation))
-        loadOrderFromFirebase()
 
-        orderSummaryViewModel!!.mutableLiveDataOrderList.observe(viewLifecycleOwner) {
-            Collections.reverse(it!!)
-            val adapter = MyOrderAdapter(requireContext(), it)
-            recycler_order.adapter = adapter
+        dialog.show()
+        val orderList = ArrayList<Order>()
+        FirebaseDatabase.getInstance().getReference(Common.ORDER_REF)
+            .orderByChild("userId")
+            .equalTo(Common.currentUser!!.uid!!)
+            .limitToLast(100)
+            .addListenerForSingleValueEvent(object: ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    listener.onLoadOrderFailed(error.message)
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for(orderSnapShot in snapshot.children) {
+                        val order = orderSnapShot.getValue(Order::class.java)
+                        order!!.orderNumber = orderSnapShot.key
+                        orderList.add(order)
+                    }
+                    listener.onLoadOrderSuccess(orderList)
+                }
+            })
+        dialog.dismiss()
+
+        customerOrderSummaryViewModel!!.mutableLiveDataOrderList.observe(viewLifecycleOwner) {
+            if (it.isEmpty() || it == null) {
+                recycler_order.visibility = View.GONE
+                noOrders.visibility = View.VISIBLE
+            }
+            else {
+                Collections.reverse(it)
+                val adapter = MyOrderAdapter(requireContext(), it)
+                recycler_order.adapter = adapter
+            }
         }
 
         return root
     }
 
-    private fun loadOrderFromFirebase() {
-        dialog.show()
-        val orderList = ArrayList<Order>()
-
-            FirebaseDatabase.getInstance().getReference(Common.ORDER_REF)
-                .orderByChild("userId")
-                .equalTo(Common.currentUser!!.uid!!)
-                .limitToLast(100)
-                .addListenerForSingleValueEvent(object: ValueEventListener {
-                    override fun onCancelled(error: DatabaseError) {
-                        listener.onLoadOrderFailed(error.message)
-                    }
-
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        for(orderSnapShot in snapshot.children) {
-                            val order = orderSnapShot.getValue(Order::class.java)
-                            order!!.orderNumber = orderSnapShot.key
-                            orderList.add(order)
-                        }
-                        listener.onLoadOrderSuccess(orderList)
-                    }
-                }
-        )
-        dialog.dismiss()
-    }
-
     override fun onLoadOrderSuccess(orderList: List<Order>) {
         dialog.dismiss()
-        orderSummaryViewModel!!.setMutableLiveDataOrderList(orderList)
+        customerOrderSummaryViewModel!!.setMutableLiveDataOrderList(orderList)
     }
 
     override fun onLoadOrderFailed(message: String) {
