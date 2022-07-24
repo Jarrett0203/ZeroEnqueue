@@ -10,8 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.MyOrderAdapter
 import com.example.zeroenqueue.interfaces.ILoadOrderCallbackListener
 import com.example.zeroenqueue.classes.Order
@@ -27,16 +25,13 @@ import org.greenrobot.eventbus.EventBus
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CustomerOrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
+class CustomerOrderSummaryFragment : Fragment(){
     private var _binding: FragmentCustomerOrderSummaryBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
     private var customerOrderSummaryViewModel: CustomerOrderSummaryViewModel?=null
-    private lateinit var dialog: AlertDialog
-    internal lateinit var listener:ILoadOrderCallbackListener
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,39 +40,24 @@ class CustomerOrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
         customerOrderSummaryViewModel = ViewModelProvider(this)[CustomerOrderSummaryViewModel::class.java]
         _binding = FragmentCustomerOrderSummaryBinding.inflate(inflater, container, false)
         val root = binding.root
-        listener = this
 
-        dialog = SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
+        val dialog : AlertDialog = SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
+        dialog.show()
         val noOrders = binding.txtNoOrders
         val recycler_order = binding.recyclerOrder
+        val swipeRefresh = binding.swipeRefresh
         recycler_order.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(context)
         recycler_order.layoutManager = layoutManager
         recycler_order.addItemDecoration(DividerItemDecoration(requireContext(), layoutManager.orientation))
 
-        dialog.show()
-        val orderList = ArrayList<Order>()
-        FirebaseDatabase.getInstance().getReference(Common.ORDER_REF)
-            .orderByChild("userId")
-            .equalTo(Common.currentUser!!.uid!!)
-            .limitToLast(100)
-            .addListenerForSingleValueEvent(object: ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {
-                    listener.onLoadOrderFailed(error.message)
-                }
+        swipeRefresh.setOnRefreshListener {
+            customerOrderSummaryViewModel!!.loadOrderList()
+            swipeRefresh.isRefreshing = false
+        }
 
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for(orderSnapShot in snapshot.children) {
-                        val order = orderSnapShot.getValue(Order::class.java)
-                        order!!.orderNumber = orderSnapShot.key
-                        orderList.add(order)
-                    }
-                    listener.onLoadOrderSuccess(orderList)
-                }
-            })
-        dialog.dismiss()
-
-        customerOrderSummaryViewModel!!.mutableLiveDataOrderList.observe(viewLifecycleOwner) {
+        customerOrderSummaryViewModel!!.orderList.observe(viewLifecycleOwner) {
+            dialog.dismiss()
             if (it.isEmpty() || it == null) {
                 recycler_order.visibility = View.GONE
                 noOrders.visibility = View.VISIBLE
@@ -90,16 +70,6 @@ class CustomerOrderSummaryFragment : Fragment(), ILoadOrderCallbackListener {
         }
 
         return root
-    }
-
-    override fun onLoadOrderSuccess(orderList: List<Order>) {
-        dialog.dismiss()
-        customerOrderSummaryViewModel!!.setMutableLiveDataOrderList(orderList)
-    }
-
-    override fun onLoadOrderFailed(message: String) {
-        dialog.dismiss()
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {

@@ -75,6 +75,7 @@ class VendorOrderSummaryFragment : Fragment() {
         val root: View = binding.root
 
         val recycler_order = binding.recyclerOrder
+        val swipeRefresh = binding.swipeRefresh
         var adapter: VendorMyOrderAdapter? = null
         recycler_order.setHasFixedSize(true)
         recycler_order.layoutManager = LinearLayoutManager(context)
@@ -396,6 +397,14 @@ class VendorOrderSummaryFragment : Fragment() {
                     .append(adapter!!.itemCount)
                     .append(")")
             }
+        }
+
+        swipeRefresh.setOnRefreshListener {
+            if (Common.orderStatusSelected != -1)
+                vendorOrderSummaryViewModel.loadOrder(Common.orderStatusSelected)
+            else
+                vendorOrderSummaryViewModel.loadAllOrders()
+            swipeRefresh.isRefreshing = false
         }
 
         vendorOrderSummaryViewModel.messageError.observe(viewLifecycleOwner) {

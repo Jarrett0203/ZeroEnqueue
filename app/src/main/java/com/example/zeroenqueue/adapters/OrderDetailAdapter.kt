@@ -73,7 +73,7 @@ class OrderDetailAdapter(private var context: Context, private var cartItemList:
             .append(
                 Common.formatPrice(
                     (cartItemList[position].foodPrice + cartItemList[position].foodExtraPrice)
-                            * (1 - cartItemList[position].discount)
+                            * (1 - cartItemList[position].discount) * cartItemList[position].foodQuantity
                 )
             )
         holder.food_quantity.text = StringBuilder("x").append(cartItemList[position].foodQuantity)
