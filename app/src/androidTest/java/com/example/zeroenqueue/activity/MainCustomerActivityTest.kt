@@ -2,22 +2,24 @@ package com.example.zeroenqueue.activity
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.DrawerActions
 import androidx.test.espresso.contrib.DrawerActions.open
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiScrollable
+import androidx.test.uiautomator.UiSelector
 import com.example.zeroenqueue.CommonActions.atPosition
 import com.example.zeroenqueue.CommonActions.clickItemWithId
 import com.example.zeroenqueue.R
-import com.example.zeroenqueue.adapters.FoodStallAdapter
+import com.example.zeroenqueue.adapters.*
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -27,14 +29,6 @@ import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiScrollable
-import androidx.test.uiautomator.UiSelector
-import com.example.zeroenqueue.adapters.CategoryAdapter
-import com.example.zeroenqueue.adapters.FoodListAdapter
-import com.example.zeroenqueue.adapters.CustomerDiscountsAdapter
-
 
 
 @MediumTest
@@ -48,16 +42,11 @@ class MainCustomerActivityTest {
     fun setup() {
         hiltRule.inject()
         Common.currentUser = User()
-        Common.currentUser!!.uid = "mRodvAqJXyUAEHiF4gaqrwraXjB2"
-        Common.currentUser!!.name = "customerTest"
-        Common.currentUser!!.phone = "97261931"
+        Common.currentUser!!.uid = "ufhHO4WKzSOi7rjHDZQvDmqrePn1"
+        Common.currentUser!!.name = "customer"
+        Common.currentUser!!.phone = "98231231"
+        Common.currentUser!!.nus = true
         Common.currentUser!!.userType = "Customer"
-    }
-
-    @Test
-    fun test_isActivityInView() {
-        val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
-        onView(withId(R.id.customer_home_fragment)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -104,7 +93,7 @@ class MainCustomerActivityTest {
         val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
         onView(withId(R.id.drawer_layout)).perform(open())
         onView(withId(R.id.navigation_customer_order_summary)).perform(click())
-        onView(withId(R.id.categories_customer_order_summary)).check(matches(isDisplayed()))
+        onView(withId(R.id.customer_order_summary)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -165,21 +154,28 @@ class MainCustomerActivityTest {
     @Test
     fun changeToVendorType()  {
         val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+        onView(withId(R.id.drawer_layout)).perform(open())
         onView(withId(R.id.navigation_sign_out)).perform(click())
         onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click())
         onView(withId(R.id.loginActivity)).check(matches(isDisplayed()))
-        onView(withId(R.id.email)).perform(ViewActions.typeText("john@gmail.com"))
-        onView(withId(R.id.password)).perform(ViewActions.typeText("password"))
+        onView(withId(R.id.email)).perform(typeText("customer@test.com"))
+        onView(withId(R.id.password)).perform(typeText("password"))
         onView(withId(R.id.login)).perform(click())
-        onView(withId(R.id.login)).perform(click())
-        onView(withId(R.id.login)).perform(click())
+        Thread.sleep(1000)
         onView(withId(R.id.drawer_layout)).perform(open())
         onView(withId(R.id.profile_image)).perform(click())
         onView(withId(R.id.chipVendor)).perform(click())
         onView(withId(R.id.btnUpdate)).perform(click())
-        onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click())
-        onView(allOf(withId(R.id.stalls_overview), isDisplayed()))
+        onView(withText("OK")).inRoot(isDialog()).perform(click())
+        onView(withId(R.id.stalls_overview_activity)).check(matches(isDisplayed()))
+        onView(withId(R.id.recycler_food_stalls)).perform(RecyclerViewActions
+            .actionOnItemAtPosition<VendorFoodStallAdapter.FoodStallViewHolder>(0, click()))
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.profile_image)).perform(click())
+        onView(withId(R.id.chipCustomer)).perform(click())
+        onView(withId(R.id.btnUpdate)).perform(click())
+        onView(withText("OK")).inRoot(isDialog()).perform(click())
+        onView(withId(R.id.customer_home_fragment)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -219,7 +215,7 @@ class MainCustomerActivityTest {
         val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
         onView(withId(R.id.drawer_layout)).perform(open())
         onView(withId(R.id.navigation_customer_order_summary)).perform(click())
-        onView(withId(R.id.categories_customer_order_summary)).check(matches(isDisplayed()))
+        onView(withId(R.id.customer_order_summary)).check(matches(isDisplayed()))
         onView(withId(R.id.recycler_order)).perform(click())
         onView(allOf(withId(R.id.order_details), isDisplayed()))
     }
@@ -227,41 +223,23 @@ class MainCustomerActivityTest {
     @Test
     fun clickDiscounts_navigateToDiscountsDetailsPage() {
         val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
-        onView(withId(R.id.navigation_sign_out)).perform(click())
-        onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click())
-        onView(withId(R.id.loginActivity)).check(matches(isDisplayed()))
-        onView(withId(R.id.email)).perform(ViewActions.typeText("john@gmail.com"))
-        onView(withId(R.id.password)).perform(ViewActions.typeText("password"))
-        onView(withId(R.id.login)).perform(click())
-        onView(withId(R.id.login)).perform(click())
-        onView(withId(R.id.login)).perform(click())
         onView(withId(R.id.drawer_layout)).perform(open())
         onView(withId(R.id.navigation_customerDiscounts)).perform(click())
         onView(withId(R.id.customer_discounts_fragment)).check(matches(isDisplayed()))
-        onView(withId(R.id.customer_discounts_fragment)).perform(click())
+        onView(withId(R.id.recyclerDiscounts)).perform(RecyclerViewActions
+            .actionOnItemAtPosition<CustomerDiscountsAdapter.DiscountsViewHolder>(0, click()))
         onView(withId(R.id.discount_details)).check(matches(isDisplayed()))
     }
 
     @Test
     fun redeemDiscounts_navigateToDiscountsFragment() {
         val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
-        onView(withId(R.id.navigation_sign_out)).perform(click())
-        onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click())
-        onView(withId(R.id.loginActivity)).check(matches(isDisplayed()))
-        onView(withId(R.id.email)).perform(ViewActions.typeText("john@gmail.com"))
-        onView(withId(R.id.password)).perform(ViewActions.typeText("password"))
-        onView(withId(R.id.login)).perform(click())
-        onView(withId(R.id.login)).perform(click())
-        onView(withId(R.id.login)).perform(click())
         onView(withId(R.id.drawer_layout)).perform(open())
         onView(withId(R.id.navigation_customerDiscounts)).perform(click())
         onView(withId(R.id.recyclerDiscounts)).perform(RecyclerViewActions
             .actionOnItemAtPosition<CustomerDiscountsAdapter.DiscountsViewHolder>(0, click()))
         val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         val appViews = UiScrollable(UiSelector().scrollable(true))
-
         appViews.scrollForward()
         onView(withId(R.id.btnRedeem)).perform(click())
         onView(withId(R.id.customer_discounts_fragment)).check(matches(isDisplayed()))

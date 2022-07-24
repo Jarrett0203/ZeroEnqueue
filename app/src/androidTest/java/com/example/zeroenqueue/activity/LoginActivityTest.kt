@@ -19,6 +19,7 @@ import com.google.firebase.database.core.view.View
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.hamcrest.Matchers.anyOf
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -50,9 +51,8 @@ class LoginActivityTest {
         onView(withId(R.id.email)).perform(typeText("john@gmail.com"))
         onView(withId(R.id.password)).perform(typeText("password"))
         onView(withId(R.id.login)).perform(click())
-        onView(withId(R.id.login)).perform(click())
-        onView(withId(R.id.login)).perform(click())
-        onView(withId(R.id.customer_home_fragment)).check(matches(isDisplayed()))
+        Thread.sleep(1000)
+        onView(anyOf(withId(R.id.customer_home_fragment), withId(R.id.stalls_overview_activity))).check(matches(isDisplayed()))
     }
 
     @Test
@@ -67,5 +67,4 @@ class LoginActivityTest {
         onView(withId(R.id.login)).perform(click())
         onView(withId(R.id.loginActivity)).check(matches(isDisplayed()))
     }
-
 }
