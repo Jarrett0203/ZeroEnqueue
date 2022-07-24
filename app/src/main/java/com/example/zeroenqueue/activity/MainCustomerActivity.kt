@@ -248,14 +248,14 @@ class MainCustomerActivity : AppCompatActivity() {
         }
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = false, threadMode = ThreadMode.MAIN)
     fun onFoodSelected(event: FoodItemClick) {
         if (event.isSuccess) {
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_detail)
         }
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = false, threadMode = ThreadMode.MAIN)
     fun onFoodStallSelected(event: FoodStallClick) {
         if (event.isSuccess) {
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_list)
@@ -305,7 +305,7 @@ class MainCustomerActivity : AppCompatActivity() {
             })
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = false, threadMode = ThreadMode.MAIN)
     fun onDiscountSelected(event: CustomerDiscountItemClick) {
         if (event.isSuccess) {
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_customer_discounts_detail)
