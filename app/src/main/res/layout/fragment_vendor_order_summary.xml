@@ -19,10 +19,16 @@
             android:gravity="center"
             app:drawableLeftCompat="@drawable/ic_placed" />
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_order"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/layout_order_item_vendor"/>
+            android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_order"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/layout_order_item_vendor"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
 </LinearLayout>
