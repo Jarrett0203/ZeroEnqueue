@@ -47,13 +47,7 @@ class FoodListFragmentTest {
 
     @Test
     fun filterChicken() {
-        launchFragmentInHiltContainer<FoodListFragment> {
-            filter_fab.performClick()
-            var foodStallArrList = arrayListOf<FoodStall>()
-            var categoryArrList = arrayListOf("CHICKEN")
-            this.filter(foodStallArrList, categoryArrList)
-            onView(withId(R.id.btnFilter)).perform(click())
-        }
+
     }
 
 }
