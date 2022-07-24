@@ -2,6 +2,7 @@ package com.example.zeroenqueue.activity
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions.open
@@ -17,6 +18,7 @@ import com.example.zeroenqueue.CommonActions.clickItemWithId
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.AddNewDiscountAdapter
 import com.example.zeroenqueue.adapters.VendorDiscountsAdapter
+import com.example.zeroenqueue.adapters.VendorFoodStallAdapter
 import com.example.zeroenqueue.adapters.VendorFoodListAdapter
 import com.example.zeroenqueue.classes.FoodStall
 import com.example.zeroenqueue.classes.User
@@ -109,6 +111,29 @@ class MainVendorActivityTest {
     }
 
     @Test
+    fun changeToCustomerType()  {
+        val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
+        Thread.sleep(1000)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_sign_out)).perform(click())
+        onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click())
+        onView(withId(R.id.loginActivity)).check(matches(isDisplayed()))
+        onView(withId(R.id.email)).perform(typeText("john@gmail.com"))
+        onView(withId(R.id.password)).perform(typeText("password"))
+        onView(withId(R.id.login)).perform(click())
+        onView(withId(R.id.login)).perform(click())
+        Thread.sleep(1000)
+        onView(withId(R.id.recycler_food_stalls)).perform(RecyclerViewActions
+            .actionOnItemAtPosition<VendorFoodStallAdapter.FoodStallViewHolder>(0, click()))
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.profile_image)).perform(click())
+        onView(withId(R.id.chipCustomer)).perform(click())
+        onView(withId(R.id.btnUpdate)).perform(click())
+        onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click())
+        onView(withId(R.id.customer_home_fragment)).check(matches(isDisplayed()))
+    }
+
+    @Test
     fun foodItem_navigateToEditFoodDetailFragment() {
         val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
         onView(withId(R.id.drawer_layout)).perform(open())
@@ -128,6 +153,20 @@ class MainVendorActivityTest {
         onView(withId(R.id.addNewFood)).perform(click())
         onView(withId(R.id.vendor_food_detail_fragment)).check(matches(isDisplayed()))
     }
+
+//    @Test
+//    fun vendorOrderNavigation() {
+//        val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
+//        Thread.sleep(1000)
+//        onView(withId(R.id.drawer_layout)).perform(open())
+//        onView(withId(R.id.navigation_vendor_order_summary)).perform(click())
+//        onView(withId(R.id.recycler_order)).perform(RecyclerViewActions
+//            .actionOnItemAtPosition<VendorMyOrderAdapter.MyViewHolder>(0, swipeLeft()))
+//
+//        onView(
+//            hasDescendant(withText("Edit"))).perform(click())
+//        onView(withId(R.id.vendor_food_detail_fragment)).check(matches(isDisplayed()))
+//    }
 
     @Test
     fun discountItem_navigateToVendorDiscountDetailsFragment() {

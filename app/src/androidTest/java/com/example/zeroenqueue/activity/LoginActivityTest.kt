@@ -8,6 +8,8 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.DrawerActions
+import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
@@ -40,36 +42,30 @@ class LoginActivityTest {
 
     @Test
     fun successfulLogin()  {
-        val activityScenario = ActivityScenario.launch(LoginActivity::class.java)
-        activityScenario.onActivity { activity ->
-             run {
-                 val email = activity!!.findViewById<EditText>(R.id.email)
-                 val pass = activity!!.findViewById<EditText>(R.id.password)
-                 email.setText("test@gmail.com")
-                 pass.setText("password1")
-                 val loginBtn = activity!!.findViewById<Button>(R.id.login)
-                 loginBtn.performClick()
-                 assertNotNull(activity!!.findViewById<android.view.View>(R.id.homepage))
-             }
-        }
-
+        val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+        onView(withId(R.id.navigation_sign_out)).perform(click())
+        onView(withText("OK")).inRoot(RootMatchers.isDialog()).check(matches(isDisplayed())).perform(click())
+        onView(withId(R.id.loginActivity)).check(matches(isDisplayed()))
+        onView(withId(R.id.email)).perform(typeText("john@gmail.com"))
+        onView(withId(R.id.password)).perform(typeText("password"))
+        onView(withId(R.id.login)).perform(click())
+        onView(withId(R.id.login)).perform(click())
+        onView(withId(R.id.login)).perform(click())
+        onView(withId(R.id.customer_home_fragment)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun failedLogin()  {
-        val activityScenario = ActivityScenario.launch(LoginActivity::class.java)
-        activityScenario.onActivity { activity ->
-            run {
-                val email = activity!!.findViewById<EditText>(R.id.email)
-                val pass = activity!!.findViewById<EditText>(R.id.password)
-                email.setText("test@gmail.com")
-                pass.setText("wrongPassword1")
-                val loginBtn = activity!!.findViewById<Button>(R.id.login)
-                loginBtn.performClick()
-                assertNull(activity!!.findViewById<android.view.View>(R.id.homepage))
-            }
-        }
-
+    fun failedLogin() {
+        val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+        onView(withId(R.id.navigation_sign_out)).perform(click())
+        onView(withText("OK")).inRoot(RootMatchers.isDialog()).check(matches(isDisplayed())).perform(click())
+        onView(withId(R.id.loginActivity)).check(matches(isDisplayed()))
+        onView(withId(R.id.email)).perform(typeText("test@gmail.com"))
+        onView(withId(R.id.password)).perform(typeText("wrongPassword1"))
+        onView(withId(R.id.login)).perform(click())
+        onView(withId(R.id.loginActivity)).check(matches(isDisplayed()))
     }
 
 }
