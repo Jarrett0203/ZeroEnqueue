@@ -3,18 +3,20 @@ package com.example.zeroenqueue.activity
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions
 import androidx.test.espresso.contrib.DrawerActions.open
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
-import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
+import com.example.zeroenqueue.CommonActions.atPosition
+import com.example.zeroenqueue.CommonActions.clickItemWithId
 import com.example.zeroenqueue.R
-import com.example.zeroenqueue.ToastMatcher
 import com.example.zeroenqueue.adapters.FoodStallAdapter
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
@@ -25,21 +27,14 @@ import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
-import com.example.zeroenqueue.CommonActions.atPosition
 import com.example.zeroenqueue.adapters.CategoryAdapter
 import com.example.zeroenqueue.adapters.FoodListAdapter
 import com.example.zeroenqueue.adapters.CustomerDiscountsAdapter
-import com.example.zeroenqueue.adapters.VendorFoodStallAdapter
-import com.example.zeroenqueue.classes.Food
-import junit.framework.Assert.assertFalse
-import junit.framework.Assert.assertTrue
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.not
+
 
 
 @MediumTest
@@ -53,8 +48,9 @@ class MainCustomerActivityTest {
     fun setup() {
         hiltRule.inject()
         Common.currentUser = User()
-        Common.currentUser!!.uid = "z2SYlNY4yJbd2NVnZcIKrMHbNH63"
-        Common.currentUser!!.name = "test"
+        Common.currentUser!!.uid = "mRodvAqJXyUAEHiF4gaqrwraXjB2"
+        Common.currentUser!!.name = "customerTest"
+        Common.currentUser!!.phone = "97261931"
         Common.currentUser!!.userType = "Customer"
     }
 
@@ -296,6 +292,39 @@ class MainCustomerActivityTest {
         onView(withId(R.id.btnFilter)).perform(click())
         onView(withId(R.id.recycler_food_list))
             .check(matches(atPosition(0, hasDescendant(withText("ROASTED QUARTER CHICKEN")))))
+    }
+
+    @Test
+    fun testCartSupportMultipleOrders() {
+        val activityScenario = ActivityScenario.launch(MainCustomerActivity::class.java)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_food_list)).perform(click())
+        onView(withId(R.id.recycler_food_list)).perform(RecyclerViewActions
+            .actionOnItemAtPosition<FoodListAdapter.FoodListViewHolder>(0, click()))
+        onView(withText("Large")).perform(click()).check(matches(isChecked()))
+        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        val appViews = UiScrollable(UiSelector().scrollable(true))
+        appViews.scrollForward()
+        onView(withId(R.id.add_addon_image)).perform(click())
+        onView(withId(R.id.search_addon)).perform(typeText("Fries"))
+        onView(withSubstring("Fries(+$2.00)")).perform(click())
+        pressBack()
+        pressBack()
+        appViews.scrollBackward()
+        onView(withId(R.id.btnCart)).perform(click())
+        pressBack()
+        onView(withId(R.id.recycler_food_list)).perform(RecyclerViewActions
+            .actionOnItemAtPosition<FoodListAdapter.FoodListViewHolder>(1, clickItemWithId(R.id.cart_image)))
+        onView(withId(R.id.fabCart)).perform(click())
+        onView(withId(R.id.cartFragment)).check(matches(isDisplayed()))
+        onView(withId(R.id.recycler_cart))
+            .check(matches(atPosition(0, hasDescendant(withText("Fish and Chips")))))
+        onView(withId(R.id.recycler_cart))
+            .check(matches(atPosition(1, hasDescendant(withText("Carbonara")))))
+        onView(withId(R.id.btn_place_order)).perform(click())
+        onView(withText("Cash")).perform(click()).check(matches(isChecked()))
+        onView(withText("YES")).inRoot(isDialog()).perform(click())
+        onView(withId(R.id.txt_empty_cart)).check(matches(isDisplayed()))
     }
 
 }

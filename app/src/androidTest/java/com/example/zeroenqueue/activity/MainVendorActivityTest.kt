@@ -1,16 +1,12 @@
 package com.example.zeroenqueue.activity
 
-import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions.open
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
@@ -24,20 +20,16 @@ import com.example.zeroenqueue.adapters.AddNewDiscountAdapter
 import com.example.zeroenqueue.adapters.VendorDiscountsAdapter
 import com.example.zeroenqueue.adapters.VendorFoodStallAdapter
 import com.example.zeroenqueue.adapters.VendorFoodListAdapter
-import com.example.zeroenqueue.adapters.VendorMyOrderAdapter
 import com.example.zeroenqueue.classes.FoodStall
 import com.example.zeroenqueue.classes.User
 import com.example.zeroenqueue.common.Common
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.hamcrest.Matcher
-import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.mock
-import javax.security.auth.callback.Callback
+
 
 @MediumTest
 @HiltAndroidTest
@@ -155,7 +147,6 @@ class MainVendorActivityTest {
     @Test
     fun addNewFoodItem_navigateToEditFoodDetailFragment() {
         val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
-        Thread.sleep(1000)
         onView(withId(R.id.drawer_layout)).perform(open())
         onView(withId(R.id.navigation_stall_menu)).perform(click())
         onView(withId(R.id.menu_fragment)).check(matches(isDisplayed()))
