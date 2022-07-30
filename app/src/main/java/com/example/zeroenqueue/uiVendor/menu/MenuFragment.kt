@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +26,7 @@ import com.example.zeroenqueue.databinding.FragmentMenuBinding
 import com.example.zeroenqueue.eventBus.MenuItemBack
 import com.example.zeroenqueue.interfaces.IDeleteBtnCallback
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.chip.ChipGroup
+import com.google.android.material.slider.Slider
 import com.google.firebase.database.FirebaseDatabase
 import dmax.dialog.SpotsDialog
 import org.greenrobot.eventbus.EventBus
@@ -39,6 +40,11 @@ class MenuFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var dialog: AlertDialog
     private var adapter : VendorFoodListAdapter? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Common.rating = 0.0
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +61,7 @@ class MenuFragment : Fragment() {
 
         val recyclerViewMenuList = binding.recyclerMenuList
         val swipeRefreshLayout = binding.swipeRefresh
+        val noMenu = binding.noMenu
         val addNewFood = binding.addNewFood
         val fabFilter = binding.filterFab
 
@@ -67,13 +74,14 @@ class MenuFragment : Fragment() {
             AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
 
         val filterBottomSheetDialog = BottomSheetDialog(requireContext(), R.style.DialogStyle)
-        val layoutFilter = layoutInflater.inflate(R.layout.layout_filter_food, null)
-        val chipGroupCategory = layoutFilter.findViewById(R.id.layout_chip_group_category) as ChipGroup
-        val btnFilter = layoutFilter.findViewById(R.id.btnFilter) as Button
-        filterBottomSheetDialog.setContentView(layoutFilter)
+        val layout_filter = layoutInflater.inflate(R.layout.layout_filter_popular_food, null)
+        val btnFilter = layout_filter.findViewById<Button>(R.id.btnFilter)
+        val ratingSlider = layout_filter.findViewById<Slider>(R.id.ratingSlider)
+        val currentRating = layout_filter.findViewById<TextView>(R.id.currentRating)
+        filterBottomSheetDialog.setContentView(layout_filter)
 
         swipeRefreshLayout.setOnRefreshListener {
-            menuViewModel.loadMenuList()
+            menuViewModel.loadMenuList(Common.rating)
             swipeRefreshLayout.isRefreshing = false
         }
 
@@ -82,12 +90,23 @@ class MenuFragment : Fragment() {
         }
 
         fabFilter.setOnClickListener {
-
+            filterBottomSheetDialog.show()
+            ratingSlider.value = Common.rating.toFloat()
         }
 
         btnFilter.setOnClickListener {
-
+            Common.rating = ratingSlider.value.toDouble()
+            dialog.show()
+            menuViewModel.loadMenuList(Common.rating)
+            dialog.dismiss()
+            filterBottomSheetDialog.dismiss()
         }
+
+        ratingSlider.addOnChangeListener { slider, value, fromUser ->
+            currentRating.text = value.toString()
+            Common.rating = value.toDouble()
+        }
+
 
         val displayMetrics = DisplayMetrics()
         val version = android.os.Build.VERSION.SDK_INT
@@ -145,7 +164,7 @@ class MenuFragment : Fragment() {
                                                     "Food item has been deleted",
                                                     Toast.LENGTH_SHORT
                                                 ).show()
-                                                menuViewModel.loadMenuList()
+                                                menuViewModel.loadMenuList(Common.rating)
                                             }
                                     }
 
@@ -164,9 +183,17 @@ class MenuFragment : Fragment() {
 
         menuViewModel.menuList.observe(viewLifecycleOwner) {
             dialog.dismiss()
-            adapter = VendorFoodListAdapter(requireContext(), it.toMutableList())
-            recyclerViewMenuList.adapter = adapter
-            recyclerViewMenuList.layoutAnimation = layoutAnimationController
+            if (it.isEmpty() || it == null) {
+                recyclerViewMenuList.visibility = View.GONE
+                noMenu.visibility = View.VISIBLE
+            }
+            else {
+                recyclerViewMenuList.visibility = View.VISIBLE
+                noMenu.visibility = View.GONE
+                adapter = VendorFoodListAdapter(requireContext(), it.toMutableList())
+                recyclerViewMenuList.adapter = adapter
+                recyclerViewMenuList.layoutAnimation = layoutAnimationController
+            }
         }
         return root
     }

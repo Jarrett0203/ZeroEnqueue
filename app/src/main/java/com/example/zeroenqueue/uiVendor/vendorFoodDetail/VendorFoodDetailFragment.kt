@@ -240,7 +240,7 @@ class VendorFoodDetailFragment : Fragment() {
                 editName.setText(it!!.name!!)
                 editDescription.setText(it.description!!)
                 editPrice.setText(Common.formatPrice(it.price))
-                ratingBar.rating = it.ratingValue
+                ratingBar.rating = (it.ratingValue / it.ratingCount).toFloat()
                 addOnAdapter = AddOnAdapter(requireContext(), it.addon)
                 sizeAdapter = SizeAdapter(requireContext(), it.size)
                 recyclerAddOns.adapter = addOnAdapter

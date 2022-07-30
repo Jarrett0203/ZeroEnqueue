@@ -31,12 +31,19 @@
                     android:textSize="30sp"
                     android:textStyle="italic|bold" />
 
-            <ImageView
+            <ImageButton
+                    android:backgroundTint="@color/yellow"
                     android:id="@+id/editStallDetails"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:padding="4dp"
                     android:layout_marginStart="8dp"
+                    android:background="@drawable/roundcorner"
+                    android:elevation="10dp"
                     android:src="@drawable/ic_edit"/>
         </LinearLayout>
 
@@ -161,17 +168,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/popular_food"
-                    android:textSize="24sp"
+                    android:textSize="28sp"
                     android:textStyle="bold" />
 
-            <ImageView
+            <ImageButton
                     android:id="@+id/filter_popular_food"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/yellow"
                     android:src="@drawable/ic_filter"
-                    android:layout_marginStart="10dp"
                     android:clickable="true"
                     android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:padding="4dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/roundcorner"
+                    android:elevation="10dp"
                     android:layout_gravity="center" />
         </LinearLayout>
 
@@ -181,13 +193,54 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_popular"
+            <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    tools:listitem="@layout/layout_food_item" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                    android:layout_height="match_parent">
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_popular"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            tools:listitem="@layout/layout_food_item" />
 
+                    <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/noPopular"
+                            android:visibility="gone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardElevation="10dp"
+                            android:layout_marginTop="10dp"
+                            app:cardCornerRadius="10dp"
+                            app:cardBackgroundColor="@color/yellow">
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                            <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="No Food found!"
+                                    android:textStyle="bold"
+                                    android:textSize="24sp"
+                                    android:gravity="center"/>
+
+                            <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Please swipe up to refresh or check your filters"
+                                    android:textStyle="italic"
+                                    android:textSize="16sp"
+                                    android:gravity="center"/>
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 
 </LinearLayout>

@@ -185,6 +185,7 @@ object Common {
         }
     }
 
+    var rating: Double = 0.0
     var orderStatusSelected: Int = -1
     var orderSelected: Order? = null
     var discountSelected: Discount? = null
