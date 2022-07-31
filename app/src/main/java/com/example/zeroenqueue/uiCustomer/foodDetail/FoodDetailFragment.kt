@@ -405,7 +405,7 @@ class FoodDetailFragment : Fragment(), TextWatcher {
         food_name.text = it!!.name!!
         food_description.text = it.description!!
         food_price.text = Common.formatPrice(it.price)
-        ratingBar.rating = it.ratingValue / it.ratingCount
+        ratingBar.rating = (it.ratingValue / it.ratingCount).toFloat()
         for (size in it.size) {
             var duplicateButton = false
             val radioButton = RadioButton(context)

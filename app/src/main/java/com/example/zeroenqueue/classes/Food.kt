@@ -14,7 +14,7 @@ class Food {
     var foodStall: String? = null
     var categories: String? = null
 
-    var ratingValue:Float = 0.toFloat()
+    var ratingValue:Double = 0.toDouble()
     var ratingCount:Long = 0.toLong()
     var addOnSelected: MutableList<AddOn>? = null
     var sizeSelected: Size? = null

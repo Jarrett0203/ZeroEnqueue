@@ -14,6 +14,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/dark_yellow</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+        <item name="sliderStyle">@style/Widget.App.Slider</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -47,5 +48,25 @@
         <item name="windowSplashScreenBackground">@color/yellow</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/zeroenqueue</item>
         <item name="postSplashScreenTheme">@style/Theme.ZeroEnqueue</item>
+    </style>
+
+    <style name="Widget.App.Slider" parent="Widget.MaterialComponents.Slider">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Slider</item>
+        <item name="labelStyle">@style/Widget.App.Tooltip</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Slider" parent="">
+        <item name="colorPrimary">@color/yellow</item>
+        <item name="colorOnPrimary">@color/yellow</item>
+        <item name="colorOnSurface">@color/dark_yellow</item>
+    </style>
+
+    <style name="Widget.App.Tooltip" parent="Widget.MaterialComponents.Tooltip">
+        <item name="android:textAppearance">@style/TextAppearance.App.Tooltip</item>
+        <item name="backgroundTint">@color/yellow</item>
+    </style>
+
+    <style name="TextAppearance.App.Tooltip" parent="TextAppearance.MaterialComponents.Tooltip">
+        <item name="android:textColor">@color/black</item>
     </style>
 </resources>
