@@ -28,6 +28,39 @@
                         tools:listitem="@layout/layout_food_item_vendor" />
 
                 <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/noMenu"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardElevation="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardBackgroundColor="@color/yellow">
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="No Food found!"
+                                android:textStyle="bold"
+                                android:textSize="24sp"
+                                android:gravity="center"/>
+
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Please swipe up to refresh or check your filters"
+                                android:textStyle="italic"
+                                android:textSize="16sp"
+                                android:gravity="center"/>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                         android:clickable="true"
                         android:focusable="true"
                         android:id="@+id/addNewFood"
