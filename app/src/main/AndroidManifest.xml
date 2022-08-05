@@ -17,14 +17,16 @@
             tools:replace="android:theme">
         <activity
                 android:name=".activity.CreateNewStallActivity"
-                android:exported="false" />
+                android:exported="false"
+                android:windowSoftInputMode="adjustResize"/>
         <activity
                 android:name=".activity.StallsOverviewActivity"
                 android:exported="false" />
         <activity
                 android:name=".activity.MainVendorActivity"
                 android:exported="false"
-                android:label="@string/title_activity_main_vendor" />
+                android:label="@string/title_activity_main_vendor"
+                android:windowSoftInputMode="adjustResize"/>
         <activity
                 android:name=".activity.RegisterUserActivity"
                 android:parentActivityName=".activity.LoginActivity" />
@@ -41,7 +43,7 @@
                 android:name=".activity.MainCustomerActivity"
                 android:exported="false"
                 android:label="@string/title_activity_home"
-                android:windowSoftInputMode="adjustPan" />
+                android:windowSoftInputMode="adjustResize" />
 
         <service android:name=".services.FirebaseService"
             android:permission="com.google.android.c2dm.permission.SEND"

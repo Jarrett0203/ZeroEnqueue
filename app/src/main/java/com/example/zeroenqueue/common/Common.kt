@@ -209,6 +209,7 @@ object Common {
     const val FOODLIST_REF = "FoodList"
     const val COMMENT_REF = "Comments"
     const val DISCOUNT_REF = "Discounts"
+    const val MESSAGES_REF = "Messages"
     val TAG = "Notifications"
 
     const val DATABASE_LINK: String =
