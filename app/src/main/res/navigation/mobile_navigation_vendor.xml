@@ -81,4 +81,9 @@
             android:name="com.example.zeroenqueue.uiVendor.orders.VendorOrderDetailFragment"
             android:label="Order Details"
             tools:layout="@layout/fragment_vendor_order_detail" />
+    <fragment
+            android:id="@+id/navigation_chat"
+            android:name="com.example.zeroenqueue.uiGeneral.chat.ChatFragment"
+            android:label="Chat"
+            tools:layout="@layout/fragment_chat" />
 </navigation>

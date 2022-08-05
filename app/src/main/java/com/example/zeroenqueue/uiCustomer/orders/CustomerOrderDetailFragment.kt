@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.get
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.adapters.OrderDetailAdapter
@@ -29,9 +30,16 @@ class CustomerOrderDetailFragment : Fragment() {
         _binding = FragmentCustomerOrderDetailBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val recycler_order_detail = binding.recyclerOrderDetail
+        val chatFAB = binding.chatFAB
+        val navController = Navigation.findNavController(activity!!, R.id.nav_host_fragment_content_main)
         recycler_order_detail.setHasFixedSize(true)
         recycler_order_detail.layoutManager = LinearLayoutManager(context)
         val layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
+
+        chatFAB.setOnClickListener {
+            navController.navigate(R.id.navigation_chat)
+        }
+
         customerOrderDetailViewModel.customerOrderDetail.observe(viewLifecycleOwner) {
             if (it.isEmpty() || it == null) {
                 recycler_order_detail.visibility = View.GONE

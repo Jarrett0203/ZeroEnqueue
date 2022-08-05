@@ -58,7 +58,6 @@ class MainCustomerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        subscribeToTopic(Common.getNewOrderTopic())
 
         binding = ActivityMainCustomerBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -203,16 +202,6 @@ class MainCustomerActivity : AppCompatActivity() {
             }
         val dialog = builder.create()
         dialog.show()
-    }
-
-    private fun subscribeToTopic(newOrderTopic: String) {
-        FirebaseMessaging.getInstance()
-            .subscribeToTopic(newOrderTopic)
-            .addOnFailureListener{ Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()}
-            .addOnCompleteListener{ task ->
-                if(!task.isSuccessful)
-                    Toast.makeText(this, "Subscribe topic failed", Toast.LENGTH_SHORT).show()
-            }
     }
 
     private fun countCartItem() {
