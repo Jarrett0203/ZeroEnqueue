@@ -97,13 +97,13 @@ class ChatFragment : Fragment(), IMessageCallback {
         dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
         dialog.show()
 
-        swipeRefresh.setOnRefreshListener {
+        /*swipeRefresh.setOnRefreshListener {
             loadMessageList()
             swipeRefresh.isRefreshing = false
-        }
+        }*/
 
         recyclerMessages.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-            if (bottom < oldBottom) {
+            if (bottom < oldBottom && adapter.messageList.isNotEmpty()) {
                 recyclerMessages.postDelayed({
                     recyclerMessages.smoothScrollToPosition(
                         adapter.messageList.size - 1
@@ -133,21 +133,17 @@ class ChatFragment : Fragment(), IMessageCallback {
 
                 val id = FirebaseDatabase.getInstance().getReference(Common.MESSAGES_REF).push().key
                 val message = editMessage.text.toString()
-                val timestamp = System.currentTimeMillis() / 1000
+                val timestamp = System.currentTimeMillis()
                 val newMessage = Message(id, senderId, receiverId, userImage, message, timestamp)
-
-                adapter.messageList.add(adapter.messageList.size, newMessage)
-                adapter.notifyItemInserted(adapter.messageList.size)
-                recyclerMessages.adapter = adapter
 
                 FirebaseDatabase.getInstance()
                     .getReference(Common.MESSAGES_REF)
                     .child(chatLogId)
-                    .setValue(adapter.messageList)
+                    .child(id!!)
+                    .setValue(newMessage)
                     .addOnFailureListener { e -> Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()}
 
                 editMessage.text.clear()
-                recyclerMessages.scrollToPosition(adapter.messageList.size - 1)
             }
         }
 
@@ -159,10 +155,12 @@ class ChatFragment : Fragment(), IMessageCallback {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     if (snapshot.exists()) {
                         val newMessage = snapshot.getValue(Message::class.java)
-                        adapter.messageList.add(adapter.messageList.size, newMessage!!)
-                        adapter.notifyItemInserted(adapter.messageList.size)
-                        recyclerMessages.adapter = adapter
-                        recyclerMessages.scrollToPosition(adapter.messageList.size - 1)
+                        if (!adapter.messageList.contains(newMessage)) {
+                            adapter.messageList.add(adapter.messageList.size, newMessage!!)
+                            adapter.notifyItemInserted(adapter.messageList.size)
+                            recyclerMessages.adapter = adapter
+                            recyclerMessages.scrollToPosition(adapter.messageList.size - 1)
+                        }
                     }
                 }
 
