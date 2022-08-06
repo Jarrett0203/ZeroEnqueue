@@ -42,7 +42,7 @@
                     android:focusableInTouchMode="true"
                     android:padding="4dp"
                     android:layout_marginStart="8dp"
-                    android:background="@drawable/roundcorner"
+                    android:background="@drawable/to_message"
                     android:elevation="10dp"
                     android:src="@drawable/ic_edit"/>
         </LinearLayout>
@@ -182,7 +182,7 @@
                     android:focusableInTouchMode="true"
                     android:padding="4dp"
                     android:layout_marginStart="8dp"
-                    android:background="@drawable/roundcorner"
+                    android:background="@drawable/to_message"
                     android:elevation="10dp"
                     android:layout_gravity="center" />
         </LinearLayout>

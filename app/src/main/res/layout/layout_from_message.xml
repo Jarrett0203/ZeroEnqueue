@@ -22,7 +22,7 @@
             android:layout_marginStart="8dp"
             android:text="This is my message"
             android:textSize="18sp"
-            android:background="@drawable/roundcorner"
+            android:background="@drawable/from_message"
             android:maxWidth="240dp"
             android:padding="16dp"
             android:layout_centerVertical="true"
