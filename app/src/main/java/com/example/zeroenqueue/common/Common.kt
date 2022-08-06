@@ -196,6 +196,7 @@ object Common {
     var addOnSelected: AddOn? = null
     var cartItemSelected: CartItem? = null
     var currentUser: User? = null
+    var chatLogId: String? = null
 
     const val NOTI_TITLE = "title"
     const val NOTI_CONTENT = "content"

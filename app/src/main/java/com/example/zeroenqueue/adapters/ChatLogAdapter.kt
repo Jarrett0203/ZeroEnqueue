@@ -11,6 +11,10 @@ import com.bumptech.glide.Glide
 import com.example.zeroenqueue.R
 import com.example.zeroenqueue.classes.Message
 import com.example.zeroenqueue.common.Common
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ChatLogAdapter(
     var context: Context,
@@ -51,6 +55,9 @@ class ChatLogAdapter(
         if (messageList[position].userImage!!.isNotEmpty())
             Glide.with(context).load(messageList[position].userImage).into(holder.profileImage)
         holder.message.text = messageList[position].message
+        val formatter: DateFormat = SimpleDateFormat("HH:mm", Locale.US)
+        formatter.timeZone = TimeZone.getTimeZone("GMT+8:00")
+        holder.timestamp.text = formatter.format(Date(messageList[position].timestamp!!))
     }
 
     override fun getItemCount(): Int {
