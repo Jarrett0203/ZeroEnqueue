@@ -271,6 +271,7 @@ class ProfileFragment : Fragment() {
                                             chipCustomer.isChecked = false
                                             chipVendor.isChecked = true
                                             dialogInterface.dismiss()
+                                            dialog.dismiss()
                                         }
                                         .setPositiveButton("OK") { _, _ ->
                                             currentFirebaseUser?.let { firebaseUser ->
@@ -325,6 +326,7 @@ class ProfileFragment : Fragment() {
                                             chipCustomer.isChecked = true
                                             chipVendor.isChecked = false
                                             dialogInterface.dismiss()
+                                            dialog.dismiss()
                                         }
                                         .setPositiveButton("OK") { _, _ ->
                                             currentFirebaseUser?.let { firebaseUser ->

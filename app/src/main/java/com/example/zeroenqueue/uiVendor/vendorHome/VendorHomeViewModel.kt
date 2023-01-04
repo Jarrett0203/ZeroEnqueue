@@ -13,7 +13,7 @@ import com.google.firebase.database.ValueEventListener
 
 class VendorHomeViewModel : ViewModel(), IFoodLoadCallback {
     private var foodListMutableLiveData: MutableLiveData<List<Food>> ?= null
-    private lateinit var messageError:MutableLiveData<String>
+    private lateinit var messageError: MutableLiveData<String>
     private var foodCallbackListener : IFoodLoadCallback = this
 
     val foodList:LiveData<List<Food>>
@@ -21,19 +21,19 @@ class VendorHomeViewModel : ViewModel(), IFoodLoadCallback {
             if(foodListMutableLiveData == null){
                 foodListMutableLiveData = MutableLiveData()
                 messageError = MutableLiveData()
-                loadFoodList()
+                loadFoodList(Common.rating)
             }
             return foodListMutableLiveData!!
         }
 
-    fun loadFoodList() {
+    fun loadFoodList(rating: Double) {
         val tempList = ArrayList<Food>()
         val foodListRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODLIST_REF)
         foodListRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(itemSnapShot in snapshot.children){
                     val food = itemSnapShot.getValue(Food::class.java)
-                    if (food!!.ratingValue >= 4.0 && food.foodStall == Common.foodStallSelected!!.id)
+                    if ((food!!.ratingValue/ food.ratingCount) >= rating && food.foodStall == Common.foodStallSelected!!.id)
                         tempList.add(food)
                 }
                 foodCallbackListener.onFoodLoadSuccess(tempList)

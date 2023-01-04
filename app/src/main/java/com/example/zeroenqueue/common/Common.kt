@@ -185,6 +185,7 @@ object Common {
         }
     }
 
+    var rating: Double = 0.0
     var orderStatusSelected: Int = -1
     var orderSelected: Order? = null
     var discountSelected: Discount? = null
@@ -195,6 +196,7 @@ object Common {
     var addOnSelected: AddOn? = null
     var cartItemSelected: CartItem? = null
     var currentUser: User? = null
+    var chatLogId: String? = null
 
     const val NOTI_TITLE = "title"
     const val NOTI_CONTENT = "content"
@@ -208,6 +210,7 @@ object Common {
     const val FOODLIST_REF = "FoodList"
     const val COMMENT_REF = "Comments"
     const val DISCOUNT_REF = "Discounts"
+    const val MESSAGES_REF = "Messages"
     val TAG = "Notifications"
 
     const val DATABASE_LINK: String =

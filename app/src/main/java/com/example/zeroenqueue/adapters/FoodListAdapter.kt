@@ -87,7 +87,7 @@ class FoodListAdapter(
         holder.setListener(object : IRecyclerItemClickListener {
             override fun onItemClick(view: View, pos: Int) {
                 Common.foodSelected = foodList[pos]
-                EventBus.getDefault().postSticky(FoodItemClick(true, foodList[pos]))
+                EventBus.getDefault().post(FoodItemClick(true, foodList[pos]))
             }
         })
 

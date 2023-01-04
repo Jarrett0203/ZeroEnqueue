@@ -9,9 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -22,7 +20,9 @@ import com.example.zeroenqueue.adapters.VendorFoodListAdapter
 import com.example.zeroenqueue.common.Common
 import com.example.zeroenqueue.databinding.FragmentVendorHomeBinding
 import com.example.zeroenqueue.eventBus.MenuItemBack
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.slider.Slider
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import dmax.dialog.SpotsDialog
@@ -42,6 +42,11 @@ class VendorHomeFragment : Fragment() {
     private val storageRef = FirebaseStorage.getInstance().reference
     private val foodStallRef = FirebaseDatabase.getInstance().getReference(Common.FOODSTALL_REF)
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Common.rating = 4.0
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -53,16 +58,17 @@ class VendorHomeFragment : Fragment() {
         _binding = FragmentVendorHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val swipeRefreshLayout = binding.swipeRefresh
-        val recyclerViewPopularFood = binding.recyclerPopular
         val editStallDetails = binding.editStallDetails
-        val filterPopularFood = binding.filterPopularFood
-
         val stallName = binding.stallName
         val stallPhone = binding.stallPhone
         val stallAddress = binding.stallAddress
         val stallDescription = binding.stallDescription
         val stallImage = binding.stallImage
+
+        val swipeRefreshLayout = binding.swipeRefresh
+        val recyclerViewPopularFood = binding.recyclerPopular
+        val noPopular = binding.noPopular
+        val filterPopularFood = binding.filterPopularFood
 
         stallName.text = Common.foodStallSelected!!.name
         stallPhone.text = Common.foodStallSelected!!.phone
@@ -145,7 +151,7 @@ class VendorHomeFragment : Fragment() {
                                 Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT)
                                     .show()
                             }
-                            .addOnCompleteListener { _ ->
+                            .addOnCompleteListener {
                                 Common.foodStallSelected!!.name = newStallName
                                 Common.foodStallSelected!!.address = newStallAddress
                                 Common.foodStallSelected!!.phone = newStallPhone
@@ -181,8 +187,7 @@ class VendorHomeFragment : Fragment() {
                                             requireContext(),
                                             e.message,
                                             Toast.LENGTH_SHORT
-                                        )
-                                            .show()
+                                        ).show()
                                     }
                                     .addOnCompleteListener { _ ->
                                         Common.foodStallSelected!!.image = it.toString()
@@ -220,10 +225,30 @@ class VendorHomeFragment : Fragment() {
             uploadDialog.show()
         }
 
-
+        val filterBottomSheetDialog = BottomSheetDialog(requireContext(), R.style.DialogStyle)
+        val layout_filter = layoutInflater.inflate(R.layout.layout_filter_popular_food, null)
+        filterBottomSheetDialog.setContentView(layout_filter)
+        val btnFilter = layout_filter.findViewById<Button>(R.id.btnFilter)
+        val ratingSlider = layout_filter.findViewById<Slider>(R.id.ratingSlider)
+        val currentRating = layout_filter.findViewById<TextView>(R.id.currentRating)
 
         filterPopularFood.setOnClickListener {
-            //filter by rating or sales
+            //filter by rating
+            filterBottomSheetDialog.show()
+            ratingSlider.value = Common.rating.toFloat()
+        }
+
+        btnFilter.setOnClickListener {
+            Common.rating = ratingSlider.value.toDouble()
+            dialog.show()
+            vendorHomeViewModel.loadFoodList(Common.rating)
+            dialog.dismiss()
+            filterBottomSheetDialog.dismiss()
+        }
+
+        ratingSlider.addOnChangeListener { slider, value, fromUser ->
+            currentRating.text = value.toString()
+            Common.rating = value.toDouble()
         }
 
         dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
@@ -234,12 +259,21 @@ class VendorHomeFragment : Fragment() {
 
         vendorHomeViewModel.foodList.observe(viewLifecycleOwner) {
             dialog.dismiss()
-            recyclerViewPopularFood.adapter = VendorFoodListAdapter(requireContext(), it.toMutableList())
-            recyclerViewPopularFood.layoutAnimation = layoutAnimationController
+            if (it.isEmpty() || it == null) {
+                recyclerViewPopularFood.visibility = View.GONE
+                noPopular.visibility = View.VISIBLE
+            }
+            else {
+                recyclerViewPopularFood.visibility = View.VISIBLE
+                noPopular.visibility = View.GONE
+                recyclerViewPopularFood.adapter =
+                    VendorFoodListAdapter(requireContext(), it.toMutableList())
+                recyclerViewPopularFood.layoutAnimation = layoutAnimationController
+            }
         }
 
         swipeRefreshLayout.setOnRefreshListener {
-            vendorHomeViewModel.loadFoodList()
+            vendorHomeViewModel.loadFoodList(Common.rating)
             swipeRefreshLayout.isRefreshing = false
         }
         return root
