@@ -8,7 +8,7 @@ Therefore, we decided to come up with an application for customers to be able to
 
 ZeroEnqueue will be an Android mobile app to support an online ordering platform for a wide variety of food stalls.
 
-Zeroenqueue’s features will take inspiration from other food ordering apps such as GrabFood, foodpanda, Deliveroo etc. Specific app features will be further elaborated in the following sections.
+ZeroEnqueue’s features will take inspiration from other food ordering apps such as GrabFood, foodpanda, Deliveroo etc. Specific app features will be further elaborated in the following sections.
 
 We hope to streamline the process of ordering food through a convenient and intuitive user interface. This speeds up the ordering of food and makes the entire process a more pleasant experience. Customers can also make better informed decisions on what food they might buy through the recommendations of the other users.
 
