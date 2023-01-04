@@ -67,7 +67,7 @@ class CustomerDiscountsAdapter(var context: Context,
         holder.setListener(object: IRecyclerItemClickListener{
             override fun onItemClick(view: View, pos: Int) {
                 Common.discountSelected = discountList[pos]
-                EventBus.getDefault().postSticky(CustomerDiscountItemClick(true, discountList[pos]))
+                EventBus.getDefault().post(CustomerDiscountItemClick(true, discountList[pos]))
             }
         })
     }

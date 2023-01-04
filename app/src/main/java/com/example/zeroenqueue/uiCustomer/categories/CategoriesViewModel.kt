@@ -15,11 +15,7 @@ class CategoriesViewModel : ViewModel(), ICategoryLoadCallback {
 
     private var categoryListMutableLiveData: MutableLiveData<List<Category>> ?= null
     private var messageError:MutableLiveData<String> ?= null
-    private var categoryCallbackListener : ICategoryLoadCallback
-
-    init {
-        categoryCallbackListener = this
-    }
+    private var categoryCallbackListener : ICategoryLoadCallback = this
 
     val categoryList:LiveData<List<Category>>
         get(){

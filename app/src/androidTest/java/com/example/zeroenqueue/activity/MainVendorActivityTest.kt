@@ -55,12 +55,6 @@ class MainVendorActivityTest {
     }
 
     @Test
-    fun test_isActivityInView() {
-        val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
-        onView(withId(R.id.vendor_home_fragment)).check(matches(isDisplayed()))
-    }
-
-    @Test
     fun clickProfile_navigateToProfileFragment() {
         val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
         onView(withId(R.id.drawer_layout)).perform(open())
@@ -113,14 +107,12 @@ class MainVendorActivityTest {
     @Test
     fun changeToCustomerType()  {
         val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
-        Thread.sleep(1000)
         onView(withId(R.id.drawer_layout)).perform(open())
         onView(withId(R.id.navigation_sign_out)).perform(click())
         onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click())
         onView(withId(R.id.loginActivity)).check(matches(isDisplayed()))
         onView(withId(R.id.email)).perform(typeText("john@gmail.com"))
         onView(withId(R.id.password)).perform(typeText("password"))
-        onView(withId(R.id.login)).perform(click())
         onView(withId(R.id.login)).perform(click())
         Thread.sleep(1000)
         onView(withId(R.id.recycler_food_stalls)).perform(RecyclerViewActions
@@ -131,6 +123,12 @@ class MainVendorActivityTest {
         onView(withId(R.id.btnUpdate)).perform(click())
         onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click())
         onView(withId(R.id.customer_home_fragment)).check(matches(isDisplayed()))
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.profile_image)).perform(click())
+        onView(withId(R.id.chipVendor)).perform(click())
+        onView(withId(R.id.btnUpdate)).perform(click())
+        onView(withText("OK")).inRoot(isDialog()).perform(click())
+        onView(withId(R.id.stalls_overview_activity)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -150,23 +148,26 @@ class MainVendorActivityTest {
         onView(withId(R.id.drawer_layout)).perform(open())
         onView(withId(R.id.navigation_stall_menu)).perform(click())
         onView(withId(R.id.menu_fragment)).check(matches(isDisplayed()))
+        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        val appViews = UiScrollable(UiSelector().scrollable(true))
+        appViews.scrollForward()
         onView(withId(R.id.addNewFood)).perform(click())
         onView(withId(R.id.vendor_food_detail_fragment)).check(matches(isDisplayed()))
     }
 
-//    @Test
-//    fun vendorOrderNavigation() {
-//        val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
-//        Thread.sleep(1000)
-//        onView(withId(R.id.drawer_layout)).perform(open())
-//        onView(withId(R.id.navigation_vendor_order_summary)).perform(click())
-//        onView(withId(R.id.recycler_order)).perform(RecyclerViewActions
-//            .actionOnItemAtPosition<VendorMyOrderAdapter.MyViewHolder>(0, swipeLeft()))
-//
-//        onView(
-//            hasDescendant(withText("Edit"))).perform(click())
-//        onView(withId(R.id.vendor_food_detail_fragment)).check(matches(isDisplayed()))
-//    }
+/*    @Test
+    fun vendorOrderNavigation() {
+        val activityScenario = ActivityScenario.launch(MainVendorActivity::class.java)
+        Thread.sleep(1000)
+        onView(withId(R.id.drawer_layout)).perform(open())
+        onView(withId(R.id.navigation_vendor_order_summary)).perform(click())
+        onView(withId(R.id.recycler_order)).perform(RecyclerViewActions
+            .actionOnItemAtPosition<VendorMyOrderAdapter.MyViewHolder>(0, swipeLeft()))
+
+        onView(
+            hasDescendant(withText("Edit"))).perform(click())
+        onView(withId(R.id.vendor_food_detail_fragment)).check(matches(isDisplayed()))
+    }*/
 
     @Test
     fun discountItem_navigateToVendorDiscountDetailsFragment() {

@@ -58,7 +58,6 @@ class MainCustomerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        subscribeToTopic(Common.getNewOrderTopic())
 
         binding = ActivityMainCustomerBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -205,16 +204,6 @@ class MainCustomerActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun subscribeToTopic(newOrderTopic: String) {
-        FirebaseMessaging.getInstance()
-            .subscribeToTopic(newOrderTopic)
-            .addOnFailureListener{ Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()}
-            .addOnCompleteListener{ task ->
-                if(!task.isSuccessful)
-                    Toast.makeText(this, "Subscribe topic failed", Toast.LENGTH_SHORT).show()
-            }
-    }
-
     private fun countCartItem() {
         if(Common.currentUser != null)
             cartDataSource.countCartItems(Common.currentUser!!.uid!!)
@@ -248,14 +237,14 @@ class MainCustomerActivity : AppCompatActivity() {
         }
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = false, threadMode = ThreadMode.MAIN)
     fun onFoodSelected(event: FoodItemClick) {
         if (event.isSuccess) {
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_detail)
         }
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = false, threadMode = ThreadMode.MAIN)
     fun onFoodStallSelected(event: FoodStallClick) {
         if (event.isSuccess) {
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_food_list)
@@ -305,7 +294,7 @@ class MainCustomerActivity : AppCompatActivity() {
             })
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = false, threadMode = ThreadMode.MAIN)
     fun onDiscountSelected(event: CustomerDiscountItemClick) {
         if (event.isSuccess) {
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.navigation_customer_discounts_detail)

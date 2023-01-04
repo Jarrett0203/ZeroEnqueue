@@ -169,7 +169,7 @@ class VendorDiscountsDetailFragment : Fragment(), ILoadTimeFromFirebaseDiscounts
             .getReference(Common.DISCOUNT_REF)
             .child(discount.id!!)
             .setValue(discount)
-            .addOnFailureListener { e -> Toast.makeText(requireContext(), "" + e.message, Toast.LENGTH_SHORT).show()}
+            .addOnFailureListener { e -> Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()}
             .addOnCompleteListener{ task ->
                 if (task.isSuccessful) {
                     Toast.makeText(

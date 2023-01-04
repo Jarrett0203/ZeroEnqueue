@@ -21,19 +21,19 @@ class MenuViewModel : ViewModel(), IFoodLoadCallback {
             if(menuListMutableLiveData == null){
                 menuListMutableLiveData = MutableLiveData()
                 messageError = MutableLiveData()
-                loadMenuList()
+                loadMenuList(Common.rating)
             }
             return menuListMutableLiveData!!
         }
 
-    fun loadMenuList() {
+    fun loadMenuList(rating: Double) {
         val tempList = ArrayList<Food>()
         val foodListRef = FirebaseDatabase.getInstance(Common.DATABASE_LINK).getReference(Common.FOODLIST_REF)
         foodListRef.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (itemSnapShot in snapshot.children) {
                     val food = itemSnapShot.getValue(Food::class.java)
-                    if (food!!.foodStall!! == Common.foodStallSelected!!.id)
+                    if ((food!!.ratingValue/ food.ratingCount) >= rating && food.foodStall == Common.foodStallSelected!!.id)
                         tempList.add(food)
                     foodCallbackListener.onFoodLoadSuccess(tempList)
                 }
